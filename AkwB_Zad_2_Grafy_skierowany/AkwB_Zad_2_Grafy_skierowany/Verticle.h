@@ -36,6 +36,14 @@ public:
 		return verticle_prev_neighbours;
 	}
 
+	void Show_prev_neighbours()
+	{
+		for (auto element : verticle_prev_neighbours)
+		{
+			std::cout << element;
+		}
+	}
+
 	Verticle(std::string line_from_file)
 	{
 		std::stringstream line(line_from_file);
@@ -110,7 +118,6 @@ public:
 
 		return list;
 	}
-	
 	bool is_verticle_adjoint(Verticle wierzcholek)
 	{
 		if (verticle_next_neighbours == wierzcholek.Get_next_neighbours()) //jesli sa takie same to moga byc sprzezone

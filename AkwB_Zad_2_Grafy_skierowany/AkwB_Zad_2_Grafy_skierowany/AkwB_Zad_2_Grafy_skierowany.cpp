@@ -8,8 +8,8 @@ int main()
 {
     std::fstream file;
     std::cout << "Podaj nazwe_pliku wejsciowego\n";
-    std::string filename;
-    std::cin >> filename;
+    std::string filename = "Graf.txt";
+    //std::cin >> filename;
     file.open(filename, std::ifstream::in);
     
 
@@ -48,8 +48,9 @@ int main()
             graph.Show_prev_neighbour_map();
             graph.Create_unordered_set_for_each_verticle();
             std::cout << "\n\n";
-            std::cout << graph.generate_prev_neighbour_list_for_graph(); // NAPRAW BO NIE DZIALA :)
-
+            graph.show_prev_neighbours_for_each_verticle();
+            //std::cout << graph.generate_prev_neighbour_list_for_graph(); // NAPRAW BO NIE DZIALA :)
+            std::cout << "Koniec\n";
             
 
             std::fstream new_file;
