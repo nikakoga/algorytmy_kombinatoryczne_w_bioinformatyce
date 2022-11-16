@@ -130,6 +130,15 @@ public:
 	{
 		verticle_prev_neighbours.emplace(str_prev_neigh);
 	}
+	
+	void Show_prev_neighbours()
+	{
+		for (std::string n : verticle_prev_neighbours)
+		{
+			std::cout << n << "|";
+		}
+		std::cout << "\n";
+	}
 
 private:
 	bool is_there_any_common_neighbour_between_two_verticles(Verticle wierzcholek_A)

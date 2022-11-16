@@ -121,13 +121,13 @@ public:
 	//	return prev_neighbours_list;
 	//}
 
-	//void Show_prev_neighbours_list()
-	//{
-	//	for (auto element : prev_neighbours_list)
-	//	{
-	//		std::cout << element << "\n";
-	//	}
-	//}
+	void Show_prev_neighbours_list()
+	{
+		for (Verticle element : all_verticles)
+		{
+			element.Show_prev_neighbours();
+		}
+	}
 
 	void generate_prev_neighbours_map_for_graph()
 	{
