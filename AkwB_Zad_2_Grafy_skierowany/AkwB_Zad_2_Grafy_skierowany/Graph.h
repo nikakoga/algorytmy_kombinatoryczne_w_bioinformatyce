@@ -89,8 +89,10 @@ public:
 		std::string wszyscy_poprzednicy;
 		std::string jeden_poprzednik;
 		
-
-		for (auto element : all_verticles)
+		// use verticle under the address in for loop
+		// where the verticle is modified (&)
+		// https://stackoverflow.com/questions/52657258/why-is-my-elements-in-my-vector-of-objects-not-updating-upon-calling-one-of-the
+		for (auto& element : all_verticles)
 		{
 			szukany_w_mapie = element.Get_name() + "<";
 			wszyscy_poprzednicy = prev_neighbours_map[szukany_w_mapie];

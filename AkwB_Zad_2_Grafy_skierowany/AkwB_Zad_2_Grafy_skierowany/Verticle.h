@@ -40,8 +40,9 @@ public:
 	{
 		for (auto element : verticle_prev_neighbours)
 		{
-			std::cout << element;
+			std::cout << element << " ";
 		}
+		std::cout << "\n";
 	}
 
 	Verticle(std::string line_from_file)
