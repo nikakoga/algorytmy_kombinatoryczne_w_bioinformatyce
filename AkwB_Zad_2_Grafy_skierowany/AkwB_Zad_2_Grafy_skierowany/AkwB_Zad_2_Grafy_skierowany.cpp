@@ -8,8 +8,8 @@ int main()
 {
     std::fstream file;
     std::cout << "Podaj nazwe_pliku wejsciowego\n";
-    std::string filename = "Graf.txt";
-    //std::cin >> filename;
+    std::string filename;
+    std::cin >> filename;
     file.open(filename, std::ifstream::in);
     
 
@@ -33,28 +33,27 @@ int main()
                 graph.add_verticle(current_verticle);         
             }
 
-            //ODKOMENTUJ POTEM
-            /*if (!graph.is_graph_adjoint())
-            {
-                throw std::invalid_argument("ERROR, Graf nie jest sprzezony");
-            }*/
-            
-            //TUTAJ ZA CZASOW LISTY POPRZEDNIKOW
-            //graph.generate_prev_neighbours_list_for_graph();
-            //graph.fill_prev_neighbours_to_each_verticle_class();
-            //graph.Show_prev_neighbours_list(); 
-
+            std::cout << "Lista nastepnikow\n";
+            std::cout << graph.generate_next_neighbour_list_for_graph();
+            std::cout<<"\nLista poprzednikow\n";
             graph.generate_prev_neighbours_map_for_graph();
             graph.Show_prev_neighbour_map();
             graph.Create_unordered_set_for_each_verticle();
-            std::cout << "\n\n";
-            //graph.show_prev_neighbours_for_each_verticle();
-            std::cout << graph.generate_prev_neighbour_list_for_graph(); 
-            
-            
+            std::cout << "\nPoprzednicy kazdego wierzcholka\n";
+            graph.show_prev_neighbours_for_each_verticle();
+            graph.generate_prev_neighbour_list_for_graph();
+
+           if (!graph.is_graph_adjoint())
+           {
+               throw std::invalid_argument("ERROR, Graf nie jest sprzezony");
+           }
+           
+           std::cout << "\n";
+           graph.Get_czy_liniowy();
+           
 
             std::fstream new_file;
-            std::cout << "Podaj nazwe_pliku wynikowego\n";
+            std::cout << "\nPodaj nazwe_pliku wynikowego\n";
             std::string new_file_name;
             std::cin >> new_file_name;
             new_file.open(new_file_name, std::ifstream::out);

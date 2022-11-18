@@ -7,6 +7,13 @@
 #include <unordered_set>
 #include <unordered_map>
 
+enum Result
+{
+	Nie_sprzezony = 0,
+	Liniowy = 1,
+	Do_sprawdzenia_czy_liniowy = 2,
+	Czesc_wspolnych_nastepnikow = 3
+};
 
 class Verticle
 {
@@ -119,19 +126,19 @@ public:
 
 		return list;
 	}
-	bool is_verticle_adjoint(Verticle wierzcholek)
+	Result is_verticle_adjoint(Verticle wierzcholek)
 	{
 		if (verticle_next_neighbours == wierzcholek.Get_next_neighbours()) //jesli sa takie same to moga byc sprzezone
 		{
-			return true;
+			return Do_sprawdzenia_czy_liniowy; // po to aby potem wlasnie dla tej pary wierzcholkow sprawdzac czy maja wspolonych poprzednikow bo jesli maja to graf nie bedzie liniowy
 		}
 
-		if (is_there_any_common_neighbour_between_two_verticles(wierzcholek)) //tutaj sa tylko czesciowo takie same wiec nie moga byc sprzezone
+		if (is_there_any_common_next_neighbour_between_two_verticles(wierzcholek)) //tutaj sa tylko czesciowo takie same wiec nie moga byc sprzezone
 		{
-			 return false;
+			 return Czesc_wspolnych_nastepnikow;
 		}
 				
-		return true; //tutaj nie maja czesci wspolnej wcale wiec moga byc sprzezone
+		return Liniowy; //tutaj nie maja czesci wspolnej wcale wiec moga byc sprzezone i moze byc liniowy nawet jesli ma poprzedniki te same
 	}
 
 	void Set_prev_neighbour(std::string str_prev_neigh) 
@@ -139,12 +146,22 @@ public:
 		verticle_prev_neighbours.emplace(str_prev_neigh);
 	}
 
-private:
-	bool is_there_any_common_neighbour_between_two_verticles(Verticle wierzcholek_A)
+
+	bool is_there_any_common_next_neighbour_between_two_verticles(Verticle wierzcholek_A)
 	{
-		for (auto element : verticle_next_neighbours)
+		return is_there_any_common_neighbours(verticle_next_neighbours, wierzcholek_A.Get_next_neighbours());
+	}
+
+	bool is_there_any_common_prev_neighbour_between_two_verticle(Verticle wierzcholek_A)
+	{
+		return is_there_any_common_neighbours(verticle_prev_neighbours, wierzcholek_A.Get_prev_neighbours());
+	}
+	
+	bool is_there_any_common_neighbours(std::unordered_set<std::string> neighbours, std::unordered_set<std::string> neighboursToCompare)
+	{
+		for (auto element : neighbours)
 		{
-			if (wierzcholek_A.Get_next_neighbours().count(element) > 0) //funkcja count zwraca 1 jesli badany element jest obecny w unordered set
+			if (neighboursToCompare.count(element) > 0) //funkcja count zwraca 1 jesli badany element jest obecny w unordered set
 			{
 				// czyli jesli okaze sie ze wierzcholek_A na swojej liscie wierzcholkow
 				// ma cos co nalezy rowniez do listy wierzcholkow tego obiektu to funkcja zwroci prawde

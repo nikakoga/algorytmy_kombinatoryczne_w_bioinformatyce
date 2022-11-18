@@ -6,8 +6,23 @@ class Graph
 {
 	std::vector <Verticle> all_verticles;
 	std::unordered_map <std::string, std::string> prev_neighbours_map;
+	bool czy_liniowy = 1;
 
 public:
+
+	void Get_czy_liniowy()
+	{
+		if (czy_liniowy)
+		{
+			std::cout << "Graf jest liniowy\n";
+		}
+
+		else
+		{
+			std::cout << "Graf nie jest liniowy\n";
+		}	
+		
+	}
 
 	std::string generate_next_neighbour_list_for_graph()
 	{
@@ -25,24 +40,27 @@ public:
 		all_verticles.emplace_back(wiercholek);
 	}
 
-	bool is_graph_adjoint()
+	Result is_graph_adjoint()
 	{
 		auto size = all_verticles.size();
 		for (unsigned int i = 0; i < size; i++)
 		{
 			for (unsigned int j = i + 1; j < size; j++)
 			{
-				if (all_verticles[i].is_verticle_adjoint(all_verticles[j])==0)
+				if (all_verticles[i].is_verticle_adjoint(all_verticles[j])==Czesc_wspolnych_nastepnikow)
 				{
 					//jesli dla jakiejkolwiek pary wierzcholkow mamy czesc wspolna inna niz wszystkie elementy lub zbior pusty
 					//to graf nie moze byc sprzezony 
-					return false;
+					return Nie_sprzezony;
 				}
 
 				// to sa wierzcholki ktore maja wspolne nastepniki, wiec sprawdzam czy poprzedniki tez zeby wiedziec czy jest liniowy 
-				else if (all_verticles[i].is_verticle_adjoint(all_verticles[j]) == 2)
+				else if (all_verticles[i].is_verticle_adjoint(all_verticles[j]) == Do_sprawdzenia_czy_liniowy)
 				{
-					if ()
+					if (all_verticles[i].is_there_any_common_prev_neighbour_between_two_verticle(all_verticles[j]))
+					{
+						czy_liniowy = 0;
+					}
 				}
 				
 			}
@@ -133,25 +151,6 @@ public:
 		}
 	}
 
-	//bool is_graph_linear()  //jesli maja wspolne nastepniki to nie moga miec wspolnych poprzednikow. Jesli nie maja wspolnych poprzednikow to moga miec
-	//{
-
-	//	for (auto element_1 : all_verticles)
-	//	{
-	//		std::string szukana_nazwa = element_1.Get_name();
-	//		szukana_nazwa + "<";
-
-	//			
-	//		for (auto element_2 : all_verticles)
-	//		{
-
-
-	//		}
-
-	//	}
-
-	//	return true;
-	//}
 
 };
 
