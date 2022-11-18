@@ -32,12 +32,19 @@ public:
 		{
 			for (unsigned int j = i + 1; j < size; j++)
 			{
-				if (!all_verticles[i].is_verticle_adjoint(all_verticles[j]))
+				if (all_verticles[i].is_verticle_adjoint(all_verticles[j])==0)
 				{
 					//jesli dla jakiejkolwiek pary wierzcholkow mamy czesc wspolna inna niz wszystkie elementy lub zbior pusty
 					//to graf nie moze byc sprzezony 
 					return false;
 				}
+
+				// to sa wierzcholki ktore maja wspolne nastepniki, wiec sprawdzam czy poprzedniki tez zeby wiedziec czy jest liniowy 
+				else if (all_verticles[i].is_verticle_adjoint(all_verticles[j]) == 2)
+				{
+					if ()
+				}
+				
 			}
 		}
 	}
@@ -89,10 +96,8 @@ public:
 		std::string wszyscy_poprzednicy;
 		std::string jeden_poprzednik;
 		
-		// use verticle under the address in for loop
-		// where the verticle is modified (&)
-		// https://stackoverflow.com/questions/52657258/why-is-my-elements-in-my-vector-of-objects-not-updating-upon-calling-one-of-the
-		for (auto& element : all_verticles)
+		
+		for (auto& element : all_verticles)  //musi byc referencja & jesli petla ma modyfikowac obiekt
 		{
 			szukany_w_mapie = element.Get_name() + "<";
 			wszyscy_poprzednicy = prev_neighbours_map[szukany_w_mapie];
@@ -122,6 +127,8 @@ public:
 	{
 		for (auto element : all_verticles)
 		{
+			std::cout<<element.Get_name();
+			std::cout<<"<";
 			element.Show_prev_neighbours();
 		}
 	}

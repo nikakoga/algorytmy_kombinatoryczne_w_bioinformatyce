@@ -48,9 +48,9 @@ int main()
             graph.Show_prev_neighbour_map();
             graph.Create_unordered_set_for_each_verticle();
             std::cout << "\n\n";
-            graph.show_prev_neighbours_for_each_verticle();
-            //std::cout << graph.generate_prev_neighbour_list_for_graph(); // NAPRAW BO NIE DZIALA :)
-            std::cout << "Koniec\n";
+            //graph.show_prev_neighbours_for_each_verticle();
+            std::cout << graph.generate_prev_neighbour_list_for_graph(); 
+            
             
 
             std::fstream new_file;

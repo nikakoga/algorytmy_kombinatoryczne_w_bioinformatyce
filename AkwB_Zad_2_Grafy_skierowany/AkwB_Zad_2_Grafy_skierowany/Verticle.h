@@ -99,7 +99,7 @@ public:
 	{
 		std::string list;
 
-		list += name + ">";
+		list += name + "<";
 
 		auto size = verticle_prev_neighbours.size();
 
