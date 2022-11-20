@@ -151,6 +151,72 @@ public:
 		}
 	}
 
+	std::vector<std::vector<std::string>> create_adjoint_vector()
+	{
+		std::vector<std::vector<std::string>> adjoint_vector;
+		int licznik = 1;
+		int element = 0;
 
+		for (auto wierzcholek : all_verticles)
+		{
+	
+			adjoint_vector[element][0] = wierzcholek.Get_name();
+
+			adjoint_vector[element][1] = licznik; //to co wchodzi do wierzcholka
+			licznik++;
+
+			adjoint_vector[element][2] = licznik; //to co wychodzi z wierzcholka
+			licznik++;
+							
+			element++;
+
+		}
+	}
+
+	int szukanie_w_wektorze(std::vector<std::vector<std::string>> vector, std::string szukana_nazwa)
+	{
+		for (int i = 0; i < all_verticles.size(); i++)
+		{
+			if (vector[i][0] == szukana_nazwa) 
+			{
+				return i;
+			}
+		}
+
+		return -1;
+		
+	}
+
+	void create_next_neighbours_list_for_adjoint_graph(std::vector<std::vector<std::string>> vector)
+	{
+		std::string nazwa_wierzcholka;
+		int licznik = 1;
+
+		for (auto wierzcholek : all_verticles)
+		{
+			nazwa_wierzcholka = wierzcholek.Get_name();
+
+			auto nastepniki = wierzcholek.Get_next_neighbours();
+
+			for (auto nastepnik_wierzcholka : nastepniki)
+			{
+				//szukam w wektorze po imieniu nastepnika aby polaczyc jego wejscie z wyjsciem wierzcholka z zewnetrznej petli
+				for (int i = 0; i < all_verticles.size(); i++) 
+				{
+					if (vector[i][0] == nastepnik_wierzcholka) // znalazlam wejscie i wyjscie tego nastepnika
+					{
+						vector[i][1] == vector[licznik][2]; //lacze wejscie tego nastepnika z wyjsciem wierzcholka
+															//moge robic to po liczniku bo reprezentuje on na ktorym wierzcholku teraz operujemy
+
+						//teraz musze wszystkie wystapienia liczby ktora byla na wejsciu nastepnika zamienic na wyjscie wierzcholka
+
+					}
+				}
+			}
+
+			
+		}
+		licznik++;
+	}
 };
 
