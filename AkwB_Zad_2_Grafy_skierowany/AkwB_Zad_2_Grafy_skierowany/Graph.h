@@ -7,6 +7,7 @@ class Graph
 	std::vector <Verticle> all_verticles;
 	std::unordered_map <std::string, std::string> prev_neighbours_map;
 	bool czy_liniowy = 1;
+	std::vector<std::vector<std::string>> adjoint_vector;
 
 public:
 
@@ -151,9 +152,9 @@ public:
 		}
 	}
 
-	std::vector<std::vector<std::string>> create_adjoint_vector()
+	void create_adjoint_vector()
 	{
-		std::vector<std::vector<std::string>> adjoint_vector;
+		
 		int licznik = 1;
 		int element = 0;
 
@@ -173,50 +174,90 @@ public:
 		}
 	}
 
-	int szukanie_w_wektorze(std::vector<std::vector<std::string>> vector, std::string szukana_nazwa)
+	int szukanie_w_wektorze_po_nazwie(std::string szukana_nazwa)
 	{
 		for (int i = 0; i < all_verticles.size(); i++)
 		{
-			if (vector[i][0] == szukana_nazwa) 
+			if (adjoint_vector[i][0] == szukana_nazwa) 
 			{
 				return i;
 			}
 		}
 
-		return -1;
+		throw std::invalid_argument("ERROR blad w wektorze do tworzenia grafu oryginalnego - nie moge znalezc wierzcholka o tym imieniu");
 		
 	}
 
-	void create_next_neighbours_list_for_adjoint_graph(std::vector<std::vector<std::string>> vector)
+	int szukanie_w_wektorze_wejscia_i_wyjscia(std::string szukana_nazwa)
 	{
-		std::string nazwa_wierzcholka;
-		int licznik = 1;
+		int rozmiar = all_verticles.size();
+		for (int i = 0; i < rozmiar ; i++)
+		{
+			for (int j = 1; j <=2; j++)
+			{
+				if (adjoint_vector[i][j] == szukana_nazwa)
+				{
+					return i;
+				}
+
+			}
+		}
+
+		return -1;
+	}
+
+	void glue_edges_in_adjoint_verticle()
+	{
+		int licznik = 0;
+		int i = 0;
+		std::string to_co_zmieniam;
 
 		for (auto wierzcholek : all_verticles)
 		{
-			nazwa_wierzcholka = wierzcholek.Get_name();
-
 			auto nastepniki = wierzcholek.Get_next_neighbours();
 
 			for (auto nastepnik_wierzcholka : nastepniki)
 			{
-				//szukam w wektorze po imieniu nastepnika aby polaczyc jego wejscie z wyjsciem wierzcholka z zewnetrznej petli
-				for (int i = 0; i < all_verticles.size(); i++) 
+				//szukam w wektorze po imieniu nastepnika aby polaczyc jego wejscie z wyjsciem wierzcholka ktory jest jego poprzednikiem
+
+				i = szukanie_w_wektorze_po_nazwie(nastepnik_wierzcholka); // znalazlam wejscie i wyjscie tego nastepnika
+
+				to_co_zmieniam = adjoint_vector[i][1];
+				adjoint_vector[i][1] = adjoint_vector[licznik][2]; //lacze wejscie tego nastepnika z wyjsciem wierzcholka
+				//moge robic to po liczniku bo reprezentuje on na ktorym wierzcholku teraz operujemy
+
+
+
+				//teraz musze wszystkie wystapienia liczby ktora byla na wejsciu nastepnika zamienic na wyjscie wierzcholka
+				i = szukanie_w_wektorze_wejscia_i_wyjscia(to_co_zmieniam);
+
+				while (i != -1)
 				{
-					if (vector[i][0] == nastepnik_wierzcholka) // znalazlam wejscie i wyjscie tego nastepnika
+
+					if (adjoint_vector[i][1] == to_co_zmieniam)
 					{
-						vector[i][1] == vector[licznik][2]; //lacze wejscie tego nastepnika z wyjsciem wierzcholka
-															//moge robic to po liczniku bo reprezentuje on na ktorym wierzcholku teraz operujemy
-
-						//teraz musze wszystkie wystapienia liczby ktora byla na wejsciu nastepnika zamienic na wyjscie wierzcholka
-
+						adjoint_vector[i][1] == adjoint_vector[licznik][2];
 					}
+
+					if (adjoint_vector[i][2] == to_co_zmieniam)
+					{
+						adjoint_vector[i][2] = adjoint_vector[licznik][2];
+					}
+
+					i = szukanie_w_wektorze_wejscia_i_wyjscia(to_co_zmieniam);
+
 				}
 			}
 
-			
+			licznik++;
 		}
-		licznik++;
 	}
+		
+	void create_adjoint_next_neighbours_list()
+	{
+
+	}
+
 };
+
 
