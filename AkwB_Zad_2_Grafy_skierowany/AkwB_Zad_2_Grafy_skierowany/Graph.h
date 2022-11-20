@@ -7,7 +7,9 @@ class Graph
 	std::vector <Verticle> all_verticles;
 	std::unordered_map <std::string, std::string> prev_neighbours_map;
 	bool czy_liniowy = 1;
+
 	std::vector<std::vector<std::string>> adjoint_vector;
+	std::unordered_map <std::string, std::string> adjoint_map;
 
 public:
 
@@ -176,7 +178,7 @@ public:
 
 	int szukanie_w_wektorze_po_nazwie(std::string szukana_nazwa)
 	{
-		for (int i = 0; i < all_verticles.size(); i++)
+		for (int i = 0; i < adjoint_vector.size(); i++)
 		{
 			if (adjoint_vector[i][0] == szukana_nazwa) 
 			{
@@ -190,8 +192,8 @@ public:
 
 	int szukanie_w_wektorze_wejscia_i_wyjscia(std::string szukana_nazwa)
 	{
-		int rozmiar = all_verticles.size();
-		for (int i = 0; i < rozmiar ; i++)
+		
+		for ( int i = 0; i < adjoint_vector.size() ; i++)
 		{
 			for (int j = 1; j <=2; j++)
 			{
@@ -252,10 +254,28 @@ public:
 			licznik++;
 		}
 	}
-		
-	void create_adjoint_next_neighbours_list()
+			
+	void create_adjoint_next_neighbours_map()
 	{
+		std::string klucz;
+		std::string element;
 
+		for (int i=0 ; i<adjoint_vector.size();i++)
+		{
+			klucz = adjoint_vector[i][1];
+			element = adjoint_vector[i][2];
+				 
+			if (adjoint_map.find(klucz)!=adjoint_map.end()) //czyli jesli juz mamy w mapie element o tym kluczu
+			{
+				adjoint_map.insert(klucz, element);
+			}
+
+			else
+			{
+				adjoint_map[klucz] = ">" + adjoint_vector[i][2];
+			}
+			
+		}
 	}
 
 };
