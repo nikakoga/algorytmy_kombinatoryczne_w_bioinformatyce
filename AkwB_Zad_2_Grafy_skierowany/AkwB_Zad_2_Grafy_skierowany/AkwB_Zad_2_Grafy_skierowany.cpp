@@ -56,9 +56,15 @@ int main()
 			if (new_file.is_open())
 			{
 				auto graf_sprzezony = graph.Get_adjoint_map();
+				
 				for (auto element : graf_sprzezony)
 				{
-					new_file << element.first << element.second<<"\n";
+					if (!element.second.empty())
+					{
+						element.second.pop_back(); //gdyby nie to kazdy element mialby na koncu "|" a to niezgodne z formatem wejscia
+					}
+					
+					new_file << element.first <<element.second <<"\n";
 				}
 					
 					

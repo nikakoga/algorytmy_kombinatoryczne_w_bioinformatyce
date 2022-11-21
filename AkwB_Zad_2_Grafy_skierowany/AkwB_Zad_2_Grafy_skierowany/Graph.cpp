@@ -271,7 +271,7 @@ void Graph::create_adjoint_next_neighbours_map()
 	for (int i = 0; i<adjoint_vector.size(); i++)
 	{
 		klucz = adjoint_vector[i][1];
-		element = adjoint_vector[i][2];
+		element = adjoint_vector[i][2] + "|";
 
 		if (adjoint_map.find(klucz) != adjoint_map.end()) //czyli jesli juz mamy w mapie element o tym kluczu
 		{
@@ -282,7 +282,7 @@ void Graph::create_adjoint_next_neighbours_map()
 
 		else
 		{
-			adjoint_map[klucz] = ">" + adjoint_vector[i][2];
+			adjoint_map[klucz] = ">" + adjoint_vector[i][2] + "|";
 		}
 
 	}
@@ -299,9 +299,9 @@ void Graph::preparing_graph()
 void Graph::create_adjoint_graph()
 {
 	create_adjoint_vector();
-	show_adjoint_vector();
+	//show_adjoint_vector();
 	glue_edges_in_adjoint_verticle();
-	show_adjoint_vector();
+	//show_adjoint_vector();
 	create_adjoint_next_neighbours_map();
 }
 
