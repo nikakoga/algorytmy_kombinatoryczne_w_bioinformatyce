@@ -4,6 +4,7 @@
 
 class Graph
 {
+
 	std::vector <Verticle> all_verticles;
 	std::unordered_map <std::string, std::string> prev_neighbours_map;
 	bool czy_liniowy = 1;
@@ -12,271 +13,42 @@ class Graph
 	std::unordered_map <std::string, std::string> adjoint_map;
 
 public:
+	Graph();
 
-	void Get_czy_liniowy()
-	{
-		if (czy_liniowy)
-		{
-			std::cout << "Graf jest liniowy\n";
-		}
+	void Get_czy_liniowy();
 
-		else
-		{
-			std::cout << "Graf nie jest liniowy\n";
-		}	
-		
-	}
+	void add_verticle(Verticle wiercholek);
 
-	std::string generate_next_neighbour_list_for_graph()
-	{
-		std::string list;
-		for (auto element : all_verticles)
-		{
-			list += element.generate_next_neighbour_list_for_verticle();
-		}
-
-		return list;
-	}
-
-	void add_verticle(Verticle wiercholek)
-	{
-		all_verticles.emplace_back(wiercholek);
-	}
-
-	Result is_graph_adjoint()
-	{
-		auto size = all_verticles.size();
-		for (unsigned int i = 0; i < size; i++)
-		{
-			for (unsigned int j = i + 1; j < size; j++)
-			{
-				if (all_verticles[i].is_verticle_adjoint(all_verticles[j])==Czesc_wspolnych_nastepnikow)
-				{
-					//jesli dla jakiejkolwiek pary wierzcholkow mamy czesc wspolna inna niz wszystkie elementy lub zbior pusty
-					//to graf nie moze byc sprzezony 
-					return Nie_sprzezony;
-				}
-
-				// to sa wierzcholki ktore maja wspolne nastepniki, wiec sprawdzam czy poprzedniki tez zeby wiedziec czy jest liniowy 
-				else if (all_verticles[i].is_verticle_adjoint(all_verticles[j]) == Do_sprawdzenia_czy_liniowy)
-				{
-					if (all_verticles[i].is_there_any_common_prev_neighbour_between_two_verticle(all_verticles[j]))
-					{
-						czy_liniowy = 0;
-					}
-				}
-				
-			}
-		}
-	}
-
-
-	void generate_prev_neighbours_map_for_graph()
-	{
-
-		for (auto element_ktorego_poprzednikow_szukam : all_verticles)
-		{
-			//szukaj nazwy elementu w unordered_set nastepnych sasiadow rezsty wierzcholkow nalezacych do grafu
-			//wierzcholek ktory zawiera nazwe elementu na swojej liscie nastepnikow jest poprzednikiem tego elementu
-
-			std::string szukany_element = element_ktorego_poprzednikow_szukam.Get_name();
-			std::string poprzedniki;
-			std::string wierzcholek = szukany_element + "<";
-
-			for (auto wierzcholek_ktorego_sasiadow_analizuje : all_verticles)
-			{
-
-				if (wierzcholek_ktorego_sasiadow_analizuje.Get_next_neighbours().count(szukany_element))
-				{
-					poprzedniki += wierzcholek_ktorego_sasiadow_analizuje.Get_name() + "|";
-
-				}
-
-			}
-			if (!poprzedniki.empty()) //bo jesli nie bedzie poprzednikow to z pustego stringa nie mozna usuwac
-			{
-				poprzedniki.pop_back(); //aby na koncu zadnej linii nie bylo "|"
-			}
-			
-			prev_neighbours_map[wierzcholek] = poprzedniki;
-		}
-	}
-	void Show_prev_neighbour_map()
-	{
-		for (auto element : prev_neighbours_map)
-		{
-			std::cout << element.first <<
-				element.second << std::endl;
-		}
-		
-	}
-
-	void Create_unordered_set_for_each_verticle()
-	{
-		std::string szukany_w_mapie;
-		std::string wszyscy_poprzednicy;
-		std::string jeden_poprzednik;
-		
-		
-		for (auto& element : all_verticles)  //musi byc referencja & jesli petla ma modyfikowac obiekt
-		{
-			szukany_w_mapie = element.Get_name() + "<";
-			wszyscy_poprzednicy = prev_neighbours_map[szukany_w_mapie];
-			std::stringstream stream(wszyscy_poprzednicy); 
-
-			while (!stream.eof())
-			{
-				std::getline(stream, jeden_poprzednik, '|');
-				element.Set_prev_neighbour(jeden_poprzednik);
-			}
-			
-		}
-	}
-
-	std::string generate_prev_neighbour_list_for_graph()
-	{
-		std::string list;
-		for (auto element : all_verticles)
-		{
-			list += element.generate_prev_neighbour_list_for_verticle();
-		}
-
-		return list;
-	}
-
-	void show_prev_neighbours_for_each_verticle()
-	{
-		for (auto element : all_verticles)
-		{
-			std::cout<<element.Get_name();
-			std::cout<<"<";
-			element.Show_prev_neighbours();
-		}
-	}
-
-	void create_adjoint_vector()
-	{
-		
-		int licznik = 1;
-		int element = 0;
-
-		for (auto wierzcholek : all_verticles)
-		{
+	Result is_graph_adjoint();
 	
-			adjoint_vector[element][0] = wierzcholek.Get_name();
+	void Show_prev_neighbour_map();
 
-			adjoint_vector[element][1] = licznik; //to co wchodzi do wierzcholka
-			licznik++;
+	void show_prev_neighbours_for_each_verticle();
 
-			adjoint_vector[element][2] = licznik; //to co wychodzi z wierzcholka
-			licznik++;
-							
-			element++;
+	void preparing_graph();
 
-		}
-	}
+	void create_adjoint_graph();
 
-	int szukanie_w_wektorze_po_nazwie(std::string szukana_nazwa)
-	{
-		for (int i = 0; i < adjoint_vector.size(); i++)
-		{
-			if (adjoint_vector[i][0] == szukana_nazwa) 
-			{
-				return i;
-			}
-		}
+	
+//private :
 
-		throw std::invalid_argument("ERROR blad w wektorze do tworzenia grafu oryginalnego - nie moge znalezc wierzcholka o tym imieniu");
-		
-	}
+	std::string generate_next_neighbour_list_for_graph();
 
-	int szukanie_w_wektorze_wejscia_i_wyjscia(std::string szukana_nazwa)
-	{
-		
-		for ( int i = 0; i < adjoint_vector.size() ; i++)
-		{
-			for (int j = 1; j <=2; j++)
-			{
-				if (adjoint_vector[i][j] == szukana_nazwa)
-				{
-					return i;
-				}
+	void generate_prev_neighbours_map_for_graph();
 
-			}
-		}
+	void Create_unordered_set_for_each_verticle();
 
-		return -1;
-	}
+	std::string generate_prev_neighbour_list_for_graph();
 
-	void glue_edges_in_adjoint_verticle()
-	{
-		int licznik = 0;
-		int i = 0;
-		std::string to_co_zmieniam;
+	void create_adjoint_vector();
 
-		for (auto wierzcholek : all_verticles)
-		{
-			auto nastepniki = wierzcholek.Get_next_neighbours();
+	int szukanie_w_wektorze_po_nazwie(std::string szukana_nazwa);
 
-			for (auto nastepnik_wierzcholka : nastepniki)
-			{
-				//szukam w wektorze po imieniu nastepnika aby polaczyc jego wejscie z wyjsciem wierzcholka ktory jest jego poprzednikiem
+	int szukanie_w_wektorze_wejscia_i_wyjscia(std::string szukana_nazwa);
 
-				i = szukanie_w_wektorze_po_nazwie(nastepnik_wierzcholka); // znalazlam wejscie i wyjscie tego nastepnika
-
-				to_co_zmieniam = adjoint_vector[i][1];
-				adjoint_vector[i][1] = adjoint_vector[licznik][2]; //lacze wejscie tego nastepnika z wyjsciem wierzcholka
-				//moge robic to po liczniku bo reprezentuje on na ktorym wierzcholku teraz operujemy
-
-
-
-				//teraz musze wszystkie wystapienia liczby ktora byla na wejsciu nastepnika zamienic na wyjscie wierzcholka
-				i = szukanie_w_wektorze_wejscia_i_wyjscia(to_co_zmieniam);
-
-				while (i != -1)
-				{
-
-					if (adjoint_vector[i][1] == to_co_zmieniam)
-					{
-						adjoint_vector[i][1] == adjoint_vector[licznik][2];
-					}
-
-					if (adjoint_vector[i][2] == to_co_zmieniam)
-					{
-						adjoint_vector[i][2] = adjoint_vector[licznik][2];
-					}
-
-					i = szukanie_w_wektorze_wejscia_i_wyjscia(to_co_zmieniam);
-
-				}
-			}
-
-			licznik++;
-		}
-	}
+	void glue_edges_in_adjoint_verticle();
 			
-	void create_adjoint_next_neighbours_map()
-	{
-		std::string klucz;
-		std::string element;
-
-		for (int i=0 ; i<adjoint_vector.size();i++)
-		{
-			klucz = adjoint_vector[i][1];
-			element = adjoint_vector[i][2];
-				 
-			if (adjoint_map.find(klucz)!=adjoint_map.end()) //czyli jesli juz mamy w mapie element o tym kluczu
-			{
-				adjoint_map.insert(klucz, element);
-			}
-
-			else
-			{
-				adjoint_map[klucz] = ">" + adjoint_vector[i][2];
-			}
-			
-		}
-	}
+	void create_adjoint_next_neighbours_map();	
 
 };
 

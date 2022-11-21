@@ -37,11 +37,13 @@ int main()
             std::cout << graph.generate_next_neighbour_list_for_graph();
             std::cout<<"\nLista poprzednikow\n";
             graph.generate_prev_neighbours_map_for_graph();
-            graph.Show_prev_neighbour_map();
+           // graph.Show_prev_neighbour_map();
             graph.Create_unordered_set_for_each_verticle();
-            std::cout << "\nPoprzednicy kazdego wierzcholka\n";
-            graph.show_prev_neighbours_for_each_verticle();
+            //std::cout << "\nPoprzednicy kazdego wierzcholka\n";
+            //graph.show_prev_neighbours_for_each_verticle();
             graph.generate_prev_neighbour_list_for_graph();
+
+            //graph.preparing_graph();
 
            if (!graph.is_graph_adjoint())
            {
@@ -50,6 +52,7 @@ int main()
            
            std::cout << "\n";
            graph.Get_czy_liniowy();
+          // graph.create_adjoint_graph();
            
 
             std::fstream new_file;
@@ -61,7 +64,8 @@ int main()
 
             if (new_file.is_open())
             {
-                new_file << graph.generate_next_neighbour_list_for_graph();
+                //ZAPIS DO PLIKU
+                // new_file << 
             }            
             else 
             {
