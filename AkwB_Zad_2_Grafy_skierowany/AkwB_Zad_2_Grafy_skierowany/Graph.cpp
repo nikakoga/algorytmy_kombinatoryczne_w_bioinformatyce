@@ -276,8 +276,6 @@ void Graph::preparing_graph()
 	generate_prev_neighbours_map_for_graph();
 	Create_unordered_set_for_each_verticle();
 	generate_prev_neighbour_list_for_graph();
-
-
 }
 
 void Graph::create_adjoint_graph()

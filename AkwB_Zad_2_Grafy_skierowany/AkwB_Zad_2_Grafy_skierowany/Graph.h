@@ -30,7 +30,7 @@ public:
 	void create_adjoint_graph();
 
 	
-//private :
+private :
 
 	std::string generate_next_neighbour_list_for_graph();
 
