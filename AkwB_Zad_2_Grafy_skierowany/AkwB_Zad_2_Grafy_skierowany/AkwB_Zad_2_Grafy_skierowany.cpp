@@ -33,15 +33,6 @@ int main()
 				graph.add_verticle(current_verticle);
 			}
 
-			// std::cout << "Lista nastepnikow\n";
-			// std::cout << graph.generate_next_neighbour_list_for_graph();
-			// std::cout<<"\nLista poprzednikow\n";
-			// graph.generate_prev_neighbours_map_for_graph();
-			//// graph.Show_prev_neighbour_map();
-			// graph.Create_unordered_set_for_each_verticle();
-			// //std::cout << "\nPoprzednicy kazdego wierzcholka\n";
-			// //graph.show_prev_neighbours_for_each_verticle();
-			// graph.generate_prev_neighbour_list_for_graph();
 
 			graph.preparing_graph();
 
@@ -50,9 +41,9 @@ int main()
 				throw std::invalid_argument("ERROR, Graf nie jest sprzezony");
 			}
 
-			std::cout << "\n";
+			std::cout << "Graf sprzezony\n";
 			graph.Get_czy_liniowy();
-			// graph.create_adjoint_graph();
+			graph.create_adjoint_graph();
 
 
 			std::fstream new_file;
@@ -64,8 +55,13 @@ int main()
 
 			if (new_file.is_open())
 			{
-				//ZAPIS DO PLIKU
-				// new_file << 
+				auto graf_sprzezony = graph.Get_adjoint_map();
+				for (auto element : graf_sprzezony)
+				{
+					new_file << element.first << element.second<<"\n";
+				}
+					
+					
 			}
 			else
 			{

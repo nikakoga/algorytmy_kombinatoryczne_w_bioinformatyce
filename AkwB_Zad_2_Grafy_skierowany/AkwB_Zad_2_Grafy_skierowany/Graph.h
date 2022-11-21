@@ -29,6 +29,7 @@ public:
 
 	void create_adjoint_graph();
 
+	std::unordered_map <std::string, std::string> Get_adjoint_map();
 	
 private :
 

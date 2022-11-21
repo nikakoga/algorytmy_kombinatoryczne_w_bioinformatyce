@@ -284,3 +284,8 @@ void Graph::create_adjoint_graph()
 	glue_edges_in_adjoint_verticle();
 	create_adjoint_next_neighbours_map();
 }
+
+std::unordered_map<std::string, std::string> Graph::Get_adjoint_map()
+{
+	return adjoint_map;
+}
