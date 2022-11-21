@@ -59,7 +59,7 @@ int main()
 				
 				for (auto element : graf_sprzezony)
 				{
-					if (!element.second.empty())
+					if (element.second != ">") //zeby nie zabierac tego z izolowanych wierzcholkow, one na koncu nie maja | ktore trzeba odjac
 					{
 						element.second.pop_back(); //gdyby nie to kazdy element mialby na koncu "|" a to niezgodne z formatem wejscia
 					}

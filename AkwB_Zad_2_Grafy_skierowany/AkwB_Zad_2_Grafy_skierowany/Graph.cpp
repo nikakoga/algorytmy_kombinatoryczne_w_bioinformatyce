@@ -186,7 +186,7 @@ int Graph::szukanie_w_wektorze_po_nazwie(std::string szukana_nazwa)
 		}
 	}
 
-	throw std::invalid_argument("ERROR blad w wektorze do tworzenia grafu oryginalnego - nie moge znalezc wierzcholka o tym imieniu");
+	throw std::invalid_argument("ERROR blad w wektorze do tworzenia grafu oryginalnego - nie moge znalezc wierzcholka o tym imieniu\n");
 
 }
 
@@ -218,45 +218,50 @@ void Graph::glue_edges_in_adjoint_verticle()
 	{
 		auto nastepniki = wierzcholek.Get_next_neighbours();
 
-		for (auto nastepnik_wierzcholka : nastepniki)
-		{
-			//szukam w wektorze po imieniu nastepnika aby polaczyc jego wejscie z wyjsciem wierzcholka ktory jest jego poprzednikiem
-
-			i = szukanie_w_wektorze_po_nazwie(nastepnik_wierzcholka); // znalazlam wejscie i wyjscie tego nastepnika
-
-			to_co_zmieniam = adjoint_vector[i][1];
-			adjoint_vector[i][1] = adjoint_vector[licznik][2]; //lacze wejscie tego nastepnika z wyjsciem wierzcholka
-															   //moge robic to po liczniku bo reprezentuje on na ktorym wierzcholku teraz operujemy
-
-
-
-															   //teraz musze wszystkie wystapienia liczby ktora byla na wejsciu nastepnika zamienic na wyjscie wierzcholka
-			i = szukanie_w_wektorze_wejscia_i_wyjscia(to_co_zmieniam);
-
-			while (i != -1)
+			for (auto nastepnik_wierzcholka : nastepniki)
 			{
-				if (to_co_zmieniam == adjoint_vector[licznik][2]) //nie chce zmieniac X na X bo to infinite loop
+				if (nastepnik_wierzcholka == "")//zabezpieczenie przed wierzcholkami izolowanymi 
 				{
 					break;
 				}
 
-				else
+				//szukam w wektorze po imieniu nastepnika aby polaczyc jego wejscie z wyjsciem wierzcholka ktory jest jego poprzednikiem
+				i = szukanie_w_wektorze_po_nazwie(nastepnik_wierzcholka); // znalazlam wejscie i wyjscie tego nastepnika
+
+				to_co_zmieniam = adjoint_vector[i][1];
+				adjoint_vector[i][1] = adjoint_vector[licznik][2]; //lacze wejscie tego nastepnika z wyjsciem wierzcholka
+																   //moge robic to po liczniku bo reprezentuje on na ktorym wierzcholku teraz operujemy
+
+				//teraz musze wszystkie wystapienia liczby ktora byla na wejsciu nastepnika zamienic na wyjscie wierzcholka
+				i = szukanie_w_wektorze_wejscia_i_wyjscia(to_co_zmieniam);
+
+				while (i != -1)
 				{
-					if (adjoint_vector[i][1] == to_co_zmieniam)
+					if (to_co_zmieniam == adjoint_vector[licznik][2]) //nie chce zmieniac X na X bo to infinite loop
 					{
-						adjoint_vector[i][1] = adjoint_vector[licznik][2];
+						break;
 					}
 
-					if (adjoint_vector[i][2] == to_co_zmieniam)
+					else
 					{
-						adjoint_vector[i][2] = adjoint_vector[licznik][2];
+						if (adjoint_vector[i][1] == to_co_zmieniam)
+						{
+							adjoint_vector[i][1] = adjoint_vector[licznik][2];
+						}
+
+						if (adjoint_vector[i][2] == to_co_zmieniam)
+						{
+							adjoint_vector[i][2] = adjoint_vector[licznik][2];
+						}
+
+						i = szukanie_w_wektorze_wejscia_i_wyjscia(to_co_zmieniam);
 					}
 
-					i = szukanie_w_wektorze_wejscia_i_wyjscia(to_co_zmieniam);
 				}
-				
 			}
-		}
+		
+
+		
 
 		licznik++;
 	}
@@ -271,18 +276,27 @@ void Graph::create_adjoint_next_neighbours_map()
 	for (int i = 0; i<adjoint_vector.size(); i++)
 	{
 		klucz = adjoint_vector[i][1];
-		element = adjoint_vector[i][2] + "|";
+		element = adjoint_vector[i][2];
+		
+		if (adjoint_map.find(element) == adjoint_map.end()) //Jesli nie istnieje na mapie ten element to w ten sposob dodam wierzcholek izolowany jako klucz.  
+															//Najpierw dodadza sie tez nieizolowane, ale one beda potem edytowane a izolowany juz nie i zostanie tu
+		{
+			adjoint_map[element] = ">";
+			
+		}
+
+		element += "|";
 
 		if (adjoint_map.find(klucz) != adjoint_map.end()) //czyli jesli juz mamy w mapie element o tym kluczu
 		{
 			to_co_w_mapie = adjoint_map[klucz];
-			to_co_w_mapie += element;
+			to_co_w_mapie += element; //to powiekszamy to co w mapie o ten element
 			adjoint_map[klucz] = to_co_w_mapie;
 		}
 
-		else
+		if (adjoint_map.find(klucz) == adjoint_map.end()) //nie mamy w mapie elementu o tym kluczu
 		{
-			adjoint_map[klucz] = ">" + adjoint_vector[i][2] + "|";
+			adjoint_map[klucz] = ">" + element;
 		}
 
 	}
