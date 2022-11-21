@@ -43,6 +43,8 @@ private :
 
 	void create_adjoint_vector();
 
+	void show_adjoint_vector();
+
 	int szukanie_w_wektorze_po_nazwie(std::string szukana_nazwa);
 
 	int szukanie_w_wektorze_wejscia_i_wyjscia(std::string szukana_nazwa);

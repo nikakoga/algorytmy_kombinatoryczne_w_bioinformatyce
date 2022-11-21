@@ -151,18 +151,29 @@ void Graph::create_adjoint_vector()
 
 	for (auto wierzcholek : all_verticles)
 	{
+		adjoint_vector.emplace_back(std::vector<std::string>());
 
-		adjoint_vector[element][0] = wierzcholek.Get_name();
+		adjoint_vector[element].emplace_back(wierzcholek.Get_name());
 
-		adjoint_vector[element][1] = licznik; //to co wchodzi do wierzcholka
+		adjoint_vector[element].emplace_back(std::to_string(licznik)); //to co wchodzi do wierzcholka
 		licznik++;
 
-		adjoint_vector[element][2] = licznik; //to co wychodzi z wierzcholka
+		adjoint_vector[element].emplace_back(std::to_string(licznik)); //to co wychodzi z wierzcholka
 		licznik++;
 
 		element++;
 
 	}
+}
+
+void Graph::show_adjoint_vector()
+{
+	for (auto element : adjoint_vector)
+	{
+		std::cout << element[0] << " " << element[1] << " " << element[2] << "\n";
+	}
+
+	std::cout << "\n\n";
 }
 
 int Graph::szukanie_w_wektorze_po_nazwie(std::string szukana_nazwa)
@@ -224,19 +235,26 @@ void Graph::glue_edges_in_adjoint_verticle()
 
 			while (i != -1)
 			{
-
-				if (adjoint_vector[i][1] == to_co_zmieniam)
+				if (to_co_zmieniam == adjoint_vector[licznik][2]) //nie chce zmieniac X na X bo to infinite loop
 				{
-					adjoint_vector[i][1] == adjoint_vector[licznik][2];
+					break;
 				}
 
-				if (adjoint_vector[i][2] == to_co_zmieniam)
+				else
 				{
-					adjoint_vector[i][2] = adjoint_vector[licznik][2];
+					if (adjoint_vector[i][1] == to_co_zmieniam)
+					{
+						adjoint_vector[i][1] = adjoint_vector[licznik][2];
+					}
+
+					if (adjoint_vector[i][2] == to_co_zmieniam)
+					{
+						adjoint_vector[i][2] = adjoint_vector[licznik][2];
+					}
+
+					i = szukanie_w_wektorze_wejscia_i_wyjscia(to_co_zmieniam);
 				}
-
-				i = szukanie_w_wektorze_wejscia_i_wyjscia(to_co_zmieniam);
-
+				
 			}
 		}
 
@@ -281,7 +299,9 @@ void Graph::preparing_graph()
 void Graph::create_adjoint_graph()
 {
 	create_adjoint_vector();
+	show_adjoint_vector();
 	glue_edges_in_adjoint_verticle();
+	show_adjoint_vector();
 	create_adjoint_next_neighbours_map();
 }
 
