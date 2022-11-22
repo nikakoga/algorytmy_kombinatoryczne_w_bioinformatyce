@@ -54,55 +54,55 @@ Verticle::Verticle(std::string line_from_file)
 	}
 }
 
-std::string Verticle::generate_next_neighbour_list_for_verticle()
-{
-	std::string list;
+//std::string Verticle::generate_next_neighbour_list_for_verticle()
+//{
+//	std::string list;
+//
+//	list += name + ">";
+//
+//	auto size = verticle_next_neighbours.size();
+//
+//	unsigned int licznik = 0;
+//	for (auto element : verticle_next_neighbours)
+//	{
+//		list += element;
+//		licznik++;
+//
+//		if (licznik < size)
+//		{
+//			list += "|";
+//		}
+//	}
+//
+//	list += "\n";
+//
+//	return list;
+//}
 
-	list += name + ">";
-
-	auto size = verticle_next_neighbours.size();
-
-	unsigned int licznik = 0;
-	for (auto element : verticle_next_neighbours)
-	{
-		list += element;
-		licznik++;
-
-		if (licznik < size)
-		{
-			list += "|";
-		}
-	}
-
-	list += "\n";
-
-	return list;
-}
-
-std::string Verticle::generate_prev_neighbour_list_for_verticle()
-{
-	std::string list;
-
-	list += name + "<";
-
-	auto size = verticle_prev_neighbours.size();
-
-	unsigned int licznik = 0;
-	for (auto element : verticle_prev_neighbours)
-	{
-		list += element;
-		licznik++;
-
-		if (licznik < size)
-		{
-			list += "|";
-		}
-	}
-
-	list += "\n";
-
-	return list;
-}
+//std::string Verticle::generate_prev_neighbour_list_for_verticle()
+//{
+//	std::string list;
+//
+//	list += name + "<";
+//
+//	auto size = verticle_prev_neighbours.size();
+//
+//	unsigned int licznik = 0;
+//	for (auto element : verticle_prev_neighbours)
+//	{
+//		list += element;
+//		licznik++;
+//
+//		if (licznik < size)
+//		{
+//			list += "|";
+//		}
+//	}
+//
+//	list += "\n";
+//
+//	return list;
+//}
 
 Result Verticle::is_verticle_adjoint(Verticle wierzcholek)
 {

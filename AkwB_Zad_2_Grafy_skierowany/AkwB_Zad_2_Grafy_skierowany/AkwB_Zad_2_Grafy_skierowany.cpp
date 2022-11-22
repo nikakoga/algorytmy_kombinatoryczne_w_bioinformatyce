@@ -38,12 +38,12 @@ int main()
 
 			if (!graph.is_graph_adjoint())
 			{
-				throw std::invalid_argument("ERROR, Graf nie jest sprzezony");
+				throw std::invalid_argument("Graf nie jest sprzezony bo zbior nastepnikow dla 2 wierzcholkow ma czesc wspolna inna niz wszystko i inna niz nic\n");
 			}
 
 			std::cout << "Graf sprzezony\n";
 			graph.Get_czy_liniowy();
-			graph.create_adjoint_graph();
+			graph.create_oryginal_graph();
 
 
 			std::fstream new_file;

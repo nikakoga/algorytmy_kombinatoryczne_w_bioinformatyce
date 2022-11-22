@@ -1,0 +1,13 @@
+A>E|F
+B>E|F
+C>K|L
+D>M
+E>E|F
+F>
+G>A|B|C|D
+H>
+I>G|H|I|J
+J>G|H|I|J
+K>A|B|C|D
+L>G|H|I|J
+M>K|L

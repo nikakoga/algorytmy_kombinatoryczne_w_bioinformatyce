@@ -27,21 +27,21 @@ public:
 
 	void preparing_graph();
 
-	void create_adjoint_graph();
+	void create_oryginal_graph();
 
 	std::unordered_map <std::string, std::string> Get_adjoint_map();
 	
 private :
 
-	std::string generate_next_neighbour_list_for_graph();
+	//std::string generate_next_neighbour_list_for_graph();
 
 	void generate_prev_neighbours_map_for_graph();
 
 	void Create_unordered_set_for_each_verticle();
 
-	std::string generate_prev_neighbour_list_for_graph();
+	//std::string generate_prev_neighbour_list_for_graph();
 
-	void create_adjoint_vector();
+	void create_helper_vector();
 
 	void show_adjoint_vector();
 
@@ -51,7 +51,7 @@ private :
 
 	void glue_edges_in_adjoint_verticle();
 			
-	void create_adjoint_next_neighbours_map();	
+	void create_oryginal_next_neighbours_map();	
 
 };
 

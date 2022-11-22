@@ -68,16 +68,16 @@ void Graph::show_prev_neighbours_for_each_verticle()
 	}
 }
 
-std::string Graph::generate_next_neighbour_list_for_graph()
-{
-	std::string list;
-	for (auto element : all_verticles)
-	{
-		list += element.generate_next_neighbour_list_for_verticle();
-	}
-
-	return list;
-}
+//std::string Graph::generate_next_neighbour_list_for_graph()
+//{
+//	std::string list;
+//	for (auto element : all_verticles)
+//	{
+//		list += element.generate_next_neighbour_list_for_verticle();
+//	}
+//
+//	return list;
+//}
 
 void Graph::generate_prev_neighbours_map_for_graph()
 {
@@ -132,18 +132,18 @@ void Graph::Create_unordered_set_for_each_verticle()
 	}
 }
 
-std::string Graph::generate_prev_neighbour_list_for_graph()
-{
-	std::string list;
-	for (auto element : all_verticles)
-	{
-		list += element.generate_prev_neighbour_list_for_verticle();
-	}
+//std::string graph::generate_prev_neighbour_list_for_graph()
+//{
+//	std::string list;
+//	for (auto element : all_verticles)
+//	{
+//		list += element.generate_prev_neighbour_list_for_verticle();
+//	}
+//
+//	return list;
+//}
 
-	return list;
-}
-
-void Graph::create_adjoint_vector()
+void Graph::create_helper_vector()
 {
 
 	int licznik = 1;
@@ -267,7 +267,7 @@ void Graph::glue_edges_in_adjoint_verticle()
 	}
 }
 
-void Graph::create_adjoint_next_neighbours_map()
+void Graph::create_oryginal_next_neighbours_map()
 {
 	std::string klucz;
 	std::string element;
@@ -304,19 +304,19 @@ void Graph::create_adjoint_next_neighbours_map()
 
 void Graph::preparing_graph()
 {
-	generate_next_neighbour_list_for_graph();
+	//generate_next_neighbour_list_for_graph();
 	generate_prev_neighbours_map_for_graph();
 	Create_unordered_set_for_each_verticle();
-	generate_prev_neighbour_list_for_graph();
+	//generate_prev_neighbour_list_for_graph();
 }
 
-void Graph::create_adjoint_graph()
+void Graph::create_oryginal_graph()
 {
-	create_adjoint_vector();
+	create_helper_vector();
 	//show_adjoint_vector();
 	glue_edges_in_adjoint_verticle();
 	//show_adjoint_vector();
-	create_adjoint_next_neighbours_map();
+	create_oryginal_next_neighbours_map();
 }
 
 std::unordered_map<std::string, std::string> Graph::Get_adjoint_map()

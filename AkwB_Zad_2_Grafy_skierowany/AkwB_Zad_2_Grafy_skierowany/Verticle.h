@@ -36,9 +36,9 @@ public:
 
 	Verticle(std::string line_from_file);
 
-	std::string generate_next_neighbour_list_for_verticle();
+	//std::string generate_next_neighbour_list_for_verticle();
 
-	std::string generate_prev_neighbour_list_for_verticle();
+	//std::string generate_prev_neighbour_list_for_verticle();
 
 	Result is_verticle_adjoint(Verticle wierzcholek);
 
