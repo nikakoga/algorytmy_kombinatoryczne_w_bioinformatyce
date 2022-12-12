@@ -21,7 +21,7 @@ void Graph::add_verticle(Verticle wiercholek)
 	all_verticles.emplace_back(wiercholek);
 }
 
-Result Graph::is_graph_adjoint()
+Result Graph::is_graph_adjoint_and_linear()
 {
 	auto size = all_verticles.size();
 	for (unsigned int i = 0; i < size; i++)
@@ -75,7 +75,7 @@ void Graph::generate_prev_neighbours_map_for_graph()
 
 	for (auto element_ktorego_poprzednikow_szukam : all_verticles)
 	{
-		//szukaj nazwy elementu w unordered_set nastepnych sasiadow rezsty wierzcholkow nalezacych do grafu
+		//szukam nazwy elementu w unordered_set nastepnych sasiadow reszty wierzcholkow nalezacych do grafu
 		//wierzcholek ktory zawiera nazwe elementu na swojej liscie nastepnikow jest poprzednikiem tego elementu
 
 		std::string szukany_element = element_ktorego_poprzednikow_szukam.Get_name();

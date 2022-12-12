@@ -36,7 +36,7 @@ int main()
 
 			graph.preparing_graph();
 
-			if (!graph.is_graph_adjoint())
+			if (graph.is_graph_adjoint_and_linear() == Nie_sprzezony) // OSTATNI EDIT TUTAJ
 			{
 				throw std::invalid_argument("Graf nie jest sprzezony bo zbior nastepnikow dla 2 wierzcholkow ma czesc wspolna inna niz wszystko i inna niz nic\n");
 			}

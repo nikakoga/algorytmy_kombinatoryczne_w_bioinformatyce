@@ -19,7 +19,7 @@ public:
 
 	void add_verticle(Verticle wiercholek);
 
-	Result is_graph_adjoint();
+	Result is_graph_adjoint_and_linear();
 	
 	void Show_prev_neighbour_map();
 
