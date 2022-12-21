@@ -16,7 +16,6 @@ def liczenie_zawartosci_GC():
                 ilosc_GC += 1
 
     return ilosc_GC/ilosc_zasad_azotowych
-#print(f"Wspolczynnik GC = {liczenie_zawartosci_GC()}")
 
 
 def liczenie_ATCG_w_wielu_sekwencjach():
@@ -81,10 +80,6 @@ def Dot_plot():
         i += 1
 
 
-print("\n")
-Dot_plot()
-
-
 def Liczenie_wystapien(nr_pliku, aminokwasy: list):
     slownik = {}
     Model = 0
@@ -123,7 +118,7 @@ def Statystyki_kodonow(FASTA):
         ["Ala", "GCT", "GCC", "GCA", "GCG"],
         ["Ile", "ATT", "ATC", "ATA"],
         ["Arg", "CGT", "CGC", "CGA", "CGG", "AGA", "AGG"],
-        ["Leu", "CTT", "CTC", "CTA", "CTG" "TTA", "TTG"],
+        ["Leu", "CTT", "CTC", "CTA", "CTG", "TTA", "TTG"],
         ["Asn", "AAT", "AAC"],
         ["Lys", "AAA", "AAG"],
         ["Asp", "GAT", "GAC"],
@@ -141,7 +136,8 @@ def Statystyki_kodonow(FASTA):
         ["His", "CAT", "CAC"],
         ["Val", "GTT", "GTC", "GTA", "GTG"],
         ["START", "ATG"],
-        ["STOP", "TAA", "TGA", "TAG"]]
+        ["STOP", "TAA", "TGA", "TAG"]
+    ]
 
     Slownik_kodonow = dict((x[0], dict((y, 0) for y in x[1:])) for x in Kodony)
     # print(Slownik_kodonow)
@@ -152,14 +148,16 @@ def Statystyki_kodonow(FASTA):
         for x in sekwencja:
             if (x in zasady):
                 kodon = kodon+x
+                found = False
                 if (len(kodon) == 3):
                     for aminokwas in Slownik_kodonow:
                         if kodon in list(Slownik_kodonow[aminokwas].keys()):
+                            found = True
                             break
 
-                        else:
-                            raise Exception(
-                                f"{kodon} nie znaleziony!")
+                    if not found:
+                        raise Exception(
+                            f"{kodon} nie znaleziony!")
                     # aminokwas = list(Slownik_kodonow.keys())[
                     #     list(Slownik_kodonow.values()).index(kodon)]
                     Slownik_kodonow[aminokwas][kodon] = Slownik_kodonow[aminokwas][kodon] + 1
@@ -167,8 +165,12 @@ def Statystyki_kodonow(FASTA):
                     kodon = ""
 
 
-Statystyki_kodonow("FKBP5.fna")
+if __name__ == "__main__":
+    #print(f"Wspolczynnik GC = {liczenie_zawartosci_GC()}")
+    # print("\n")
+    # Dot_plot()
+    Statystyki_kodonow("FKBP5.fna")
 
-# Liczenie_aminokwasow()
+    # Liczenie_aminokwasow()
 
-# liczenie_ATCG_w_wielu_sekwencjach()
+    # liczenie_ATCG_w_wielu_sekwencjach()
