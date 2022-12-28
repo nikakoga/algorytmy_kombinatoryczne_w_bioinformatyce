@@ -49,6 +49,7 @@ public:
 		std::string smieci;
 		getline(f_wiarygodnosc, smieci);
 		int nr_nukleotydu = 1;
+		int ilosc_usunietych_nt = 0;
 
 		std::string linia;
 		std::string wiarygodnosc_jednego_nukleotydu;
@@ -64,9 +65,21 @@ public:
 				int wiarygodnosc = std::stoi(wiarygodnosc_jednego_nukleotydu);
 				if (wiarygodnosc < zadany_prog)
 				{
+					ilosc_usunietych_nt++;
 					niewiarygodne_nukleotydy[nr_nukleotydu] = wiarygodne_nukleotydy[nr_nukleotydu];
-					wiarygodne_nukleotydy.erase(nr_nukleotydu); 
+					wiarygodne_nukleotydy.erase(nr_nukleotydu);
 					
+					
+				}
+				if (ilosc_usunietych_nt > 0) //jesli jakiekolwiek nt zostaly usuniete
+				{
+					if (wiarygodne_nukleotydy.find(nr_nukleotydu) != wiarygodne_nukleotydy.end())//to do wszystkich wciaz wiarygodnych nt dopisujemy jaki mialyby nr w oryginalnej nici
+					{
+						//wiarygodne_nukleotydy[nr_nukleotydu].insert(nr_nukleotydu - ilosc_usunietych_nt);
+						//ALE MUSISZ WYMYSLIC NA TO INNY SPOSOB BO NIE MOZESZ DODAC INTA JAKO WARTOSC TEJ MAPY. INTY TO KLUCZE A WARTOSCI TO CHAR
+						//ZACZNIJ TO OBIEKTOWO PAKOWAC, KAZDY NT MOZE BYC OBIEKTEM ZE SWOIM PODCIAGIEM I NR NT PRZED I PO ZADANIU PROGU WIARYGODNOSCI
+						//MOZESZ TEZ ZROBIC MAPE INT INT ZEBY SLEDZIC JAK SIE ZMIENIALY NR NT (NP NR ORYGINALNY-NR PO ODSIANIU NIEWIARYGODNYCH)
+					}
 				}
 				nr_nukleotydu++;
 
