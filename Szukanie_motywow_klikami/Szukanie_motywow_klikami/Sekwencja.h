@@ -7,20 +7,28 @@
 
 class Sekwencja
 {
+	int numer_sekwencji;
 	std::string ID; 
 	std::unordered_map<int, char> wiarygodne_nukleotydy;
 	std::unordered_map<int, char> niewiarygodne_nukleotydy;
-	std::unordered_map<int, std::string> podciag; //klucz to nt od ktorego sie podciag zaczyna
+	std::unordered_map<int, std::string> podciag; //klucz to nt od ktorego sie podciag zaczyna 
+	//TO DO ZAKTUALIZUJ TO DO KLASY NUKLEOTYD
+	//std::unordered_map< Nukleotyd* // mozna tez przez pointer i potem Mapa.insert(std::make_pair(new Scene_Branding(tutaj rzeczy do konstruktora)));
 
 public: 
-	Sekwencja(std::fstream& f_sekwencja)
+	Sekwencja(int numer, std::string sekwencja)
 	{
+		numer_sekwencji = numer;
+
+		std::stringstream cala_sekwencja (sekwencja);
 		std::string first_line;
-		getline(f_sekwencja,first_line);
+		getline(cala_sekwencja,first_line);
 		std::stringstream line (first_line);
 
+		std::string zbedny_znak;
 		std::string nazwa;
-		std::getline(line, nazwa, ' '); //zeby pobrac tylko nazwe z calego wersu nazwy + zbednych rzeczy
+		std::getline(line, zbedny_znak, '>');//zeby w nazwie bylo bez ">"
+		std::getline(line, nazwa, ' '); //zeby pobrac tylko nazwe z calego wersu nazwy i zbednych rzeczy
 
 		ID = nazwa;
 
@@ -29,14 +37,14 @@ public:
 		int nr_nukleotydu = 1;
 
 		 
-		while (!f_sekwencja.eof())
+		while (!cala_sekwencja.eof())
 		{
-			std::getline(f_sekwencja, czesc_sekwencji);
+			std::getline(cala_sekwencja, czesc_sekwencji);
 			ilosc_wczytanych_nukleotydow = czesc_sekwencji.size();
 
 			for (int i = 0; i < ilosc_wczytanych_nukleotydow; i++)
 			{
-				wiarygodne_nukleotydy[nr_nukleotydu] = czesc_sekwencji[i];
+				wiarygodne_nukleotydy[nr_nukleotydu] = czesc_sekwencji[i]; //czesc_sekwencji w kazdej petli jest nadpisywana, ale nr nukleotydu jest ciagle aktualizowany i dzieki temu czytam calosc
 				nr_nukleotydu++;
 			}
 
@@ -44,10 +52,11 @@ public:
 		
 	}
 
-	void uwzglednianie_progu_wiarygodnosci(std::fstream& f_wiarygodnosc, int zadany_prog)
+	void uwzglednianie_progu_wiarygodnosci(std::string wiarygodnosc, int zadany_prog)
 	{
+		std::stringstream cala_wiarygodnosc(wiarygodnosc);
 		std::string smieci;
-		getline(f_wiarygodnosc, smieci);
+		getline(cala_wiarygodnosc, smieci);
 		int nr_nukleotydu = 1;
 		int ilosc_usunietych_nt = 0;
 
@@ -55,9 +64,9 @@ public:
 		std::string wiarygodnosc_jednego_nukleotydu;
 		
 
-		while (!f_wiarygodnosc.eof())
+		while (!cala_wiarygodnosc.eof())
 		{
-			getline(f_wiarygodnosc, linia);
+			getline(cala_wiarygodnosc, linia);
 			std::stringstream stream_linii(linia);
 			while (!stream_linii.eof())
 			{
