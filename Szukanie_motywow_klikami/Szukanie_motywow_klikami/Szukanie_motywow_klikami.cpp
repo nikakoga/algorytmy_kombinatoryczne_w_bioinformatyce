@@ -2,6 +2,8 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <map>
+#include <unordered_map>
 #include "Sekwencja.h"
 
 #define ILOSC_PLIKOW 5
@@ -45,6 +47,8 @@ std::vector<std::string> tworzenie_wektora_z_elementami_pliku(std::fstream& file
 
 int main()
 {
+    std::unordered_map<int,Sekwencja *> Mapa_sekwencji;
+
     std::cout << "Podaj prog wiarygodnosci\n";
     unsigned int prog_wiarygodnosci = 0;
     std::cin >> prog_wiarygodnosci;
@@ -72,8 +76,9 @@ int main()
         {
             pojedyncza_sekwencja_z_pliku = wektor_sekwencji[i];
             pojedyncza_wiarygodnosc_z_pliku = wektor_wiarygodnosci[i];
-            Sekwencja Aktualna_sekwencja (i,pojedyncza_sekwencja_z_pliku); //PAMIETAJ ZE SEKWENCJE NUMERUJESZ OD 0 A NUKLEOTYDY OD 1
-            Aktualna_sekwencja.uwzglednianie_progu_wiarygodnosci(pojedyncza_wiarygodnosc_z_pliku, prog_wiarygodnosci);
+            Sekwencja* Wskaznik_na_aktualna_sekwencje = new Sekwencja(i, pojedyncza_sekwencja_z_pliku);
+            Mapa_sekwencji.insert({i,Wskaznik_na_aktualna_sekwencje}); //PAMIETAJ ZE SEKWENCJE NUMERUJESZ OD 0 A NUKLEOTYDY OD 1
+            Wskaznik_na_aktualna_sekwencje->uwzglednianie_progu_wiarygodnosci(pojedyncza_wiarygodnosc_z_pliku, prog_wiarygodnosci); //-> bo tak sie odwolujesz do metod i pol z wskaznika
         }
         
         //TO DO jakis container na te sekwencje zeby moc sie do nich dostawac

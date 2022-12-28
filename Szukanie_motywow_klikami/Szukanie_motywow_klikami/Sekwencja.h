@@ -12,9 +12,9 @@ class Sekwencja
 	std::unordered_map<int, char> wiarygodne_nukleotydy;
 	std::unordered_map<int, char> niewiarygodne_nukleotydy;
 	std::unordered_map<int, std::string> podciag; //klucz to nt od ktorego sie podciag zaczyna 
-	//TO DO ZAKTUALIZUJ TO DO KLASY NUKLEOTYD
-	//std::unordered_map< Nukleotyd* // mozna tez przez pointer i potem Mapa.insert(std::make_pair(new Scene_Branding(tutaj rzeczy do konstruktora)));
-
+	//TO DO
+	//moze to byc krotka a moze kluczem bedzie obiekt klasy nukleotyd. Do przemyslenia
+	
 public: 
 	Sekwencja(int numer, std::string sekwencja)
 	{
@@ -52,7 +52,7 @@ public:
 		
 	}
 
-	void uwzglednianie_progu_wiarygodnosci(std::string wiarygodnosc, int zadany_prog)
+	void uwzglednianie_progu_wiarygodnosci(std::string wiarygodnosc, int zadany_prog) //dodaje do klasy Sekwencja mape wiarygodnych i niewiarygodnych nt
 	{
 		std::stringstream cala_wiarygodnosc(wiarygodnosc);
 		std::string smieci;
