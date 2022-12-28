@@ -21,9 +21,18 @@
     <ClCompile Include="Sekwencja.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Graf.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sekwencja.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pomocniecze.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,9 +1,9 @@
 #pragma once
+#include <unordered_map>
 class Graf
 {
-	//graf bedzie zawierac kazdy podciag jako osobny wierzcholek
-	//ma byc informacja o :
-	//nr sekwencji z jakiej pochodzi podciag 
-	//nr pierwszego nt w oryginalnej sekwencji
+	//jakos przechowuj wierzcholki tak aby nie bylo to w wektorze
+	//wierzcholki musisz polaczyc nieskierowanymi lukami jesli maja ten sam podciag ale sa z innych sekwencji
+
 };
 

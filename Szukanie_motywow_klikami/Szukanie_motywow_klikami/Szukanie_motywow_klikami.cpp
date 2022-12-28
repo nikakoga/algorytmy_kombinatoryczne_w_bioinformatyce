@@ -5,45 +5,10 @@
 #include <map>
 #include <unordered_map>
 #include "Sekwencja.h"
+#include "Pomocniecze.h"
 
 #define ILOSC_PLIKOW 5
 #define ILOSC_SEKWENCJI_W_PLIKU 5
-
-// TO DO moze przeklej to potem do jakiegos pliku osobno, zeby tu byl tylko main
-std::vector<std::string> tworzenie_wektora_z_elementami_pliku(std::fstream& file)
-{
-    std::vector<std::string> Wszystkie_sekwencje_z_pliku;
-    
-    std::string sekwencja = "";
-    std::string line;
-
-    while (!file.eof())
-    {
-
-        if (sekwencja.empty()) //jesli sekwencja jest pusta to wczytuje pierwsza linie, ktora zawiera ">" na poczatku. Wazne tylko przy pierwszym czytaniu z pliku
-        {
-            getline(file, line);
-            sekwencja += line;
-        }
-        
-        else 
-        {
-            getline(file, line);
-            if (line[0] != '>') //jesli wlasnie nie zaczela sie nowa sekwencja
-            {
-                sekwencja += line; //dodaje to co zczytalam 
-            }
-            else if (line[0] == '>') //jesli wlasnie zaczela sie nowa sekwencja
-            {
-                Wszystkie_sekwencje_z_pliku.push_back(sekwencja); //dodaje to co mam dotychczas
-                sekwencja = line; //zaczynam tworzyc nowa sekwencje, ktora zaczyna sie od zczytanego wlasnie ">"
-            }
-        }
-
-    }
-    
-    return Wszystkie_sekwencje_z_pliku;
-}
 
 int main()
 {
@@ -80,8 +45,6 @@ int main()
             Mapa_sekwencji.insert({i,Wskaznik_na_aktualna_sekwencje}); //PAMIETAJ ZE SEKWENCJE NUMERUJESZ OD 0 A NUKLEOTYDY OD 1
             Wskaznik_na_aktualna_sekwencje->uwzglednianie_progu_wiarygodnosci(pojedyncza_wiarygodnosc_z_pliku, prog_wiarygodnosci); //-> bo tak sie odwolujesz do metod i pol z wskaznika
         }
-        
-        //TO DO jakis container na te sekwencje zeby moc sie do nich dostawac
  
         f_sekwencja.close();
         f_wiarygodnosc.close();

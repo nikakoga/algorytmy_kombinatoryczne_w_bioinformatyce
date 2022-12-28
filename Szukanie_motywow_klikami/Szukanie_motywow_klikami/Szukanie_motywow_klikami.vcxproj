@@ -139,10 +139,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Graf.cpp" />
     <ClCompile Include="Sekwencja.cpp" />
     <ClCompile Include="Szukanie_motywow_klikami.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Graf.h" />
+    <ClInclude Include="Pomocniecze.h" />
     <ClInclude Include="Sekwencja.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
