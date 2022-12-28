@@ -1,9 +1,11 @@
 #pragma once
-#include <string>
 #include <map>
 #include <unordered_map>
 #include <fstream>
 #include <sstream>
+#include "Wierzcholek.h"
+
+int ID_wierzcholka = 1; //ZMIENNA GLOBALNA !
 
 class Sekwencja
 {
@@ -11,9 +13,9 @@ class Sekwencja
 	std::string ID; 
 	std::unordered_map<int, char> wiarygodne_nukleotydy;
 	std::unordered_map<int, char> niewiarygodne_nukleotydy;
-	std::unordered_map<int, std::string> podciag; //klucz to nt od ktorego sie podciag zaczyna 
-	//TO DO
-	//moze to byc krotka a moze kluczem bedzie obiekt klasy nukleotyd. Do przemyslenia
+	//krotka ktora bedzie trzymac nr oryginalnego nt, nr wiarygodnego nt i podciag
+	std::unordered_map<int, Wierzcholek*> wierzcholki_w_tej_sekwencji;
+	//std::unordered_map<int, std::string> podciag; //klucz to nt w oryginale od ktorego sie podciag zaczyna 
 	
 public: 
 	Sekwencja(int numer, std::string sekwencja)
@@ -57,7 +59,9 @@ public:
 		std::stringstream cala_wiarygodnosc(wiarygodnosc);
 		std::string smieci;
 		getline(cala_wiarygodnosc, smieci);
-		int nr_nukleotydu = 1;
+		int nr_nukleotydu_w_oryginale = 1;
+		int nr_nt_wiarygodnego;
+		int prev_nr_nt_wiarygodnego = 0;
 		int ilosc_usunietych_nt = 0;
 
 		std::string linia;
@@ -75,26 +79,34 @@ public:
 				if (wiarygodnosc < zadany_prog)
 				{
 					ilosc_usunietych_nt++;
-					niewiarygodne_nukleotydy[nr_nukleotydu] = wiarygodne_nukleotydy[nr_nukleotydu];
-					wiarygodne_nukleotydy.erase(nr_nukleotydu);
-					
-					
+					niewiarygodne_nukleotydy[nr_nukleotydu_w_oryginale] = wiarygodne_nukleotydy[nr_nukleotydu_w_oryginale]; //mozliwe ze nie uzyje ale moze sie przydac przy debugowanu
+					wiarygodne_nukleotydy.erase(nr_nukleotydu_w_oryginale); // to tez
+						
 				}
-				if (ilosc_usunietych_nt > 0) //jesli jakiekolwiek nt zostaly usuniete
+				nr_nt_wiarygodnego = nr_nukleotydu_w_oryginale - ilosc_usunietych_nt; //pozycja jaka mialby nt po usunieciu niewiarygodnych
+
+				if (nr_nt_wiarygodnego > 0 && nr_nt_wiarygodnego != prev_nr_nt_wiarygodnego) // >0 aby nie dodac nt nr 1 jesli bylby niewiarygodny
+					//gdy zwiekszy sie liczba nukleotydow_w_oryginale ale nie zwiekszy sie liczba nukleotydow_wiarygodnych to byl niewiarygodny nukleotyd
+					// gdy zwiekszy sie liczba nukleotydow_w_oryginale i zwiekszy_sie_liczba nt_wiarygodnych to ten nukleotyd ktory wlasnie przejrzalam jest wiarygodny
+					// prev_wiarygodny pozwala mi sledzic zmiany czy przybylo wiarygodnego_nt
 				{
-					if (wiarygodne_nukleotydy.find(nr_nukleotydu) != wiarygodne_nukleotydy.end())//to do wszystkich wciaz wiarygodnych nt dopisujemy jaki mialyby nr w oryginalnej nici
-					{
-						//wiarygodne_nukleotydy[nr_nukleotydu].insert(nr_nukleotydu - ilosc_usunietych_nt);
-						//ALE MUSISZ WYMYSLIC NA TO INNY SPOSOB BO NIE MOZESZ DODAC INTA JAKO WARTOSC TEJ MAPY. INTY TO KLUCZE A WARTOSCI TO CHAR
-						//ZACZNIJ TO OBIEKTOWO PAKOWAC, KAZDY NT MOZE BYC OBIEKTEM ZE SWOIM PODCIAGIEM I NR NT PRZED I PO ZADANIU PROGU WIARYGODNOSCI
-						//MOZESZ TEZ ZROBIC MAPE INT INT ZEBY SLEDZIC JAK SIE ZMIENIALY NR NT (NP NR ORYGINALNY-NR PO ODSIANIU NIEWIARYGODNYCH)
-					}
+					Wierzcholek aktualny(nr_nukleotydu_w_oryginale, nr_nt_wiarygodnego,ID_wierzcholka);
+					prev_nr_nt_wiarygodnego = nr_nt_wiarygodnego;
+					Wierzcholek* wskaznik_na_aktualny = &aktualny;
+					wierzcholki_w_tej_sekwencji.insert({ ID_wierzcholka,wskaznik_na_aktualny });
+					ID_wierzcholka++; //aktualizuje zmienna globalna. Graf sklada sie z wszystkich wierzcholkow z wszystkich sekwencji a ja chce aby kazdy wierzcholek mial unikatowe ID wiec musi byc globalnie
 				}
-				nr_nukleotydu++;
+			
+				nr_nukleotydu_w_oryginale++;
 
 			}
 
 		}
+	}
+
+	void dodawanie_wierzcholkow_do_grafu(/*tu podasz graf*/)
+	{
+
 	}
 };
 

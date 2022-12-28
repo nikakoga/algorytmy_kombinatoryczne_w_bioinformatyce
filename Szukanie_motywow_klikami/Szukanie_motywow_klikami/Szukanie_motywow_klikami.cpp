@@ -37,12 +37,12 @@ int main()
         std::string pojedyncza_sekwencja_z_pliku;
         std::string pojedyncza_wiarygodnosc_z_pliku;
 
-        for (int i = 0; i < ILOSC_SEKWENCJI_W_PLIKU; i++)
+        for (int i = 0; i < ILOSC_SEKWENCJI_W_PLIKU; i++) //dodawanie sekwencji z jednego pliku do mapy sekwencjigit
         {
             pojedyncza_sekwencja_z_pliku = wektor_sekwencji[i];
             pojedyncza_wiarygodnosc_z_pliku = wektor_wiarygodnosci[i];
             Sekwencja* Wskaznik_na_aktualna_sekwencje = new Sekwencja(i, pojedyncza_sekwencja_z_pliku);
-            Mapa_sekwencji.insert({i,Wskaznik_na_aktualna_sekwencje}); //PAMIETAJ ZE SEKWENCJE NUMERUJESZ OD 0 A NUKLEOTYDY OD 1
+            Mapa_sekwencji.insert({i+1,Wskaznik_na_aktualna_sekwencje}); //SEKWENCJE NUMERUJESZ OD 1
             Wskaznik_na_aktualna_sekwencje->uwzglednianie_progu_wiarygodnosci(pojedyncza_wiarygodnosc_z_pliku, prog_wiarygodnosci); //-> bo tak sie odwolujesz do metod i pol z wskaznika
         }
  

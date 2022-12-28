@@ -142,11 +142,13 @@
     <ClCompile Include="Graf.cpp" />
     <ClCompile Include="Sekwencja.cpp" />
     <ClCompile Include="Szukanie_motywow_klikami.cpp" />
+    <ClCompile Include="Wierzcholek.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graf.h" />
     <ClInclude Include="Pomocniecze.h" />
     <ClInclude Include="Sekwencja.h" />
+    <ClInclude Include="Wierzcholek.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

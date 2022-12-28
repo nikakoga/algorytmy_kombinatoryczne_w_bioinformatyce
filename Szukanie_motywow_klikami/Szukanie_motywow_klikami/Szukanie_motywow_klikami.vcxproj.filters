@@ -24,6 +24,9 @@
     <ClCompile Include="Graf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Wierzcholek.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sekwencja.h">
@@ -33,6 +36,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Pomocniecze.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Wierzcholek.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
