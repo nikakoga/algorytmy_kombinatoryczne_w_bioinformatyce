@@ -10,6 +10,7 @@
 #define ILOSC_PLIKOW 5
 #define ILOSC_SEKWENCJI_W_PLIKU 5
 
+
 int main()
 {
     std::unordered_map<int,Sekwencja *> Mapa_sekwencji;
@@ -19,8 +20,8 @@ int main()
     std::cin >> prog_wiarygodnosci;
 
     std::cout << "Podaj dlugosc podciagow\n";
-    unsigned int podciagi = 0;
-    std::cin >> podciagi;
+    unsigned int dlugosc_podciagu = 0;
+    std::cin >> dlugosc_podciagu;
 
     std::vector<std::string> Nazwy_plikow = { "file_1_sekwencja.txt", "file_1_wiarygodnosc.txt", "file_2_sekwencja.txt", "file_2_wiarygodnosc.txt", "file_3_sekwencja.txt", "file_3_wiarygodnosc.txt", "file_4_sekwencja.txt", "file_4_wiarygodnosc.txt" };
     std::fstream f_sekwencja, f_wiarygodnosc;
@@ -41,7 +42,7 @@ int main()
         {
             pojedyncza_sekwencja_z_pliku = wektor_sekwencji[i];
             pojedyncza_wiarygodnosc_z_pliku = wektor_wiarygodnosci[i];
-            Sekwencja* Wskaznik_na_aktualna_sekwencje = new Sekwencja(i, pojedyncza_sekwencja_z_pliku);
+            Sekwencja* Wskaznik_na_aktualna_sekwencje = new Sekwencja(i, pojedyncza_sekwencja_z_pliku,dlugosc_podciagu);
             Mapa_sekwencji.insert({i+1,Wskaznik_na_aktualna_sekwencje}); //SEKWENCJE NUMERUJESZ OD 1
             Wskaznik_na_aktualna_sekwencje->uwzglednianie_progu_wiarygodnosci(pojedyncza_wiarygodnosc_z_pliku, prog_wiarygodnosci); //-> bo tak sie odwolujesz do metod i pol z wskaznika
         }

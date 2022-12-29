@@ -11,16 +11,20 @@ class Sekwencja
 {
 	int numer_sekwencji;
 	std::string ID; 
+	int dlugosc_podciagu;
 	std::unordered_map<int, char> wiarygodne_nukleotydy;
 	std::unordered_map<int, char> niewiarygodne_nukleotydy;
+	int ilosc_nukleotydow_w_sekwencji;
+	std::string sekwencja_wiarygodnych_nukleotydow;
 	//krotka ktora bedzie trzymac nr oryginalnego nt, nr wiarygodnego nt i podciag
 	std::unordered_map<int, Wierzcholek*> wierzcholki_w_tej_sekwencji;
 	//std::unordered_map<int, std::string> podciag; //klucz to nt w oryginale od ktorego sie podciag zaczyna 
 	
 public: 
-	Sekwencja(int numer, std::string sekwencja)
+	Sekwencja(int numer, std::string sekwencja,int wybrana_dlugosc_podciagu)
 	{
 		numer_sekwencji = numer;
+		dlugosc_podciagu = wybrana_dlugosc_podciagu;
 
 		std::stringstream cala_sekwencja (sekwencja);
 		std::string first_line;
@@ -51,10 +55,11 @@ public:
 			}
 
 		}
+		ilosc_nukleotydow_w_sekwencji = nr_nukleotydu-1;//bo nr_nt jest teraz wolny, gotowy do zapisania tam nowego nt, czyli nie ma nt o takim numerze
 		
 	}
 
-	void uwzglednianie_progu_wiarygodnosci(std::string wiarygodnosc, int zadany_prog) //dodaje do klasy Sekwencja mape wiarygodnych i niewiarygodnych nt
+	void uwzglednianie_progu_wiarygodnosci(std::string wiarygodnosc, int zadany_prog) //dodaje do klasy Sekwencja mape wiarygodnych i niewiarygodnych nt, tworzy wstepnie wierzcholki
 	{
 		std::stringstream cala_wiarygodnosc(wiarygodnosc);
 		std::string smieci;
@@ -101,6 +106,38 @@ public:
 
 			}
 
+		}
+	}
+
+	void tworzenie_stringa_z_sekwencja_wiarygodnych_nt()
+	{
+		std::string sekwencja;
+		for (int i = 1; i <= ilosc_nukleotydow_w_sekwencji; i++)
+		{
+			if (wiarygodne_nukleotydy.find(i) != wiarygodne_nukleotydy.end()) //jesli nukleotyd o oryginalnym numerze i jest w mapie wiarygodnych nt
+			{
+				sekwencja += wiarygodne_nukleotydy[i]; //dodaje go do sekwencji
+			}
+		}
+		sekwencja_wiarygodnych_nukleotydow = sekwencja;
+	}
+
+	void tworzenie_podciagow()
+	{
+		std::string podciag;
+		int licznik;
+
+		for (int i = 1; i <= ID_wierzcholka - dlugosc_podciagu; i++) //od 1 wiarygodnego nt lece ramka o dlugosci podciagu i dodaje wszystkie nt ktore sie w niej mieszcza
+		{
+			for (int j = i-1; j < dlugosc_podciagu; j++) //zaczynam od i-1 bo pierwsza litera stringa ma indeks 0 a tutaj musze liczyc w for od 1 bo wierzcholki numeruje w mapie od 1
+			{
+				podciag += sekwencja_wiarygodnych_nukleotydow[j];
+			}
+
+			Wierzcholek* w_ktorym_dodaje_podciag = wierzcholki_w_tej_sekwencji[i];
+			w_ktorym_dodaje_podciag->set_podciag(podciag);
+			podciag = ""; //kasuje podciag zeby dodac nowy 
+		
 		}
 	}
 
