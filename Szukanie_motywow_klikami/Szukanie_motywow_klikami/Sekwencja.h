@@ -1,11 +1,11 @@
 #pragma once
 #include <map>
-#include <unordered_map>
 #include <fstream>
 #include <sstream>
 #include "Wierzcholek.h"
+#include "Graf.h"
 
-int ID_wierzcholka = 1; //ZMIENNA GLOBALNA !
+int ID_wierzcholka_w_grafie = 1; //ZMIENNA GLOBALNA !
 
 class Sekwencja
 {
@@ -95,11 +95,12 @@ public:
 					// gdy zwiekszy sie liczba nukleotydow_w_oryginale i zwiekszy_sie_liczba nt_wiarygodnych to ten nukleotyd ktory wlasnie przejrzalam jest wiarygodny
 					// prev_wiarygodny pozwala mi sledzic zmiany czy przybylo wiarygodnego_nt
 				{
-					Wierzcholek aktualny(nr_nukleotydu_w_oryginale, nr_nt_wiarygodnego,ID_wierzcholka);
+					Wierzcholek aktualny(nr_nukleotydu_w_oryginale, nr_nt_wiarygodnego);//ID_wierzcholka);
 					prev_nr_nt_wiarygodnego = nr_nt_wiarygodnego;
 					Wierzcholek* wskaznik_na_aktualny = &aktualny;
-					wierzcholki_w_tej_sekwencji.insert({ ID_wierzcholka,wskaznik_na_aktualny });
-					ID_wierzcholka++; //aktualizuje zmienna globalna. Graf sklada sie z wszystkich wierzcholkow z wszystkich sekwencji a ja chce aby kazdy wierzcholek mial unikatowe ID wiec musi byc globalnie
+					wierzcholki_w_tej_sekwencji.insert({ nr_nt_wiarygodnego,wskaznik_na_aktualny });
+					//tych wierzcholkow tworzy sie tutaj za duzo bo kazdy nukleotyd jest wierzcholkiem na razie a w finale kazdy podciag nim bedzie. Pozniej usune z wierzcholkow te nt ktore sa na samym koncu sekwencji  inie aczyna sie z nich juz zaden podciag
+					
 				}
 			
 				nr_nukleotydu_w_oryginale++;
@@ -124,14 +125,21 @@ public:
 
 	void tworzenie_podciagow()
 	{
+		tworzenie_stringa_z_sekwencja_wiarygodnych_nt();
 		std::string podciag;
+		int i;
 		int licznik;
+		int pozycja_do_dodania;
 
-		for (int i = 1; i <= ID_wierzcholka - dlugosc_podciagu; i++) //od 1 wiarygodnego nt lece ramka o dlugosci podciagu i dodaje wszystkie nt ktore sie w niej mieszcza
+		for (i = 1; i <= sekwencja_wiarygodnych_nukleotydow.length() - dlugosc_podciagu +1 ; i++) //od 1 wiarygodnego nt lece ramka o dlugosci podciagu i dodaje wszystkie nt ktore sie w niej mieszcza
 		{
-			for (int j = i-1; j < dlugosc_podciagu; j++) //zaczynam od i-1 bo pierwsza litera stringa ma indeks 0 a tutaj musze liczyc w for od 1 bo wierzcholki numeruje w mapie od 1
+			pozycja_do_dodania = i - 1;
+			licznik = 0;
+			while (licznik < dlugosc_podciagu)
 			{
-				podciag += sekwencja_wiarygodnych_nukleotydow[j];
+				podciag += sekwencja_wiarygodnych_nukleotydow[pozycja_do_dodania];
+				pozycja_do_dodania++;
+				licznik++;
 			}
 
 			Wierzcholek* w_ktorym_dodaje_podciag = wierzcholki_w_tej_sekwencji[i];
@@ -139,11 +147,34 @@ public:
 			podciag = ""; //kasuje podciag zeby dodac nowy 
 		
 		}
+	
+		for (i; i <= wierzcholki_w_tej_sekwencji.size(); i++) //teraz musze usun¹æ z mapy wierzcho³ków nukleotydy od których nie zaczyna siê ¿aden podci¹ bo one jednak nie bêd¹ wierzcho³kami
+		{
+			Wierzcholek* do_zwolnienia_wskaznik = wierzcholki_w_tej_sekwencji[i];
+			delete do_zwolnienia_wskaznik; //zwalniam pamiec 
+			wierzcholki_w_tej_sekwencji.erase(i); //mapa ma teraz tylko te wierzcholki ktore bede chciala dodac do grafu bo maja podciagi
+		}
+
+		
 	}
 
-	void dodawanie_wierzcholkow_do_grafu(/*tu podasz graf*/)
+	void dodawanie_wierzcholkow_do_grafu(Graf graf)
 	{
-
+		for (int i = 1; i <= wierzcholki_w_tej_sekwencji.size(); i++)
+		{
+			Wierzcholek* ktory_dodaje_do_grafu = wierzcholki_w_tej_sekwencji[i];
+			graf.add_to_graph(ID_wierzcholka_w_grafie, ktory_dodaje_do_grafu);
+			ID_wierzcholka_w_grafie++;
+		}
+		
 	}
+
+	void tworzenie_wierzcholkow_i_dodawanie_do_grafu(std::string wiarygodnosc, int zadany_prog,Graf graf)
+	{
+		uwzglednianie_progu_wiarygodnosci(wiarygodnosc,zadany_prog);
+		tworzenie_podciagow();
+		dodawanie_wierzcholkow_do_grafu(graf);
+	}
+	
 };
 
