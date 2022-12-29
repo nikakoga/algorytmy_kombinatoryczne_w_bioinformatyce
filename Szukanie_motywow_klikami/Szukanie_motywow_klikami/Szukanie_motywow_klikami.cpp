@@ -7,14 +7,14 @@
 #include "Sekwencja.h"
 #include "Pomocniecze.h"
 
-#define ILOSC_PLIKOW 5
+#define ILOSC_PLIKOW 1
 #define ILOSC_SEKWENCJI_W_PLIKU 5
 
 
 int main()
 {
-    std::unordered_map<int,Sekwencja *> Mapa_sekwencji;
-
+    Graf graf(1);
+    
     std::cout << "Podaj prog wiarygodnosci\n";
     unsigned int prog_wiarygodnosci = 0;
     std::cin >> prog_wiarygodnosci;
@@ -23,7 +23,7 @@ int main()
     unsigned int dlugosc_podciagu = 0;
     std::cin >> dlugosc_podciagu;
 
-    std::vector<std::string> Nazwy_plikow = { "file_1_sekwencja.txt", "file_1_wiarygodnosc.txt", "file_2_sekwencja.txt", "file_2_wiarygodnosc.txt", "file_3_sekwencja.txt", "file_3_wiarygodnosc.txt", "file_4_sekwencja.txt", "file_4_wiarygodnosc.txt" };
+    std::vector<std::string> Nazwy_plikow = { "plik_1.fasta", "plik_1.qual", "file_2_sekwencja.txt", "file_2_wiarygodnosc.txt", "file_3_sekwencja.txt", "file_3_wiarygodnosc.txt", "file_4_sekwencja.txt", "file_4_wiarygodnosc.txt" };
     std::fstream f_sekwencja, f_wiarygodnosc;
 
     for (int i = 0; i < ILOSC_PLIKOW * 2; i+=2)
@@ -36,15 +36,14 @@ int main()
         std::vector<std::string> wektor_sekwencji = tworzenie_wektora_z_elementami_pliku(f_sekwencja);
         std::vector<std::string> wektor_wiarygodnosci = tworzenie_wektora_z_elementami_pliku(f_wiarygodnosc);
         std::string pojedyncza_sekwencja_z_pliku;
-        std::string pojedyncza_wiarygodnosc_z_pliku;
+        std::string pojedyncza_wiarygodnosc_sekwencji_z_pliku;
 
-        for (int i = 0; i < ILOSC_SEKWENCJI_W_PLIKU; i++) //dodawanie sekwencji z jednego pliku do mapy sekwencjigit
+        for (int i = 0; i < ILOSC_SEKWENCJI_W_PLIKU; i++) //dodawanie sekwencji z jednego pliku do mapy sekwencji
         {
             pojedyncza_sekwencja_z_pliku = wektor_sekwencji[i];
-            pojedyncza_wiarygodnosc_z_pliku = wektor_wiarygodnosci[i];
-            Sekwencja* Wskaznik_na_aktualna_sekwencje = new Sekwencja(i, pojedyncza_sekwencja_z_pliku,dlugosc_podciagu);
-            Mapa_sekwencji.insert({i+1,Wskaznik_na_aktualna_sekwencje}); //SEKWENCJE NUMERUJESZ OD 1
-            Wskaznik_na_aktualna_sekwencje->uwzglednianie_progu_wiarygodnosci(pojedyncza_wiarygodnosc_z_pliku, prog_wiarygodnosci); //-> bo tak sie odwolujesz do metod i pol z wskaznika
+            pojedyncza_wiarygodnosc_sekwencji_z_pliku = wektor_wiarygodnosci[i];
+            Sekwencja aktualna_sekwencja(i + 1, pojedyncza_sekwencja_z_pliku, dlugosc_podciagu); // i+1 bo numeruje sekwencje od 1
+            aktualna_sekwencja.tworzenie_wierzcholkow_i_dodawanie_do_grafu(pojedyncza_wiarygodnosc_sekwencji_z_pliku, prog_wiarygodnosci, graf);
         }
  
         f_sekwencja.close();

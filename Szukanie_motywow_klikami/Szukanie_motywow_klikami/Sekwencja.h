@@ -2,10 +2,8 @@
 #include <map>
 #include <fstream>
 #include <sstream>
-#include "Wierzcholek.h"
 #include "Graf.h"
 
-int ID_wierzcholka_w_grafie = 1; //ZMIENNA GLOBALNA !
 
 class Sekwencja
 {
@@ -127,7 +125,7 @@ public:
 	{
 		tworzenie_stringa_z_sekwencja_wiarygodnych_nt();
 		std::string podciag;
-		int i;
+		unsigned int i;
 		int licznik;
 		int pozycja_do_dodania;
 
@@ -160,11 +158,11 @@ public:
 
 	void dodawanie_wierzcholkow_do_grafu(Graf graf)
 	{
-		for (int i = 1; i <= wierzcholki_w_tej_sekwencji.size(); i++)
+		for (unsigned int i = 1; i <= wierzcholki_w_tej_sekwencji.size(); i++)
 		{
 			Wierzcholek* ktory_dodaje_do_grafu = wierzcholki_w_tej_sekwencji[i];
-			graf.add_to_graph(ID_wierzcholka_w_grafie, ktory_dodaje_do_grafu);
-			ID_wierzcholka_w_grafie++;
+			graf.add_to_graph(graf.get_next_free_ID(), ktory_dodaje_do_grafu);
+			graf.set_next_free_ID();
 		}
 		
 	}
