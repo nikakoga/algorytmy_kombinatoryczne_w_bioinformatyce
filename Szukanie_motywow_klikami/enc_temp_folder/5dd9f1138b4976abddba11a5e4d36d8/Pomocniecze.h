@@ -31,7 +31,7 @@ std::vector<std::string> tworzenie_wektora_z_elementami_pliku(std::fstream& file
         }
 
     }
-    Wszystkie_sekwencje_z_pliku.push_back(sekwencja); //aby ostatnia sekwencja dodala sie do wektora bo po ostatniej sekwencji nie ma ju¿ ">" które dodaje poprzedni¹
+    Wszystkie_sekwencje_z_pliku.push_back(sekwencja); //aby ostatnia sekwencja dodala sie do wektora bo po ostatnim getline osi¹gniêty jest eof i wychodze z pêtli wiêc to siê nie zd¹¿y³o dodaæ
     return Wszystkie_sekwencje_z_pliku;
 }
 

@@ -13,8 +13,7 @@
 
 int main()
 {
-    Graf graf(1);
-    
+        
     std::cout << "Podaj prog wiarygodnosci\n";
     unsigned int prog_wiarygodnosci = 0;
     std::cin >> prog_wiarygodnosci;
@@ -23,8 +22,10 @@ int main()
     unsigned int dlugosc_podciagu = 0;
     std::cin >> dlugosc_podciagu;
 
-    std::vector<std::string> Nazwy_plikow = { "plik_1.fasta", "plik_1.qual", "file_2_sekwencja.txt", "file_2_wiarygodnosc.txt", "file_3_sekwencja.txt", "file_3_wiarygodnosc.txt", "file_4_sekwencja.txt", "file_4_wiarygodnosc.txt" };
+    std::vector<std::string> Nazwy_plikow = { "plik_1.fasta", "plik_1.qual" };
     std::fstream f_sekwencja, f_wiarygodnosc;
+
+    Graf graf(1);
 
     for (int i = 0; i < ILOSC_PLIKOW * 2; i+=2)
     {

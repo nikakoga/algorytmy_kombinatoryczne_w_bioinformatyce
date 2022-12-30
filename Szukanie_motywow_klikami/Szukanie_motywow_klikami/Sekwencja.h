@@ -26,7 +26,7 @@ public:
 
 		std::stringstream cala_sekwencja (sekwencja);
 		std::string first_line;
-		getline(cala_sekwencja,first_line);
+		std::getline(cala_sekwencja,first_line);
 		std::stringstream line (first_line);
 
 		std::string zbedny_znak;
