@@ -53,7 +53,7 @@ public:
 			}
 
 		}
-		ilosc_nukleotydow_w_sekwencji = nr_nukleotydu-1;//bo nr_nt jest teraz wolny, gotowy do zapisania tam nowego nt, czyli nie ma nt o takim numerze
+		ilosc_nukleotydow_w_sekwencji += nr_nukleotydu-1;//bo nr_nt jest teraz wolny, gotowy do zapisania tam nowego nt, czyli nie ma nt o takim numerze
 		
 	}
 
@@ -78,6 +78,10 @@ public:
 			while (!stream_linii.eof())
 			{
 				getline(stream_linii, wiarygodnosc_jednego_nukleotydu, ' ');
+				if (wiarygodnosc_jednego_nukleotydu == "") //pusty string pobierze sie na koncu sekwencji, trzeba wyjsc wtedy z petli
+				{
+					break;
+				}
 				int wiarygodnosc = std::stoi(wiarygodnosc_jednego_nukleotydu);
 				if (wiarygodnosc < zadany_prog)
 				{

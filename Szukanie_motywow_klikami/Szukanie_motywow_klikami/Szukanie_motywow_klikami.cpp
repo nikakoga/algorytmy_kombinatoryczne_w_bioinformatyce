@@ -15,12 +15,12 @@ int main()
 {
         
     std::cout << "Podaj prog wiarygodnosci\n";
-    unsigned int prog_wiarygodnosci = 0;
-    std::cin >> prog_wiarygodnosci;
+    unsigned int prog_wiarygodnosci = 30;
+    //std::cin >> prog_wiarygodnosci;
 
     std::cout << "Podaj dlugosc podciagow\n";
-    unsigned int dlugosc_podciagu = 0;
-    std::cin >> dlugosc_podciagu;
+    unsigned int dlugosc_podciagu = 4;
+    //std::cin >> dlugosc_podciagu;
 
     std::vector<std::string> Nazwy_plikow = { "plik_1.fasta", "plik_1.qual" };
     std::fstream f_sekwencja, f_wiarygodnosc;
