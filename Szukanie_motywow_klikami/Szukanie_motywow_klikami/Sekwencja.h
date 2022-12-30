@@ -97,9 +97,8 @@ public:
 					// gdy zwiekszy sie liczba nukleotydow_w_oryginale i zwiekszy_sie_liczba nt_wiarygodnych to ten nukleotyd ktory wlasnie przejrzalam jest wiarygodny
 					// prev_wiarygodny pozwala mi sledzic zmiany czy przybylo wiarygodnego_nt
 				{
-					Wierzcholek aktualny(nr_nukleotydu_w_oryginale, nr_nt_wiarygodnego);//ID_wierzcholka);
+					Wierzcholek* wskaznik_na_aktualny = new Wierzcholek(nr_nukleotydu_w_oryginale, nr_nt_wiarygodnego);
 					prev_nr_nt_wiarygodnego = nr_nt_wiarygodnego;
-					Wierzcholek* wskaznik_na_aktualny = &aktualny;
 					wierzcholki_w_tej_sekwencji.insert({ nr_nt_wiarygodnego,wskaznik_na_aktualny });
 					//tych wierzcholkow tworzy sie tutaj za duzo bo kazdy nukleotyd jest wierzcholkiem na razie a w finale kazdy podciag nim bedzie. Pozniej usune z wierzcholkow te nt ktore sa na samym koncu sekwencji  inie aczyna sie z nich juz zaden podciag
 					
@@ -144,17 +143,19 @@ public:
 				licznik++;
 			}
 
-			Wierzcholek* w_ktorym_dodaje_podciag = wierzcholki_w_tej_sekwencji[i];
+			auto w_ktorym_dodaje_podciag = wierzcholki_w_tej_sekwencji[i]; //TO DO TUTAJ CHYBA PRZPISUJESZ WSKAZNIK POD WSKAZNIK
 			w_ktorym_dodaje_podciag->set_podciag(podciag);
 			podciag = ""; //kasuje podciag zeby dodac nowy 
 		
 		}
 	
-		for (i; i <= wierzcholki_w_tej_sekwencji.size(); i++) //teraz musze usun¹æ z mapy wierzcho³ków nukleotydy od których nie zaczyna siê ¿aden podci¹ bo one jednak nie bêd¹ wierzcho³kami
+		int rozmiar_ze_zbednymi_wierzcholkami = wierzcholki_w_tej_sekwencji.size();
+		for (i; i <= rozmiar_ze_zbednymi_wierzcholkami; i++) //teraz musze usun¹æ z mapy wierzcho³ków nukleotydy od których nie zaczyna siê ¿aden podci¹ bo one jednak nie bêd¹ wierzcho³kami
 		{
 			Wierzcholek* do_zwolnienia_wskaznik = wierzcholki_w_tej_sekwencji[i];
-			delete do_zwolnienia_wskaznik; //zwalniam pamiec 
 			wierzcholki_w_tej_sekwencji.erase(i); //mapa ma teraz tylko te wierzcholki ktore bede chciala dodac do grafu bo maja podciagi
+			delete do_zwolnienia_wskaznik; //zwalniam pamiec 
+			
 		}
 
 		
