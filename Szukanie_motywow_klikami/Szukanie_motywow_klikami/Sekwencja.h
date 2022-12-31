@@ -124,7 +124,7 @@ public:
 		sekwencja_wiarygodnych_nukleotydow = sekwencja;
 	}
 
-	void tworzenie_podciagow()
+	std::unordered_map<int, Wierzcholek*> tworzenie_podciagow()
 	{
 		tworzenie_stringa_z_sekwencja_wiarygodnych_nt();
 		std::string podciag;
@@ -158,26 +158,12 @@ public:
 			
 		}
 
+		return wierzcholki_w_tej_sekwencji;
+
 		
 	}
 
-	void dodawanie_wierzcholkow_do_grafu(Graf graf)
-	{
-		for (unsigned int i = 1; i <= wierzcholki_w_tej_sekwencji.size(); i++)
-		{
-			Wierzcholek* ktory_dodaje_do_grafu = wierzcholki_w_tej_sekwencji[i];
-			graf.add_to_graph(graf.get_next_free_ID(), ktory_dodaje_do_grafu);
-			graf.set_next_free_ID();
-		}
-		
-	}
 
-	void tworzenie_wierzcholkow_i_dodawanie_do_grafu(std::string wiarygodnosc, int zadany_prog,Graf graf)
-	{
-		uwzglednianie_progu_wiarygodnosci(wiarygodnosc,zadany_prog);
-		tworzenie_podciagow();
-		dodawanie_wierzcholkow_do_grafu(graf);
-	}
 	
 };
 

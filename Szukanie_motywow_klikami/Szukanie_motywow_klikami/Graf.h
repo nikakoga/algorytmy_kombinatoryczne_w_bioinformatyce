@@ -17,19 +17,16 @@ public:
 		next_free_ID = ID_start;
 	}
 
-	void add_to_graph(int ID, Wierzcholek* wierzcholek)
-	{
-		wszystkie_wierzcholki.insert({ ID,wierzcholek });
-	}
 
-	int get_next_free_ID()
+	void dodawanie_wierzcholkow_do_grafu(std::unordered_map<int, Wierzcholek*> wierzcholki_w_tej_sekwencji)
 	{
-		return next_free_ID;
-	}
+		for (unsigned int i = 1; i <= wierzcholki_w_tej_sekwencji.size(); i++)
+		{
+			Wierzcholek* ktory_dodaje_do_grafu = wierzcholki_w_tej_sekwencji[i];
+			wszystkie_wierzcholki.insert({ next_free_ID, ktory_dodaje_do_grafu });
+			next_free_ID++;
+		}
 
-	void set_next_free_ID()
-	{
-		next_free_ID++;
 	}
 
 };

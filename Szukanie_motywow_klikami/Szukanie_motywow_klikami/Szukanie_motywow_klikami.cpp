@@ -44,7 +44,11 @@ int main()
             pojedyncza_sekwencja_z_pliku = wektor_sekwencji[i];
             pojedyncza_wiarygodnosc_sekwencji_z_pliku = wektor_wiarygodnosci[i];
             Sekwencja aktualna_sekwencja(i + 1, pojedyncza_sekwencja_z_pliku, dlugosc_podciagu); // i+1 bo numeruje sekwencje od 1
-            aktualna_sekwencja.tworzenie_wierzcholkow_i_dodawanie_do_grafu(pojedyncza_wiarygodnosc_sekwencji_z_pliku, prog_wiarygodnosci, graf);
+            aktualna_sekwencja.uwzglednianie_progu_wiarygodnosci(pojedyncza_wiarygodnosc_sekwencji_z_pliku, prog_wiarygodnosci);
+            auto wierzcholki_do_dodania = aktualna_sekwencja.tworzenie_podciagow();
+            graf.dodawanie_wierzcholkow_do_grafu(wierzcholki_do_dodania);
+            
+            
         }
  
         f_sekwencja.close();
