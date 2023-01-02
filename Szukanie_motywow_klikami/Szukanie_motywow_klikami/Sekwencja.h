@@ -97,7 +97,7 @@ public:
 					// gdy zwiekszy sie liczba nukleotydow_w_oryginale i zwiekszy_sie_liczba nt_wiarygodnych to ten nukleotyd ktory wlasnie przejrzalam jest wiarygodny
 					// prev_wiarygodny pozwala mi sledzic zmiany czy przybylo wiarygodnego_nt
 				{
-					Wierzcholek* wskaznik_na_aktualny = new Wierzcholek(nr_nukleotydu_w_oryginale, nr_nt_wiarygodnego);
+					Wierzcholek* wskaznik_na_aktualny = new Wierzcholek(nr_nukleotydu_w_oryginale, nr_nt_wiarygodnego, numer_sekwencji);
 					prev_nr_nt_wiarygodnego = nr_nt_wiarygodnego;
 					wierzcholki_w_tej_sekwencji.insert({ nr_nt_wiarygodnego,wskaznik_na_aktualny });
 					//tych wierzcholkow tworzy sie tutaj za duzo bo kazdy nukleotyd jest wierzcholkiem na razie a w finale kazdy podciag nim bedzie. Pozniej usune z wierzcholkow te nt ktore sa na samym koncu sekwencji  inie aczyna sie z nich juz zaden podciag
@@ -109,6 +109,7 @@ public:
 			}
 
 		}
+
 	}
 
 	void tworzenie_stringa_z_sekwencja_wiarygodnych_nt()

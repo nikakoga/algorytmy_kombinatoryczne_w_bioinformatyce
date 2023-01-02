@@ -1,4 +1,3 @@
-#include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -43,16 +42,20 @@ int main()
         {
             pojedyncza_sekwencja_z_pliku = wektor_sekwencji[i];
             pojedyncza_wiarygodnosc_sekwencji_z_pliku = wektor_wiarygodnosci[i];
+
             Sekwencja aktualna_sekwencja(i + 1, pojedyncza_sekwencja_z_pliku, dlugosc_podciagu); // i+1 bo numeruje sekwencje od 1
             aktualna_sekwencja.uwzglednianie_progu_wiarygodnosci(pojedyncza_wiarygodnosc_sekwencji_z_pliku, prog_wiarygodnosci);
-            auto wierzcholki_do_dodania = aktualna_sekwencja.tworzenie_podciagow();
-            graf.dodawanie_wierzcholkow_do_grafu(wierzcholki_do_dodania);
+            std::unordered_map<int, Wierzcholek*> wierzcholki_w_tej_sekwencji = aktualna_sekwencja.tworzenie_podciagow();
+
+            graf.dodawanie_informacji_do_grafu(wierzcholki_w_tej_sekwencji);
             
             
         }
  
         f_sekwencja.close();
         f_wiarygodnosc.close();
+
+        graf.wyswietl_mape_podciagow();
     }
 
 
