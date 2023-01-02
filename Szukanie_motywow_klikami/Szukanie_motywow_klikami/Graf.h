@@ -1,17 +1,17 @@
 #pragma once
 #include <unordered_map>
+#include <cstdlib>
 #include "Wierzcholek.h"
 
 
 class Graf
 {
-	//jakos przechowuj wierzcholki tak aby nie bylo to w wektorze
-	//wierzcholki musisz polaczyc nieskierowanymi lukami jesli maja ten sam podciag ale sa z innych sekwencji i dl nt start nie jest wieksza niz dl_podciagu * 10
 	int next_free_ID;
-	std::unordered_map<int, Wierzcholek*> wszystkie_wierzcholki;
-	std::vector<std::unordered_map<int, Wierzcholek*>> wektor_map_poszczegolnych_sekwencji; //mapy wszystkich nt ktore tworzylam w klasie sekwencja sa tutaj wpakowane do wektora (kazda sekwencja ma tu jedna mape)
-	// w wektorze komorki sa numerowane od 0 wiec chcac sie dostac do mapy sekwencji 2 musze szukac w wektorze w komorce 2-1. Analogicznie do reszty
+	int dlugosc_podciagu;
+	std::unordered_map<int, Wierzcholek*> wszystkie_wierzcholki; //klucz to unikalne ID wierzcholka (rozdaje po kolei)
 	std::unordered_map<std::string, std::vector<Wierzcholek*>> mapa_podciagow;
+	std::vector<int> ID_kandydatow_do_gwiazdy;
+	std::vector<int> gwiazda;
 
 public:
 
@@ -55,22 +55,58 @@ public:
 
 	}
 
-	void dodawanie_mapy_sekwencji(std::unordered_map<int, Wierzcholek*> mapa)
+
+	void ustalanie_sasiedztwa()
 	{
-		wektor_map_poszczegolnych_sekwencji.push_back(mapa);
+		int rozmiar;
+		for (auto element : mapa_podciagow)
+		{
+			rozmiar = element.second.size(); //element.second to wektor z wierzcholkami ktore maja ten podciag
+			for (int i = 0; i < rozmiar;i++) //iteruje po wierzcholkach ktore maja ten podciag
+			{
+				for (int j = i + 1; j < rozmiar; j++)
+				{
+
+					if (element.second[i]->get_nr_sek() != element.second[j]->get_nr_sek()) //jesli te wierzcholki sa z roznych sekwencji
+					{
+						if (std::abs(element.second[i]->get_nr_nt() - element.second[j]->get_nr_nt()) <= 10 * dlugosc_podciagu)
+							// jesli wartosc bezwzgledna z wyniku odejmowania nr_nt tych sekwencji jest mniejsza lub rowna 10*dlugosc podciagu to sa to sasiedzi
+						{
+							element.second[i]->dodaj_sasiada(element.second[j]->get_ID()); // j jest sasiadem i
+							element.second[j]->dodaj_sasiada(element.second[i]->get_ID()); // i jest sasiadem j 
+						}
+
+					}
+				}
+
+				if (element.second[i]->get_sasiedzi().size() >= ILOSC_SEKWENCJI_W_PLIKU)
+					//jesli wierzcholek i ma 4 lub wiecej sasiadow to moze wchodzic w sklad rozwiazania. 
+					//Poniewaz ja do "sasiadow" dodalam tez ten aktualny wierzcholek (aby latwiej porownywac hashsety) to rozmiar sasiadow musi wynosic 5 lub wiecej aby dany wierzcholek mogl wchodzic w sklad rozwiazania
+				{
+					ID_kandydatow_do_gwiazdy.push_back(element.second[i]->get_ID());
+				}
+			}
+		}
 	}
 
-	void dodawanie_informacji_do_grafu(std::unordered_map<int, Wierzcholek*> wierzcholki_w_tej_sekwencji)
+	void szukaj_gwiazdy()
 	{
-		dodawanie_wierzcholkow_do_grafu(wierzcholki_w_tej_sekwencji);
-		dodawanie_mapy_sekwencji(wierzcholki_w_tej_sekwencji);
+		for (auto wierzcholek : ID_kandydatow_do_gwiazdy)
+		{
+
+		}
+	}
+
+	void set_dlugosc_podciagu(int dlugosc)
+	{
+		dlugosc_podciagu = dlugosc;
 	}
 
 	void wyswietl_wektor_wierzcholkow(std::vector<Wierzcholek*> wierzcholki)
 	{
 		for (auto wierzcholek : wierzcholki)
 		{
-			std::cout << wierzcholek->ger_nr_sek()<<"->" << wierzcholek->get_ID() << " ";
+			std::cout << wierzcholek->get_nr_sek()<<"->" << wierzcholek->get_ID() << " ";
 		}
 	}
 	void wyswietl_mape_podciagow()
@@ -81,6 +117,16 @@ public:
 			wyswietl_wektor_wierzcholkow(element.second);
 			std::cout<< "\n";
 		}
+	}
+
+	void wyswietl_kandydatow_do_gwiazdy()
+	{
+		std::cout << "KANDYDACI" << "\n";
+		for (auto element : ID_kandydatow_do_gwiazdy)
+		{
+			std::cout << element << " " << "\n";
+		}
+		std::cout << "KONIEC";
 	}
 
 };

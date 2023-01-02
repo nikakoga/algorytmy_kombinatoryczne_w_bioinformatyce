@@ -14,9 +14,7 @@ class Sekwencja
 	std::unordered_map<int, char> niewiarygodne_nukleotydy;
 	int ilosc_nukleotydow_w_sekwencji;
 	std::string sekwencja_wiarygodnych_nukleotydow;
-	//krotka ktora bedzie trzymac nr oryginalnego nt, nr wiarygodnego nt i podciag
-	std::unordered_map<int, Wierzcholek*> wierzcholki_w_tej_sekwencji;
-	//std::unordered_map<int, std::string> podciag; //klucz to nt w oryginale od ktorego sie podciag zaczyna 
+	std::unordered_map<int, Wierzcholek*> wierzcholki_w_tej_sekwencji; //klucz to nr nt w wiarygodnej wersji
 	
 public: 
 	Sekwencja(int numer, std::string sekwencja,int wybrana_dlugosc_podciagu)

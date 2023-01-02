@@ -6,9 +6,7 @@
 #include "Sekwencja.h"
 #include "Pomocniecze.h"
 
-#define ILOSC_PLIKOW 1
-#define ILOSC_SEKWENCJI_W_PLIKU 5
-
+//ILOSC PLIKOW I ILOSC SEKWENCJI DEFINIUJE W PLIKU WIERZCHOLEK.H
 
 int main()
 {
@@ -25,6 +23,7 @@ int main()
     std::fstream f_sekwencja, f_wiarygodnosc;
 
     Graf graf(1);
+    graf.set_dlugosc_podciagu(dlugosc_podciagu);
 
     for (int i = 0; i < ILOSC_PLIKOW * 2; i+=2)
     {
@@ -47,7 +46,7 @@ int main()
             aktualna_sekwencja.uwzglednianie_progu_wiarygodnosci(pojedyncza_wiarygodnosc_sekwencji_z_pliku, prog_wiarygodnosci);
             std::unordered_map<int, Wierzcholek*> wierzcholki_w_tej_sekwencji = aktualna_sekwencja.tworzenie_podciagow();
 
-            graf.dodawanie_informacji_do_grafu(wierzcholki_w_tej_sekwencji);
+            graf.dodawanie_wierzcholkow_do_grafu(wierzcholki_w_tej_sekwencji);
             
             
         }
@@ -56,6 +55,8 @@ int main()
         f_wiarygodnosc.close();
 
         graf.wyswietl_mape_podciagow();
+        graf.ustalanie_sasiedztwa();
+        graf.wyswietl_kandydatow_do_gwiazdy();
     }
 
 

@@ -4,6 +4,9 @@
 #include <iostream>
 #include <unordered_set>
 
+#define ILOSC_PLIKOW 1
+#define ILOSC_SEKWENCJI_W_PLIKU 5
+
 class Wierzcholek
 {
 	std::string podciag;
@@ -11,7 +14,7 @@ class Wierzcholek
 	int pozycja_w_oryginalnej_sekwencji;
 	int numer_po_usunieciu_niewiarygodnych;
 	int ID;
-	std::unordered_set<int> sasiedzi; //dodaje tutaj ich ID
+	std::unordered_set<int> sasiedzi_oraz_ten_wierzcholek; //dodaje tutaj ich ID i ID tego wierzcholka, aby latwiej szukac gwiazdy
 
 public:
 	Wierzcholek(int numer_w_oryginalnej_sekwencji, int nr_po_usunieciu_niewiarygodnych, int nr_seq)
@@ -30,11 +33,12 @@ public:
 	void set_ID(int id)
 	{
 		ID = id;
+		sasiedzi_oraz_ten_wierzcholek.insert(id); // juz dodaje to zeby potem latwiej gwiazdy szukac
 	}
 
 	void dodaj_sasiada(int ID_sasiada)
 	{
-		sasiedzi.insert(ID_sasiada);
+		sasiedzi_oraz_ten_wierzcholek.insert(ID_sasiada);
 	}
 
 	int get_ID()
@@ -55,6 +59,11 @@ public:
 	int get_nr_nt()
 	{
 		return numer_po_usunieciu_niewiarygodnych;
+	}
+
+	std::unordered_set<int> get_sasiedzi()
+	{
+		return sasiedzi_oraz_ten_wierzcholek;
 	}
 };
 
