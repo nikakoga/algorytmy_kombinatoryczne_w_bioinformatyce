@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <unordered_set>
 
 class Wierzcholek
 {
@@ -10,8 +11,7 @@ class Wierzcholek
 	int pozycja_w_oryginalnej_sekwencji;
 	int numer_po_usunieciu_niewiarygodnych;
 	int ID;
-	std::vector<Wierzcholek*> somsiedzi;
-	std::vector<int> ID_somsiadow;
+	std::unordered_set<int> sasiedzi; //dodaje tutaj ich ID
 
 public:
 	Wierzcholek(int numer_w_oryginalnej_sekwencji, int nr_po_usunieciu_niewiarygodnych, int nr_seq)
@@ -32,6 +32,11 @@ public:
 		ID = id;
 	}
 
+	void dodaj_sasiada(int ID_sasiada)
+	{
+		sasiedzi.insert(ID_sasiada);
+	}
+
 	int get_ID()
 	{
 		return ID;
@@ -42,9 +47,14 @@ public:
 		return podciag;
 	}
 
-	int ger_nr_sek()
+	int get_nr_sek()
 	{
 		return nr_sekwencji;
+	}
+
+	int get_nr_nt()
+	{
+		return numer_po_usunieciu_niewiarygodnych;
 	}
 };
 
