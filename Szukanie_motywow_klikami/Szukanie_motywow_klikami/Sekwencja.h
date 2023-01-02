@@ -148,7 +148,7 @@ public:
 		
 		}
 	
-		int rozmiar_ze_zbednymi_wierzcholkami = wierzcholki_w_tej_sekwencji.size();
+		unsigned int rozmiar_ze_zbednymi_wierzcholkami = wierzcholki_w_tej_sekwencji.size();
 		for (i; i <= rozmiar_ze_zbednymi_wierzcholkami; i++) //teraz musze usun¹æ z mapy wierzcho³ków nukleotydy od których nie zaczyna siê ¿aden podci¹ bo one jednak nie bêd¹ wierzcho³kami
 		{
 			Wierzcholek* do_zwolnienia_wskaznik = wierzcholki_w_tej_sekwencji[i];

@@ -118,13 +118,14 @@ public:
 			std::cout<< "\n";
 		}
 	}
-
 	void wyswietl_kandydatow_do_gwiazdy()
 	{
 		std::cout << "KANDYDACI" << "\n";
-		for (auto element : ID_kandydatow_do_gwiazdy)
+		for (auto ID : ID_kandydatow_do_gwiazdy)
 		{
-			std::cout << element << " " << "\n";
+			std::cout << ID << "->";
+			wszystkie_wierzcholki[ID]->wyswietl_sasiadow();
+			std::cout<< "\n";
 		}
 		std::cout << "KONIEC";
 	}

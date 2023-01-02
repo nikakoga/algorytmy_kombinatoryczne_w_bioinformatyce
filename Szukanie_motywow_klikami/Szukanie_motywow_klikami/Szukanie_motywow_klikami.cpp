@@ -54,7 +54,7 @@ int main()
         f_sekwencja.close();
         f_wiarygodnosc.close();
 
-        graf.wyswietl_mape_podciagow();
+        //graf.wyswietl_mape_podciagow();
         graf.ustalanie_sasiedztwa();
         graf.wyswietl_kandydatow_do_gwiazdy();
     }
