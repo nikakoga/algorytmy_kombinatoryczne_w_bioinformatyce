@@ -2,13 +2,14 @@ from itertools import combinations
 
 
 def main():
-    vertices = get_vertices()
-    stars = set()
-    for v, neighbours in vertices.items():
-        res = get_star(v, vertices, neighbours)
-        if res is not None:
-            stars.add(res)
-    print(stars)
+    heuristic_xd(get_vertices())
+    # vertices = get_vertices()
+    # stars = set()
+    # for v, neighbours in vertices.items():
+    #     res = get_star(v, vertices, neighbours)
+    #     if res is not None:
+    #         stars.add(res)
+    # print(stars)
 
 
 def get_star(verticle, all_vertices, neighbours) -> tuple | None:
@@ -25,6 +26,26 @@ def get_star(verticle, all_vertices, neighbours) -> tuple | None:
             if times_present < 5:
                 return None
         return tuple(sorted(d.keys()))
+
+
+def heuristic_xd(vertices: dict):
+    while True:
+        smallest_degree = len(vertices) - 1
+        smallest_degree_verticle = -1
+        smallest_degree_neighbours = None
+
+        for v, neighbours in vertices.items():
+            if len(neighbours) < smallest_degree:
+                smallest_degree_verticle = v
+                smallest_degree_neighbours = neighbours
+                smallest_degree = len(neighbours)
+        if smallest_degree == len(vertices) - 1:
+            break
+        elif smallest_degree_verticle != -1:
+            del vertices[smallest_degree_verticle]
+            for neighbour in smallest_degree_neighbours:
+                vertices[neighbour].remove(smallest_degree_verticle)
+    print(vertices)
 
 
 def get_vertices() -> dict:
