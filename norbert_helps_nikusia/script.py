@@ -8,6 +8,7 @@ def main():
         res = get_star(v, vertices, neighbours)
         if res is not None:
             stars.add(res)
+            break
 
     for idx, star in enumerate(stars):
         print(f"{idx}: {star}")

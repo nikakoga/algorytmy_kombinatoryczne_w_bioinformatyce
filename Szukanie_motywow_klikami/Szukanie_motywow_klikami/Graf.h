@@ -10,7 +10,7 @@ class Graf
 	int dlugosc_podciagu;
 	std::unordered_map<int, Wierzcholek*> wszystkie_wierzcholki; //klucz to unikalne ID wierzcholka (rozdaje po kolei)
 	std::unordered_map<std::string, std::vector<Wierzcholek*>> mapa_podciagow;
-	std::vector<int> ID_kandydatow_do_gwiazdy;
+	std::unordered_map<int, Wierzcholek*> mapa_gwiazd;
 	std::vector<int> gwiazda;
 
 public:
@@ -55,13 +55,12 @@ public:
 
 	}
 
-
 	void ustalanie_sasiedztwa()
 	{
 		int rozmiar;
 		for (auto element : mapa_podciagow)
 		{
-			rozmiar = element.second.size(); //element.second to wektor z wierzcholkami ktore maja ten podciag
+			rozmiar = element.second.size(); //element.second to wektor z wskaznikami na wierzcholki ktore maja ten podciag
 			for (int i = 0; i < rozmiar;i++) //iteruje po wierzcholkach ktore maja ten podciag
 			{
 				for (int j = i + 1; j < rozmiar; j++)
@@ -83,7 +82,7 @@ public:
 					//jesli wierzcholek i ma 4 lub wiecej sasiadow to moze wchodzic w sklad rozwiazania. 
 					//Poniewaz ja do "sasiadow" dodalam tez ten aktualny wierzcholek (aby latwiej porownywac hashsety) to rozmiar sasiadow musi wynosic 5 lub wiecej aby dany wierzcholek mogl wchodzic w sklad rozwiazania
 				{
-					ID_kandydatow_do_gwiazdy.push_back(element.second[i]->get_ID());
+					mapa_gwiazd.insert({ element.second[i]->get_ID() ,element.second[i]});
 				}
 			}
 		}
@@ -91,10 +90,8 @@ public:
 
 	void szukaj_gwiazdy()
 	{
-		for (auto wierzcholek : ID_kandydatow_do_gwiazdy)
-		{
-
-		}
+		
+		
 	}
 
 	void set_dlugosc_podciagu(int dlugosc)
@@ -118,13 +115,27 @@ public:
 			std::cout<< "\n";
 		}
 	}
+
+	void wyswietl_mape_dla_konkretnego_podciagu(std::string klucz)
+	{
+		if (mapa_podciagow.find(klucz) != mapa_podciagow.end())
+		{
+			auto wektor_wskaznikow_na_wierzcholki = mapa_podciagow[klucz];
+
+			for (auto wskaznik : wektor_wskaznikow_na_wierzcholki)
+			{
+				std::cout <<"sekwencja: "<<wskaznik->get_nr_sek()<<" nr nt w oryginale: "<<wskaznik->get_nr_org_nt() << " ID: " << wskaznik->get_ID() << " podciag: " << wskaznik->get_podciag() << "\n";
+			}
+			
+		}
+	}
 	void wyswietl_kandydatow_do_gwiazdy()
 	{
 		std::cout << "KANDYDACI" << "\n";
-		for (auto ID : ID_kandydatow_do_gwiazdy)
+		for (auto& [ID_kandydata, wierzcholek] : mapa_kandydatow_do_gwiazdy)
 		{
-			std::cout << ID << "->";
-			wszystkie_wierzcholki[ID]->wyswietl_sasiadow();
+			std::cout << ID_kandydata << "->";
+			wierzcholek->wyswietl_sasiadow();
 			std::cout<< "\n";
 		}
 		std::cout << "KONIEC";

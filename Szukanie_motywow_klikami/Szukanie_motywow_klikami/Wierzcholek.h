@@ -58,6 +58,10 @@ public:
 	{
 		return numer_po_usunieciu_niewiarygodnych;
 	}
+	int get_nr_org_nt()
+	{
+		return pozycja_w_oryginalnej_sekwencji;
+	}
 	std::unordered_set<int> get_sasiedzi()
 	{
 		return sasiedzi_oraz_ten_wierzcholek;

@@ -1,4 +1,5 @@
-1. filtruje wierzcholki majace mniej niz 4 sasiadow
+1. filtruje wierzcholki majace mniej niz 4 sasiadow 
+DONE
 2. dla kazdego wierzcholka biorę sąsiadów
 3. tworzę kombinacje bez powtórzeń długości 4 z sąsiadów
 4. dla każdej kombinacji tworzę słownik zawierający jako klucze wierzcholek i jego sąsiadów zainicjalizowane na dlugosc 1<br/>
