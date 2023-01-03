@@ -55,7 +55,9 @@ int main()
         f_wiarygodnosc.close();
 
         graf.wyswietl_mape_podciagow();
+        //graf.wyswietl_mape_dla_konkretnego_podciagu("GGGA");
         graf.ustalanie_sasiedztwa();
+        graf.szukaj_gwiazdy();
         graf.wyswietl_kandydatow_do_gwiazdy();
     }
 

@@ -23,7 +23,7 @@ def get_star(verticle, all_vertices, neighbours) -> tuple | None:
                     if nn in d.keys():
                         d[nn] = d[nn] + 1
         for times_present in d.values():
-            if times_present < 5:
+            if times_present != 5:
                 return None
         return tuple(sorted(d.keys()))
 
@@ -50,7 +50,7 @@ def heuristic_xd(vertices: dict):
 
 def get_vertices() -> dict:
     res = {}
-    with open(r"C:\Users\norbert\code\akwb\norbert_helps_nikusia\input.txt", "r") as f:
+    with open("input.txt", "r") as f:
         for l in f.readlines():
             tmp = l.split('->')
             neighbours = list(
