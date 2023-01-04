@@ -6,6 +6,7 @@
 
 #define ILOSC_PLIKOW 1
 #define ILOSC_SEKWENCJI_W_PLIKU 5
+#define ILE_RAZY_LOSUJE_GWIAZDE 10
 
 class Wierzcholek
 {

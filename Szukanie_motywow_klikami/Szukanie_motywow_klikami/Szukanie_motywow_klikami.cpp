@@ -57,22 +57,8 @@ int main()
         //graf.wyswietl_mape_podciagow();
         //graf.wyswietl_mape_dla_konkretnego_podciagu("GGGA");
         graf.ustalanie_sasiedztwa();
-        //graf.wyswietl_ID_wchodzace_w_sklad_gwiazdy();
         graf.wyswietl_rozwiazanie();
 
-        /*std::cout << "PODOBNO KLIKA\n";
-        graf.sprawdzam_dla_Nomika(359);
-        graf.sprawdzam_dla_Nomika(105);
-        graf.sprawdzam_dla_Nomika(14);
-        graf.sprawdzam_dla_Nomika(213);
-        graf.sprawdzam_dla_Nomika(285);
-
-        std::cout << "\nPODOBNO GWIAZDA\n";
-        graf.sprawdzam_dla_Nomika(360);
-        graf.sprawdzam_dla_Nomika(15);
-        graf.sprawdzam_dla_Nomika(106);
-        graf.sprawdzam_dla_Nomika(214);
-        graf.sprawdzam_dla_Nomika(286);*/
 
       
     }

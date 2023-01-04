@@ -12,6 +12,9 @@ class Graf
 	std::unordered_map<std::string, std::vector<Wierzcholek*>> mapa_podciagow;
 	std::unordered_map<int, Wierzcholek*> mapa_gwiazd;
 
+	int max_punkty_gestosci = 0;
+	std::vector<int> najgestsza_gwiazda;
+
 
 public:
 
@@ -90,10 +93,9 @@ public:
 	void szukaj_gwiazdy(Wierzcholek * wierzcholek)
 	{
 		auto ID_sasiadow = wierzcholek->get_sasiedzi();
-		std::unordered_set<int> objete_sekwencje;
+		std::vector<int> objete_sekwencje;
 		int nr_aktualnej_sekwencji;
-		// TO DO
-		std::unordered_map<int,std::unordered_set<int>> mapa_sasiadow_wg_sekwencji_z_ktorej_sa; // klucz to nr sekwencji
+		std::unordered_map<int,std::vector<int>> mapa_sasiadow_wg_sekwencji_z_ktorej_sa; // klucz to nr sekwencji
 
 		for (auto ID_sasiada : ID_sasiadow)
 		{
@@ -102,39 +104,73 @@ public:
 
 			if (mapa_sasiadow_wg_sekwencji_z_ktorej_sa.find(nr_aktualnej_sekwencji) == mapa_sasiadow_wg_sekwencji_z_ktorej_sa.end()) //jesli jeszcze nie ma go w secie objetych sekwencji
 			{
-				objete_sekwencje.insert(ID_sasiada); //dodaje sasiada do unordered set
-				mapa_sasiadow_wg_sekwencji_z_ktorej_sa.insert({ nr_aktualnej_sekwencji, objete_sekwencje }); //dodaje ten unordered_set
-				objete_sekwencje.erase(objete_sekwencje.begin(), objete_sekwencje.end());//kasuje ten set zeby byl pusty
+				objete_sekwencje.push_back(ID_sasiada); //dodaje sasiada do wektora
+				mapa_sasiadow_wg_sekwencji_z_ktorej_sa.insert({ nr_aktualnej_sekwencji, objete_sekwencje }); //dodaje ten wektor
+				objete_sekwencje.erase(objete_sekwencje.begin(), objete_sekwencje.end());//kasuje ten wektor zeby byl pusty
 			}
 			else //czyli jesli juz jest ta sekwencja w mapie
 			{
-				objete_sekwencje = mapa_sasiadow_wg_sekwencji_z_ktorej_sa[nr_aktualnej_sekwencji];
-				objete_sekwencje.insert(ID_sasiada); //dodaje ze wierzcholek o tym ID tez pochodzi z tej sekwencji
+				objete_sekwencje = mapa_sasiadow_wg_sekwencji_z_ktorej_sa[nr_aktualnej_sekwencji]; //sciagalm aktualny wektor z pod tego klucza
+				objete_sekwencje.push_back(ID_sasiada); //dodaje ze wierzcholek o tym ID tez pochodzi z tej sekwencji
 				mapa_sasiadow_wg_sekwencji_z_ktorej_sa[nr_aktualnej_sekwencji] = objete_sekwencje; // dodaje do mapy uaktualniony spis wierzcholkow z tej sekwencji
-				objete_sekwencje.erase(objete_sekwencje.begin(), objete_sekwencje.end());//kasuje ten set zeby byl pusty
+				objete_sekwencje.erase(objete_sekwencje.begin(), objete_sekwencje.end());//kasuje ten wektor zeby byl pusty
 
 			}
 
 		}
 
+		std::vector<int> ID_ramion_gwiazdy;
+		int ID_dodawanego;
+		int punkty_gestosci_tej_gwiazdy;
+
 		if (mapa_sasiadow_wg_sekwencji_z_ktorej_sa.size() == ILOSC_SEKWENCJI_W_PLIKU-1)//jesli jest co najmniej po 1 wierzcholku z kazdej sekwencji. -1 bo zaden sasiad nie moze byc z tej samej sekwencji co wierzcholek centralny, czyli do sprawdzenia mamy tylko czy istnieja sasiedzi z pozostalych sekwencji
 		{ //jesli tu weszlam to istnieje gwiazda z tych sasiadow
 
 			if (ID_sasiadow.size() == ILOSC_SEKWENCJI_W_PLIKU-1) //jesli ten wierzcholek generalnie ma tylko te 4 sasiadow a przeciez kazdy jest z innej sekwencji to jest jedyna opcja gwiazdy jaka mozemy miec
-			{
-				
-				//mapa_gwiazd.insert({ wierzcholek->get_ID(), wierzcholek }); //dodaje ta gwiazde do mapy
-				// licze jego punkty_gestosci
+			{	
+				for (auto wierzcholki_z_danej_sekwencji : mapa_sasiadow_wg_sekwencji_z_ktorej_sa)
+				{
+					//element.second to tutaj vector z ID sasadow z takiej sekwencji
+					ID_dodawanego = wierzcholki_z_danej_sekwencji.second[0]; //skoro z kazdej sekwencji jest jeden wierzcholek to dodaje tylko to co pierwsze w wektorze z wszystkich kluczy 
+					ID_ramion_gwiazdy.push_back(ID_dodawanego);
+
+				}
+
+				punkty_gestosci_tej_gwiazdy = licz_punkty_gestosci(ID_ramion_gwiazdy);
+
+				if  (punkty_gestosci_tej_gwiazdy > max_punkty_gestosci) //jesli ta gwiazda jest gestsza
+				{
+					max_punkty_gestosci = punkty_gestosci_tej_gwiazdy; // to od teraz szukamy czegos lepszego niz ona
+					najgestsza_gwiazda = ID_ramion_gwiazdy;
+				}
 				// jesli jego punkty gestosci wynosza kombinacje z (l.wierzcholkow po 2 ) to mam juz klike i koncze dzialanie algo
+				// else to co ponizej
+				ID_ramion_gwiazdy.erase(ID_ramion_gwiazdy.begin(), ID_ramion_gwiazdy.end()); //usuwam wszystko z wektora z ramionami gwiazdy, aby dodawac nowe
 			}
 
 			if (ID_sasiadow.size() > ILOSC_SEKWENCJI_W_PLIKU - 1)//jesli ten wierzcholek ma wiecej niz 4 sasiadow to znaczy ze z tym wierzcholkiem jako centralnym mozna wygenerowac wiecej niz jedna opcje gwiazdy
 			{
-				//tutaj musisz teraz jakos ladnie trzymac wierzcholki z tych samych sekwencji tak aby te z tych samych mozna bylo wylosowac ktore sie wybierze do gwiazdy
-				//np mamy wierzcholki z sekwencji : 1, 2 , 2 , 2, 3 , 4, 5
-				//bierzemy 1,3,4,5 i losujemy 2 (robimy tak wiele razy zeby miec pewnosc ze powstaly rozwiazania wszystkie)
-				//liczymy dla kazdej wygenerwanej tak gwiazdy punkty gestosci 
-				//zapamietujemy te gwiazde jesli ma wieksze punkty gestosci niz dotychczas 
+				for (int i = 0; i < ILE_RAZY_LOSUJE_GWIAZDE; i++)
+				{
+					for (auto wierzcholki_z_danej_sekwencji : mapa_sasiadow_wg_sekwencji_z_ktorej_sa)
+					{
+						//element.second to tutaj vector z ID sasadow z takiej sekwencji
+						ID_dodawanego = wierzcholki_z_danej_sekwencji.second[rand()%wierzcholki_z_danej_sekwencji.second.size()-1]; //losuje jaki element dodam do gwiazdy od 0 do ilosci wierzcholkow w wektorze -1 ( -1 bo od 0)
+						ID_ramion_gwiazdy.push_back(ID_dodawanego);
+
+					}
+
+					punkty_gestosci_tej_gwiazdy = licz_punkty_gestosci(ID_ramion_gwiazdy);
+					if (punkty_gestosci_tej_gwiazdy > max_punkty_gestosci) //jesli ta gwiazda jest gestsza
+					{
+						max_punkty_gestosci = punkty_gestosci_tej_gwiazdy; // to od teraz szukamy czegos lepszego niz ona
+						najgestsza_gwiazda = ID_ramion_gwiazdy;
+					}
+				// jesli jego punkty gestosci wynosza kombinacje z (l.wierzcholkow po 2 ) to mam juz klike i koncze dzialanie algo
+				// else to co ponizej
+				ID_ramion_gwiazdy.erase(ID_ramion_gwiazdy.begin(), ID_ramion_gwiazdy.end()); //usuwam wszystko z wektora z ramionami gwiazdy, aby dodawac nowe
+				}
+				 
 			}
 				
 		}
@@ -148,7 +184,7 @@ public:
 		{
 			for (int j = i + 1; j < ID_reszty_gwiazdy.size(); j++)
 			{
-				if (wszystkie_wierzcholki[i]->get_sasiedzi().count(ID_reszty_gwiazdy[j]) == 1) //jesli wierzcholek ma w sasiadach inny wierzcholek wchodzacy w sklad gwiazdy
+				if (wszystkie_wierzcholki[ID_reszty_gwiazdy[i]]->get_sasiedzi().count(ID_reszty_gwiazdy[j]) == 1) //jesli wierzcholek ma w sasiadach inny wierzcholek wchodzacy w sklad gwiazdy
 				{
 					licznik++;
 				}
@@ -157,6 +193,8 @@ public:
 
 		return licznik;
 	}
+
+	//void znajdz_najgestsza_gwiazde(std::unordered_map<int, std::vector<int>> mapa_sasiadow_wg_sekwencji_z_ktorej_sa, )
 
 	void set_dlugosc_podciagu(int dlugosc)
 	{
