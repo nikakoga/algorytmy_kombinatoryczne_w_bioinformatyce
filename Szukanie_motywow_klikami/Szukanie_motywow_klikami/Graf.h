@@ -78,19 +78,39 @@ public:
 					}
 				}
 
-				if (element.second[i]->get_sasiedzi().size() >= ILOSC_SEKWENCJI_W_PLIKU)
+				if (element.second[i]->get_sasiedzi().size() >= ILOSC_SEKWENCJI_W_PLIKU-1)
 					//jesli wierzcholek i ma 4 lub wiecej sasiadow to moze wchodzic w sklad rozwiazania. 
-					//Poniewaz ja do "sasiadow" dodalam tez ten aktualny wierzcholek (aby latwiej porownywac hashsety) to rozmiar sasiadow musi wynosic 5 lub wiecej aby dany wierzcholek mogl wchodzic w sklad rozwiazania
 				{
-					mapa_gwiazd.insert({ element.second[i]->get_ID() ,element.second[i]});
+					szukaj_gwiazdy(element.second[i]); // szukam gwiazdy na takim wierzcholku
 				}
 			}
 		}
 	}
 
-	void szukaj_gwiazdy()
+	void szukaj_gwiazdy(Wierzcholek * wierzcholek)
 	{
-		
+		auto ID_sasiadow = wierzcholek->get_sasiedzi();
+		std::unordered_set<int> objete_sekwencje;
+		int nr_aktualnej_sekwencji;
+
+		objete_sekwencje.insert(wierzcholek->get_nr_sek()); //dodaje ze ta sekwencja juz ma ten podciag zeby sprawdzic pozostale 4 
+
+		for (auto ID_sasiada : ID_sasiadow)
+		{
+			nr_aktualnej_sekwencji = wszystkie_wierzcholki[ID_sasiada]->get_nr_sek(); //biore ID sasiada
+			
+
+			if (objete_sekwencje.count(nr_aktualnej_sekwencji) == 0) //jesli jeszcze nie ma go w secie objetych sekwencji
+			{
+				objete_sekwencje.insert(nr_aktualnej_sekwencji); //dodaje go
+			}
+
+		}
+
+		if (objete_sekwencje.size() == ILOSC_SEKWENCJI_W_PLIKU)//jesli jest co najmniej po 1 wierzcholku z kazdej sekwencji 
+		{
+			mapa_gwiazd.insert({ wierzcholek->get_ID(), wierzcholek }); //dodaje ta gwiazde do mapy
+		}
 		
 	}
 
@@ -129,16 +149,49 @@ public:
 			
 		}
 	}
-	void wyswietl_kandydatow_do_gwiazdy()
+	void wyswietl_ID_wchodzace_w_sklad_gwiazdy()
 	{
-		std::cout << "KANDYDACI" << "\n";
-		for (auto& [ID_kandydata, wierzcholek] : mapa_kandydatow_do_gwiazdy)
+		std::cout << "GWIAZDECZKI" << "\n";
+		for (auto& [ID, wierzcholek] : mapa_gwiazd)
 		{
-			std::cout << ID_kandydata << "->";
+			std::cout <<"wierzcholek: "<< ID << "\n"<<"jego sasiedzi: ";
 			wierzcholek->wyswietl_sasiadow();
-			std::cout<< "\n";
+			std::cout<< "\n\n";
 		}
 		std::cout << "KONIEC";
+	}
+
+	void wyswietl_rozwiazanie()
+	{
+		std::unordered_set<int> sasiedzi;
+
+		for (auto& [ID, wierzcholek] : mapa_gwiazd)
+		{
+			std::cout << "ID wierzcholka: " << ID << " Nr sekwencji: " << wierzcholek->get_nr_sek() << " Pozycja w sekwencji oryginalnej: " << wierzcholek->get_nr_org_nt() << " Podciag: " << wierzcholek->get_podciag()<<"\n";
+			sasiedzi = wierzcholek->get_sasiedzi();
+
+			for (auto ID_sasiada : sasiedzi)
+			{
+				std::cout << "ID wierzcholka: " << ID_sasiada << " Nr sekwencji: " << wszystkie_wierzcholki[ID_sasiada]->get_nr_sek() << " Pozycja w sekwencji oryginalnej: " << wszystkie_wierzcholki[ID_sasiada]->get_nr_org_nt() << " Podciag: " << wszystkie_wierzcholki[ID_sasiada]->get_podciag()<<"\n";
+				
+			}
+
+			std::cout << "\n";
+		}
+	}
+
+	void sprawdzam_dla_Nomika(int A)
+	{
+		std::cout << "Nr sekwencji: " << wszystkie_wierzcholki[A]->get_nr_sek() << " Pozycja sekwencji: " << wszystkie_wierzcholki[A]->get_nr_org_nt() << " Podciag: " << wszystkie_wierzcholki[A]->get_podciag() << "\n";
+		std::cout << "sasiedzi: \n";
+		auto sasiedzi = wszystkie_wierzcholki[A]->get_sasiedzi();
+
+		for (auto sasiad : sasiedzi)
+		{
+			std::cout << "Nr sekwencji: " << wszystkie_wierzcholki[sasiad]->get_nr_sek() << " Pozycja sekwencji: " << wszystkie_wierzcholki[sasiad]->get_nr_org_nt() << " Podciag: " << wszystkie_wierzcholki[sasiad]->get_podciag() << "\n";
+		}
+
+		std::cout << "\n";
 	}
 
 };

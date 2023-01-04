@@ -14,7 +14,7 @@ class Wierzcholek
 	int pozycja_w_oryginalnej_sekwencji;
 	int numer_po_usunieciu_niewiarygodnych;
 	int ID;
-	std::unordered_set<int> sasiedzi_oraz_ten_wierzcholek; //dodaje tutaj ich ID i ID tego wierzcholka, aby latwiej szukac gwiazdy
+	std::unordered_set<int> sasiedzi; //dodaje tutaj ich ID
 
 
 public:
@@ -34,12 +34,11 @@ public:
 	void set_ID(int id)
 	{
 		ID = id;
-		sasiedzi_oraz_ten_wierzcholek.insert(id); // juz dodaje to zeby potem latwiej gwiazdy szukac
 	}
 
 	void dodaj_sasiada(int ID_sasiada)
 	{
-		sasiedzi_oraz_ten_wierzcholek.insert(ID_sasiada);
+		sasiedzi.insert(ID_sasiada);
 	}
 
 	int get_ID()
@@ -64,12 +63,12 @@ public:
 	}
 	std::unordered_set<int> get_sasiedzi()
 	{
-		return sasiedzi_oraz_ten_wierzcholek;
+		return sasiedzi;
 	}
 
 	void wyswietl_sasiadow()
 	{
-		for (auto sasiad : sasiedzi_oraz_ten_wierzcholek)
+		for (auto sasiad : sasiedzi)
 		{
 			std::cout << sasiad << " ";
 		}
