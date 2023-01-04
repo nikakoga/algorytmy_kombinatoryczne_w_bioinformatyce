@@ -14,7 +14,7 @@ class Graf
 
 	int max_punkty_gestosci = 0;
 	std::vector<int> najgestsza_gwiazda;
-	int ID_centrum_najgestszej_gwiazdy;
+	int ID_centrum_najgestszej_gwiazdy=0;
 
 
 public:
@@ -65,29 +65,35 @@ public:
 		for (auto element : mapa_podciagow)
 		{
 			rozmiar = element.second.size(); //element.second to wektor z wskaznikami na wierzcholki ktore maja ten podciag
-			for (int i = 0; i < rozmiar;i++) //iteruje po wierzcholkach ktore maja ten podciag
+
+			if (rozmiar > 1) // nie ma sensu ustalac sasiedztwa jesli istnieje tylko jeden wierzcholek z tym podciagiem w calym grafie
 			{
-				for (int j = i + 1; j < rozmiar; j++)
+				for (int i = 0; i < rozmiar; i++) //iteruje po wierzcholkach ktore maja ten podciag
 				{
-
-					if (element.second[i]->get_nr_sek() != element.second[j]->get_nr_sek()) //jesli te wierzcholki sa z roznych sekwencji
+					for (int j = i + 1; j < rozmiar; j++)
 					{
-						if (std::abs(element.second[i]->get_nr_nt() - element.second[j]->get_nr_nt()) <= 10 * dlugosc_podciagu)
-							// jesli wartosc bezwzgledna z wyniku odejmowania nr_nt tych sekwencji jest mniejsza lub rowna 10*dlugosc podciagu to sa to sasiedzi
-						{
-							element.second[i]->dodaj_sasiada(element.second[j]->get_ID()); // j jest sasiadem i
-							element.second[j]->dodaj_sasiada(element.second[i]->get_ID()); // i jest sasiadem j 
-						}
 
+						if (element.second[i]->get_nr_sek() != element.second[j]->get_nr_sek()) //jesli te wierzcholki sa z roznych sekwencji
+						{
+							if (std::abs(element.second[i]->get_nr_nt() - element.second[j]->get_nr_nt()) <= 10 * dlugosc_podciagu)
+								// jesli wartosc bezwzgledna z wyniku odejmowania nr_nt tych sekwencji jest mniejsza lub rowna 10*dlugosc podciagu to sa to sasiedzi
+							{
+								element.second[i]->dodaj_sasiada(element.second[j]->get_ID()); // j jest sasiadem i
+								element.second[j]->dodaj_sasiada(element.second[i]->get_ID()); // i jest sasiadem j 
+							}
+
+						}
+					}
+
+					if (element.second[i]->get_sasiedzi().size() >= ILOSC_SEKWENCJI_W_PLIKU - 1)
+						//jesli wierzcholek i ma 4 lub wiecej sasiadow to moze wchodzic w sklad rozwiazania. 
+					{
+						szukaj_gwiazdy(element.second[i]); // szukam gwiazdy na takim wierzcholku
 					}
 				}
-
-				if (element.second[i]->get_sasiedzi().size() >= ILOSC_SEKWENCJI_W_PLIKU-1)
-					//jesli wierzcholek i ma 4 lub wiecej sasiadow to moze wchodzic w sklad rozwiazania. 
-				{
-					szukaj_gwiazdy(element.second[i]); // szukam gwiazdy na takim wierzcholku
-				}
 			}
+
+			
 		}
 	}
 
@@ -98,33 +104,37 @@ public:
 		int nr_aktualnej_sekwencji;
 		std::unordered_map<int,std::vector<int>> mapa_sasiadow_wg_sekwencji_z_ktorej_sa; // klucz to nr sekwencji
 
-		for (auto ID_sasiada : ID_sasiadow)
+		if (ID_sasiadow.size() > 0) //iteruje po sasiadach tylko jesli sa sasiedzi
 		{
-			nr_aktualnej_sekwencji = wszystkie_wierzcholki[ID_sasiada]->get_nr_sek(); //biore ID sasiada
-			
-
-			if (mapa_sasiadow_wg_sekwencji_z_ktorej_sa.find(nr_aktualnej_sekwencji) == mapa_sasiadow_wg_sekwencji_z_ktorej_sa.end()) //jesli jeszcze nie ma go w secie objetych sekwencji
+			for (auto ID_sasiada : ID_sasiadow)
 			{
-				objete_sekwencje.push_back(ID_sasiada); //dodaje sasiada do wektora
-				mapa_sasiadow_wg_sekwencji_z_ktorej_sa.insert({ nr_aktualnej_sekwencji, objete_sekwencje }); //dodaje ten wektor
-				objete_sekwencje.erase(objete_sekwencje.begin(), objete_sekwencje.end());//kasuje ten wektor zeby byl pusty
-			}
-			else //czyli jesli juz jest ta sekwencja w mapie
-			{
-				objete_sekwencje = mapa_sasiadow_wg_sekwencji_z_ktorej_sa[nr_aktualnej_sekwencji]; //sciagalm aktualny wektor z pod tego klucza
-				objete_sekwencje.push_back(ID_sasiada); //dodaje ze wierzcholek o tym ID tez pochodzi z tej sekwencji
-				mapa_sasiadow_wg_sekwencji_z_ktorej_sa[nr_aktualnej_sekwencji] = objete_sekwencje; // dodaje do mapy uaktualniony spis wierzcholkow z tej sekwencji
-				objete_sekwencje.erase(objete_sekwencje.begin(), objete_sekwencje.end());//kasuje ten wektor zeby byl pusty
+				nr_aktualnej_sekwencji = wszystkie_wierzcholki[ID_sasiada]->get_nr_sek(); //biore ID sasiada
+
+
+				if (mapa_sasiadow_wg_sekwencji_z_ktorej_sa.find(nr_aktualnej_sekwencji) == mapa_sasiadow_wg_sekwencji_z_ktorej_sa.end()) //jesli jeszcze nie ma go w secie objetych sekwencji
+				{
+					objete_sekwencje.push_back(ID_sasiada); //dodaje sasiada do wektora
+					mapa_sasiadow_wg_sekwencji_z_ktorej_sa.insert({ nr_aktualnej_sekwencji, objete_sekwencje }); //dodaje ten wektor
+					objete_sekwencje.erase(objete_sekwencje.begin(), objete_sekwencje.end());//kasuje ten wektor zeby byl pusty
+				}
+				else //czyli jesli juz jest ta sekwencja w mapie
+				{
+					objete_sekwencje = mapa_sasiadow_wg_sekwencji_z_ktorej_sa[nr_aktualnej_sekwencji]; //sciagalm aktualny wektor z pod tego klucza
+					objete_sekwencje.push_back(ID_sasiada); //dodaje ze wierzcholek o tym ID tez pochodzi z tej sekwencji
+					mapa_sasiadow_wg_sekwencji_z_ktorej_sa[nr_aktualnej_sekwencji] = objete_sekwencje; // dodaje do mapy uaktualniony spis wierzcholkow z tej sekwencji
+					objete_sekwencje.erase(objete_sekwencje.begin(), objete_sekwencje.end());//kasuje ten wektor zeby byl pusty
+
+				}
 
 			}
 
-		}
+			if (mapa_sasiadow_wg_sekwencji_z_ktorej_sa.size() == ILOSC_SEKWENCJI_W_PLIKU - 1)//jesli jest co najmniej po 1 wierzcholku z kazdej sekwencji. -1 bo zaden sasiad nie moze byc z tej samej sekwencji co wierzcholek centralny, czyli do sprawdzenia mamy tylko czy istnieja sasiedzi z pozostalych sekwencji
+			{ //jesli tu weszlam to istnieje gwiazda z tych sasiadow
 
-		if (mapa_sasiadow_wg_sekwencji_z_ktorej_sa.size() == ILOSC_SEKWENCJI_W_PLIKU-1)//jesli jest co najmniej po 1 wierzcholku z kazdej sekwencji. -1 bo zaden sasiad nie moze byc z tej samej sekwencji co wierzcholek centralny, czyli do sprawdzenia mamy tylko czy istnieja sasiedzi z pozostalych sekwencji
-		{ //jesli tu weszlam to istnieje gwiazda z tych sasiadow
-
-			wygeneruj_gwiazde_i_policz_jej_gestosc(mapa_sasiadow_wg_sekwencji_z_ktorej_sa, wierzcholek->get_sasiedzi().size(), wierzcholek->get_ID());
+				wygeneruj_gwiazde_i_policz_jej_gestosc(mapa_sasiadow_wg_sekwencji_z_ktorej_sa, wierzcholek->get_sasiedzi().size(), wierzcholek->get_ID());
+			}
 		}
+		
 		
 	}
 
@@ -259,13 +269,22 @@ public:
 
 	void wyswietl_rozwiazanie()
 	{
-		std::cout << "\nZnaleziono podgraf o ilosci krawedzi: " << max_punkty_gestosci + ILOSC_SEKWENCJI_W_PLIKU-1 << "\n";
-		std::cout << "Wierzcholek: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_ID() << " Nr sekwencji: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_nr_sek() << " Nr nt: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_nr_org_nt() << " Podciag: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_podciag() << "\n";
-
-		for (auto ID : najgestsza_gwiazda)
+		if (najgestsza_gwiazda.size() != 0)
 		{
-			std::cout << "Wierzcholek: " << wszystkie_wierzcholki[ID]->get_ID() << " Nr sekwencji: " << wszystkie_wierzcholki[ID]->get_nr_sek() << " Nr nt: " << wszystkie_wierzcholki[ID]->get_nr_org_nt() << " Podciag: " << wszystkie_wierzcholki[ID]->get_podciag() << "\n";
+			std::cout << "\nZnaleziono podgraf o ilosci krawedzi: " << max_punkty_gestosci + ILOSC_SEKWENCJI_W_PLIKU - 1 << "\n";
+			std::cout << "Wierzcholek: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_ID() << " Nr sekwencji: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_nr_sek() << " Nr nt: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_nr_org_nt() << " Podciag: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_podciag() << "\n";
+
+			for (auto ID : najgestsza_gwiazda)
+			{
+				std::cout << "Wierzcholek: " << wszystkie_wierzcholki[ID]->get_ID() << " Nr sekwencji: " << wszystkie_wierzcholki[ID]->get_nr_sek() << " Nr nt: " << wszystkie_wierzcholki[ID]->get_nr_org_nt() << " Podciag: " << wszystkie_wierzcholki[ID]->get_podciag() << "\n";
+			}
 		}
+
+		else
+		{
+			std::cout << "\nBrak motywu obecnego w kazdej sekwencji\n";
+		}
+		
 	}
 
 };

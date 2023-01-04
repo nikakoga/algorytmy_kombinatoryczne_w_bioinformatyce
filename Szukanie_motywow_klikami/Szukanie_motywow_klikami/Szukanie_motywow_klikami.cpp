@@ -12,11 +12,11 @@ int main()
 {
         
     std::cout << "Podaj prog wiarygodnosci\n";
-    unsigned int prog_wiarygodnosci = 15;
+    unsigned int prog_wiarygodnosci = 25;
     //std::cin >> prog_wiarygodnosci;
 
     std::cout << "Podaj dlugosc podciagow\n";
-    unsigned int dlugosc_podciagu = 5;
+    unsigned int dlugosc_podciagu = 6;
     //std::cin >> dlugosc_podciagu;
 
     std::vector<std::string> Nazwy_plikow = { "Instancja_1.fasta", "Instancja_1.qual" };
