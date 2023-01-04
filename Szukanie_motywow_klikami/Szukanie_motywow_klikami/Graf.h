@@ -11,7 +11,7 @@ class Graf
 	std::unordered_map<int, Wierzcholek*> wszystkie_wierzcholki; //klucz to unikalne ID wierzcholka (rozdaje po kolei)
 	std::unordered_map<std::string, std::vector<Wierzcholek*>> mapa_podciagow;
 	std::unordered_map<int, Wierzcholek*> mapa_gwiazd;
-	std::vector<int> gwiazda;
+
 
 public:
 
@@ -92,26 +92,70 @@ public:
 		auto ID_sasiadow = wierzcholek->get_sasiedzi();
 		std::unordered_set<int> objete_sekwencje;
 		int nr_aktualnej_sekwencji;
-
-		objete_sekwencje.insert(wierzcholek->get_nr_sek()); //dodaje ze ta sekwencja juz ma ten podciag zeby sprawdzic pozostale 4 
+		// TO DO
+		std::unordered_map<int,std::unordered_set<int>> mapa_sasiadow_wg_sekwencji_z_ktorej_sa; // klucz to nr sekwencji
 
 		for (auto ID_sasiada : ID_sasiadow)
 		{
 			nr_aktualnej_sekwencji = wszystkie_wierzcholki[ID_sasiada]->get_nr_sek(); //biore ID sasiada
 			
 
-			if (objete_sekwencje.count(nr_aktualnej_sekwencji) == 0) //jesli jeszcze nie ma go w secie objetych sekwencji
+			if (mapa_sasiadow_wg_sekwencji_z_ktorej_sa.find(nr_aktualnej_sekwencji) == mapa_sasiadow_wg_sekwencji_z_ktorej_sa.end()) //jesli jeszcze nie ma go w secie objetych sekwencji
 			{
-				objete_sekwencje.insert(nr_aktualnej_sekwencji); //dodaje go
+				objete_sekwencje.insert(ID_sasiada); //dodaje sasiada do unordered set
+				mapa_sasiadow_wg_sekwencji_z_ktorej_sa.insert({ nr_aktualnej_sekwencji, objete_sekwencje }); //dodaje ten unordered_set
+				objete_sekwencje.erase(objete_sekwencje.begin(), objete_sekwencje.end());//kasuje ten set zeby byl pusty
+			}
+			else //czyli jesli juz jest ta sekwencja w mapie
+			{
+				objete_sekwencje = mapa_sasiadow_wg_sekwencji_z_ktorej_sa[nr_aktualnej_sekwencji];
+				objete_sekwencje.insert(ID_sasiada); //dodaje ze wierzcholek o tym ID tez pochodzi z tej sekwencji
+				mapa_sasiadow_wg_sekwencji_z_ktorej_sa[nr_aktualnej_sekwencji] = objete_sekwencje; // dodaje do mapy uaktualniony spis wierzcholkow z tej sekwencji
+				objete_sekwencje.erase(objete_sekwencje.begin(), objete_sekwencje.end());//kasuje ten set zeby byl pusty
+
 			}
 
 		}
 
-		if (objete_sekwencje.size() == ILOSC_SEKWENCJI_W_PLIKU)//jesli jest co najmniej po 1 wierzcholku z kazdej sekwencji 
-		{
-			mapa_gwiazd.insert({ wierzcholek->get_ID(), wierzcholek }); //dodaje ta gwiazde do mapy
+		if (mapa_sasiadow_wg_sekwencji_z_ktorej_sa.size() == ILOSC_SEKWENCJI_W_PLIKU-1)//jesli jest co najmniej po 1 wierzcholku z kazdej sekwencji. -1 bo zaden sasiad nie moze byc z tej samej sekwencji co wierzcholek centralny, czyli do sprawdzenia mamy tylko czy istnieja sasiedzi z pozostalych sekwencji
+		{ //jesli tu weszlam to istnieje gwiazda z tych sasiadow
+
+			if (ID_sasiadow.size() == ILOSC_SEKWENCJI_W_PLIKU-1) //jesli ten wierzcholek generalnie ma tylko te 4 sasiadow a przeciez kazdy jest z innej sekwencji to jest jedyna opcja gwiazdy jaka mozemy miec
+			{
+				
+				//mapa_gwiazd.insert({ wierzcholek->get_ID(), wierzcholek }); //dodaje ta gwiazde do mapy
+				// licze jego punkty_gestosci
+				// jesli jego punkty gestosci wynosza kombinacje z (l.wierzcholkow po 2 ) to mam juz klike i koncze dzialanie algo
+			}
+
+			if (ID_sasiadow.size() > ILOSC_SEKWENCJI_W_PLIKU - 1)//jesli ten wierzcholek ma wiecej niz 4 sasiadow to znaczy ze z tym wierzcholkiem jako centralnym mozna wygenerowac wiecej niz jedna opcje gwiazdy
+			{
+				//tutaj musisz teraz jakos ladnie trzymac wierzcholki z tych samych sekwencji tak aby te z tych samych mozna bylo wylosowac ktore sie wybierze do gwiazdy
+				//np mamy wierzcholki z sekwencji : 1, 2 , 2 , 2, 3 , 4, 5
+				//bierzemy 1,3,4,5 i losujemy 2 (robimy tak wiele razy zeby miec pewnosc ze powstaly rozwiazania wszystkie)
+				//liczymy dla kazdej wygenerwanej tak gwiazdy punkty gestosci 
+				//zapamietujemy te gwiazde jesli ma wieksze punkty gestosci niz dotychczas 
+			}
+				
 		}
 		
+	}
+
+	int licz_punkty_gestosci(std::vector<int> ID_reszty_gwiazdy)
+	{
+		int licznik = 0;
+		for (int i = 0; i < ID_reszty_gwiazdy.size(); i++)
+		{
+			for (int j = i + 1; j < ID_reszty_gwiazdy.size(); j++)
+			{
+				if (wszystkie_wierzcholki[i]->get_sasiedzi().count(ID_reszty_gwiazdy[j]) == 1) //jesli wierzcholek ma w sasiadach inny wierzcholek wchodzacy w sklad gwiazdy
+				{
+					licznik++;
+				}
+			}
+		}
+
+		return licznik;
 	}
 
 	void set_dlugosc_podciagu(int dlugosc)
@@ -135,7 +179,6 @@ public:
 			std::cout<< "\n";
 		}
 	}
-
 	void wyswietl_mape_dla_konkretnego_podciagu(std::string klucz)
 	{
 		if (mapa_podciagow.find(klucz) != mapa_podciagow.end())
@@ -149,18 +192,7 @@ public:
 			
 		}
 	}
-	void wyswietl_ID_wchodzace_w_sklad_gwiazdy()
-	{
-		std::cout << "GWIAZDECZKI" << "\n";
-		for (auto& [ID, wierzcholek] : mapa_gwiazd)
-		{
-			std::cout <<"wierzcholek: "<< ID << "\n"<<"jego sasiedzi: ";
-			wierzcholek->wyswietl_sasiadow();
-			std::cout<< "\n\n";
-		}
-		std::cout << "KONIEC";
-	}
-
+	
 	void wyswietl_rozwiazanie()
 	{
 		std::unordered_set<int> sasiedzi;
