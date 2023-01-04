@@ -14,6 +14,7 @@ class Graf
 
 	int max_punkty_gestosci = 0;
 	std::vector<int> najgestsza_gwiazda;
+	int ID_centrum_najgestszej_gwiazdy;
 
 
 public:
@@ -119,14 +120,10 @@ public:
 
 		}
 
-		std::vector<int> ID_ramion_gwiazdy;
-		int ID_dodawanego;
-		int punkty_gestosci_tej_gwiazdy;
-
 		if (mapa_sasiadow_wg_sekwencji_z_ktorej_sa.size() == ILOSC_SEKWENCJI_W_PLIKU-1)//jesli jest co najmniej po 1 wierzcholku z kazdej sekwencji. -1 bo zaden sasiad nie moze byc z tej samej sekwencji co wierzcholek centralny, czyli do sprawdzenia mamy tylko czy istnieja sasiedzi z pozostalych sekwencji
 		{ //jesli tu weszlam to istnieje gwiazda z tych sasiadow
 
-			wygeneruj_gwiazde_i_policz_jej_gestosc(mapa_sasiadow_wg_sekwencji_z_ktorej_sa, wierzcholek->get_sasiedzi().size());
+			wygeneruj_gwiazde_i_policz_jej_gestosc(mapa_sasiadow_wg_sekwencji_z_ktorej_sa, wierzcholek->get_sasiedzi().size(), wierzcholek->get_ID());
 		}
 		
 	}
@@ -148,7 +145,8 @@ public:
 		return licznik;
 	}
 
-	int wygeneruj_gwiazde_i_policz_jej_gestosc(std::unordered_map<int, std::vector<int>> mapa_sasiadow_wg_sekwencji_z_ktorej_sa, int ilosc_sasiadow)
+	//jesli policzysz liczbe maksymalnych polaczen to mozesz zrobic int i przerwac funkcje gdy znajdzie klike
+	void wygeneruj_gwiazde_i_policz_jej_gestosc(std::unordered_map<int, std::vector<int>> mapa_sasiadow_wg_sekwencji_z_ktorej_sa, int ilosc_sasiadow, int ID_centrum_gwiazdy)
 	{
 		int punkty_gestosci = 0;
 		std::vector<int> ID_ramion_gwiazdy;
@@ -172,11 +170,13 @@ public:
 			{
 				max_punkty_gestosci = punkty_gestosci; // to od teraz szukamy czegos lepszego niz ona
 				najgestsza_gwiazda = ID_ramion_gwiazdy;
+				ID_centrum_najgestszej_gwiazdy = ID_centrum_gwiazdy;
 			}
+
+			break;
 			//!!!!!!!!!!!!!!!!!
 			// jesli jego punkty gestosci wynosza kombinacje z (l.wierzcholkow po 2 ) to mam juz klike i koncze dzialanie algo
-			
-			return punkty_gestosci;
+			//return punkty_gestosci;
 		}
 		default: //gdy sasiadow jest wiecej niz po 1 z kazdej sekwencji
 		{
@@ -185,7 +185,7 @@ public:
 				for (auto wierzcholki_z_danej_sekwencji : mapa_sasiadow_wg_sekwencji_z_ktorej_sa)
 				{
 					//element.second to tutaj vector z ID sasadow z takiej sekwencji
-					ID_dodawanego = wierzcholki_z_danej_sekwencji.second[rand() % wierzcholki_z_danej_sekwencji.second.size() - 1]; //losuje jaki element dodam do gwiazdy od 0 do ilosci wierzcholkow w wektorze -1 ( -1 bo od 0)
+					ID_dodawanego = wierzcholki_z_danej_sekwencji.second[rand() % (wierzcholki_z_danej_sekwencji.second.size() - 1)]; //losuje jaki element dodam do gwiazdy od 0 do ilosci wierzcholkow w wektorze -1 ( -1 bo od 0)
 					ID_ramion_gwiazdy.push_back(ID_dodawanego);
 
 				}
@@ -196,6 +196,7 @@ public:
 				{
 					max_punkty_gestosci = punkty_gestosci; // to od teraz szukamy czegos lepszego niz ona
 					najgestsza_gwiazda = ID_ramion_gwiazdy;
+					ID_centrum_najgestszej_gwiazdy = ID_centrum_gwiazdy;
 				}
 				// jesli jego punkty gestosci wynosza kombinacje z (l.wierzcholkow po 2 ) to mam juz klike i koncze dzialanie algo
 				// else to co ponizej
@@ -241,26 +242,6 @@ public:
 			
 		}
 	}
-	
-	void wyswietl_rozwiazanie()
-	{
-		std::unordered_set<int> sasiedzi;
-
-		for (auto& [ID, wierzcholek] : mapa_gwiazd)
-		{
-			std::cout << "ID wierzcholka: " << ID << " Nr sekwencji: " << wierzcholek->get_nr_sek() << " Pozycja w sekwencji oryginalnej: " << wierzcholek->get_nr_org_nt() << " Podciag: " << wierzcholek->get_podciag()<<"\n";
-			sasiedzi = wierzcholek->get_sasiedzi();
-
-			for (auto ID_sasiada : sasiedzi)
-			{
-				std::cout << "ID wierzcholka: " << ID_sasiada << " Nr sekwencji: " << wszystkie_wierzcholki[ID_sasiada]->get_nr_sek() << " Pozycja w sekwencji oryginalnej: " << wszystkie_wierzcholki[ID_sasiada]->get_nr_org_nt() << " Podciag: " << wszystkie_wierzcholki[ID_sasiada]->get_podciag()<<"\n";
-				
-			}
-
-			std::cout << "\n";
-		}
-	}
-
 	void sprawdzam_dla_Nomika(int A)
 	{
 		std::cout << "Nr sekwencji: " << wszystkie_wierzcholki[A]->get_nr_sek() << " Pozycja sekwencji: " << wszystkie_wierzcholki[A]->get_nr_org_nt() << " Podciag: " << wszystkie_wierzcholki[A]->get_podciag() << "\n";
@@ -273,6 +254,18 @@ public:
 		}
 
 		std::cout << "\n";
+	}
+
+
+	void wyswietl_rozwiazanie()
+	{
+		std::cout << "\nZnaleziono podgraf o ilosci krawedzi: " << max_punkty_gestosci + ILOSC_SEKWENCJI_W_PLIKU-1 << "\n";
+		std::cout << "Wierzcholek: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_ID() << " Nr sekwencji: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_nr_sek() << " Nr nt: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_nr_org_nt() << " Podciag: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_podciag() << "\n";
+
+		for (auto ID : najgestsza_gwiazda)
+		{
+			std::cout << "Wierzcholek: " << wszystkie_wierzcholki[ID]->get_ID() << " Nr sekwencji: " << wszystkie_wierzcholki[ID]->get_nr_sek() << " Nr nt: " << wszystkie_wierzcholki[ID]->get_nr_org_nt() << " Podciag: " << wszystkie_wierzcholki[ID]->get_podciag() << "\n";
+		}
 	}
 
 };

@@ -24,6 +24,7 @@ int main()
 
     Graf graf(1);
     graf.set_dlugosc_podciagu(dlugosc_podciagu);
+    srand(time(0));
 
     for (int i = 0; i < ILOSC_PLIKOW * 2; i+=2)
     {
