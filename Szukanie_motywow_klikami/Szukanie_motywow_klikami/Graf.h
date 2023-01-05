@@ -288,18 +288,20 @@ public:
 	{
 		if (najgestsza_gwiazda.size() != 0)
 		{
-			std::cout << "\nZnaleziono podgraf o ilosci krawedzi: " << max_punkty_gestosci << "\n";
+			std::cout << "Znaleziono podgraf o ilosci krawedzi: " << max_punkty_gestosci << "\n";
 			std::cout << "Wierzcholek: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_ID() << " Nr sekwencji: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_nr_sek() << " Nr nt: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_nr_org_nt() << " Podciag: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_podciag() << "\n";
 
 			for (auto ID : najgestsza_gwiazda)
 			{
 				std::cout << "Wierzcholek: " << wszystkie_wierzcholki[ID]->get_ID() << " Nr sekwencji: " << wszystkie_wierzcholki[ID]->get_nr_sek() << " Nr nt: " << wszystkie_wierzcholki[ID]->get_nr_org_nt() << " Podciag: " << wszystkie_wierzcholki[ID]->get_podciag() << "\n";
 			}
+
+			
 		}
 
 		else
 		{
-			std::cout << "\nBrak motywu obecnego w kazdej sekwencji\n";
+			std::cout << "Brak motywu obecnego w kazdej sekwencji\n";
 		}
 		
 	}

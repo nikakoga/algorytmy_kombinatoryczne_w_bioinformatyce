@@ -4,7 +4,8 @@
 #include <iostream>
 #include <unordered_set>
 
-#define ILOSC_PLIKOW 1
+#define ILOSC_PLIKOW 3
+#define ILE_POWTORZEN_DLA_PLIKU 3
 #define ILOSC_SEKWENCJI_W_PLIKU 5
 #define ILE_RAZY_LOSUJE_GWIAZDE 10
 
