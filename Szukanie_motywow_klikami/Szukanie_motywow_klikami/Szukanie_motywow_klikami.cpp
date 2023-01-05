@@ -12,14 +12,14 @@ int main()
 {
         
     std::cout << "Podaj prog wiarygodnosci\n";
-    unsigned int prog_wiarygodnosci = 25;
+    unsigned int prog_wiarygodnosci = 11;
     //std::cin >> prog_wiarygodnosci;
 
     std::cout << "Podaj dlugosc podciagow\n";
-    unsigned int dlugosc_podciagu = 6;
+    unsigned int dlugosc_podciagu = 9;
     //std::cin >> dlugosc_podciagu;
 
-    std::vector<std::string> Nazwy_plikow = { "Instancja_1.fasta", "Instancja_1.qual" };
+    std::vector<std::string> Nazwy_plikow = { "Instancja_1.fasta", "Instancja_1.qual","Instancja_2.fasta", "Instancja_2.qual","Instancja_3.fasta", "Instancja_3.qual"};
     std::fstream f_sekwencja, f_wiarygodnosc;
 
     Graf graf(1);
@@ -58,6 +58,7 @@ int main()
         //graf.wyswietl_mape_podciagow();
         //graf.wyswietl_mape_dla_konkretnego_podciagu("GGGA");
         graf.ustalanie_sasiedztwa();
+        graf.generuj_rozwiazanie();
         graf.wyswietl_rozwiazanie();
 
 

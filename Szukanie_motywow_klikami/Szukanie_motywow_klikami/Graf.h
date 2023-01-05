@@ -12,7 +12,7 @@ class Graf
 	std::unordered_map<std::string, std::vector<Wierzcholek*>> mapa_podciagow;
 	std::unordered_map<int, Wierzcholek*> mapa_gwiazd;
 
-	int max_punkty_gestosci = 0;
+	int max_punkty_gestosci = ILOSC_SEKWENCJI_W_PLIKU-1;
 	std::vector<int> najgestsza_gwiazda;
 	int ID_centrum_najgestszej_gwiazdy=0;
 
@@ -85,16 +85,29 @@ public:
 						}
 					}
 
-					if (element.second[i]->get_sasiedzi().size() >= ILOSC_SEKWENCJI_W_PLIKU - 1)
-						//jesli wierzcholek i ma 4 lub wiecej sasiadow to moze wchodzic w sklad rozwiazania. 
-					{
-						szukaj_gwiazdy(element.second[i]); // szukam gwiazdy na takim wierzcholku
-					}
 				}
 			}
 
 			
 		}
+	}
+
+	void generuj_rozwiazanie()
+	{
+		for (unsigned int i = 1; i < next_free_ID; i++)
+		{
+			if (wszystkie_wierzcholki[i]->get_sasiedzi().size() >= ILOSC_SEKWENCJI_W_PLIKU - 1)
+				//jesli wierzcholek i ma 4 lub wiecej sasiadow to moze wchodzic w sklad rozwiazania. 
+			{
+				szukaj_gwiazdy(wszystkie_wierzcholki[i]); // szukam gwiazdy na takim wierzcholku
+			}
+
+			if (max_punkty_gestosci == (ILOSC_SEKWENCJI_W_PLIKU * (ILOSC_SEKWENCJI_W_PLIKU - 1) / 2) )//m*(m-1)/2 to wzor na ilosc krawedzi w max klice
+			{
+				break;
+			}
+		}
+		
 	}
 
 	void szukaj_gwiazdy(Wierzcholek * wierzcholek)
@@ -140,7 +153,7 @@ public:
 
 	int licz_punkty_gestosci(std::vector<int> ID_reszty_gwiazdy)
 	{
-		int licznik = 0;
+		int licznik = ILOSC_SEKWENCJI_W_PLIKU-1; //tyle polaczen juz jest pomiedzy wierzcholkiem centralnym a ramionami z innych sekwencji
 		for (int i = 0; i < ID_reszty_gwiazdy.size(); i++)
 		{
 			for (int j = i + 1; j < ID_reszty_gwiazdy.size(); j++)
@@ -158,7 +171,7 @@ public:
 	//jesli policzysz liczbe maksymalnych polaczen to mozesz zrobic int i przerwac funkcje gdy znajdzie klike
 	void wygeneruj_gwiazde_i_policz_jej_gestosc(std::unordered_map<int, std::vector<int>> mapa_sasiadow_wg_sekwencji_z_ktorej_sa, int ilosc_sasiadow, int ID_centrum_gwiazdy)
 	{
-		int punkty_gestosci = 0;
+		int punkty_gestosci;
 		std::vector<int> ID_ramion_gwiazdy;
 		int ID_dodawanego;
 
@@ -184,9 +197,7 @@ public:
 			}
 
 			break;
-			//!!!!!!!!!!!!!!!!!
-			// jesli jego punkty gestosci wynosza kombinacje z (l.wierzcholkow po 2 ) to mam juz klike i koncze dzialanie algo
-			//return punkty_gestosci;
+			
 		}
 		default: //gdy sasiadow jest wiecej niz po 1 z kazdej sekwencji
 		{
@@ -208,9 +219,15 @@ public:
 					najgestsza_gwiazda = ID_ramion_gwiazdy;
 					ID_centrum_najgestszej_gwiazdy = ID_centrum_gwiazdy;
 				}
-				// jesli jego punkty gestosci wynosza kombinacje z (l.wierzcholkow po 2 ) to mam juz klike i koncze dzialanie algo
-				// else to co ponizej
+				
+				if (max_punkty_gestosci == (ILOSC_SEKWENCJI_W_PLIKU * (ILOSC_SEKWENCJI_W_PLIKU - 1) / 2))
+				{
+					break;
+				}
+				
 				ID_ramion_gwiazdy.erase(ID_ramion_gwiazdy.begin(), ID_ramion_gwiazdy.end()); //usuwam wszystko z wektora z ramionami gwiazdy, aby dodawac nowe
+				
+				
 			}
 		}
 
@@ -271,7 +288,7 @@ public:
 	{
 		if (najgestsza_gwiazda.size() != 0)
 		{
-			std::cout << "\nZnaleziono podgraf o ilosci krawedzi: " << max_punkty_gestosci + ILOSC_SEKWENCJI_W_PLIKU - 1 << "\n";
+			std::cout << "\nZnaleziono podgraf o ilosci krawedzi: " << max_punkty_gestosci << "\n";
 			std::cout << "Wierzcholek: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_ID() << " Nr sekwencji: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_nr_sek() << " Nr nt: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_nr_org_nt() << " Podciag: " << wszystkie_wierzcholki[ID_centrum_najgestszej_gwiazdy]->get_podciag() << "\n";
 
 			for (auto ID : najgestsza_gwiazda)
