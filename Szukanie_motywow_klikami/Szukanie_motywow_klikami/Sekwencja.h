@@ -142,7 +142,7 @@ public:
 				licznik++;
 			}
 
-			auto w_ktorym_dodaje_podciag = wierzcholki_w_tej_sekwencji[i]; //TO DO TUTAJ CHYBA PRZPISUJESZ WSKAZNIK POD WSKAZNIK
+			auto w_ktorym_dodaje_podciag = wierzcholki_w_tej_sekwencji[i];
 			w_ktorym_dodaje_podciag->set_podciag(podciag);
 			podciag = ""; //kasuje podciag zeby dodac nowy 
 		

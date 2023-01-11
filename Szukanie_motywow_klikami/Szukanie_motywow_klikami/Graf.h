@@ -104,6 +104,7 @@ public:
 
 			if (max_punkty_gestosci == (ILOSC_SEKWENCJI_W_PLIKU * (ILOSC_SEKWENCJI_W_PLIKU - 1) / 2) )//m*(m-1)/2 to wzor na ilosc krawedzi w max klice
 			{
+				std::cout << "Znaleziono maksymalna klike\n";
 				break;
 			}
 		}
@@ -206,8 +207,17 @@ public:
 				for (auto wierzcholki_z_danej_sekwencji : mapa_sasiadow_wg_sekwencji_z_ktorej_sa)
 				{
 					//element.second to tutaj vector z ID sasadow z takiej sekwencji
-					ID_dodawanego = wierzcholki_z_danej_sekwencji.second[rand() % (wierzcholki_z_danej_sekwencji.second.size() - 1)]; //losuje jaki element dodam do gwiazdy od 0 do ilosci wierzcholkow w wektorze -1 ( -1 bo od 0)
-					ID_ramion_gwiazdy.push_back(ID_dodawanego);
+					if (wierzcholki_z_danej_sekwencji.second.size() > 1)
+					{
+						ID_dodawanego = wierzcholki_z_danej_sekwencji.second[rand() % (wierzcholki_z_danej_sekwencji.second.size() - 1)]; //losuje jaki element dodam do gwiazdy od 0 do ilosci wierzcholkow w wektorze -1 ( -1 bo od 0)
+						ID_ramion_gwiazdy.push_back(ID_dodawanego);
+					}
+					else
+					{
+						ID_dodawanego = wierzcholki_z_danej_sekwencji.second[0];
+						ID_ramion_gwiazdy.push_back(ID_dodawanego);
+					}
+					
 
 				}
 
