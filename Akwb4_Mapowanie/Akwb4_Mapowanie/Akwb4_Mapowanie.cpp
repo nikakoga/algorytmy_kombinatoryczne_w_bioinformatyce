@@ -162,12 +162,12 @@ void szukaj_rozwiazania(std::vector<int> rozwiazanie, int max_ilosc_ciec, clock_
                     if (i < rozwiazanie.size())// dlatego ze nie sprawdzam czy wlasnie dodany do rozwiazania element jest oznaczony jako uzyty, bo jest na pewno.
                     {
                         int nr_elementu = szukaj_elementu_jesli_jest_niewykorzystany(suma, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty);
-                        if (nr_elementu != -1)
+                        if (nr_elementu != -1) //gdy funkcja nie zwraca -1 to znalazla element o zadanej wartosci ktory jest nieuzyty
                         {
                             uzyte_w_obrebie_tego_wywolania[nr_elementu] = 1; //jesli nie jest wykorzystany ustawiam ze teraz juz jest
                             pozycje_zmienionych_elementow.push_back(nr_elementu);
                         }
-                        if (nr_elementu == -1)//ktorys element jest juz wykorzystany, czyli to nie moze nalezec do rozwiazania
+                        if (nr_elementu == -1)//znaleziony element jest juz wykorzystany
                         {
                             czy_wszystko_sie_zgadzalo = false;
                             break;
@@ -185,28 +185,18 @@ void szukaj_rozwiazania(std::vector<int> rozwiazanie, int max_ilosc_ciec, clock_
                             int element_do_cofniecia = pozycje_zmienionych_elementow[i];
                             uzyte_w_obrebie_tego_wywolania[element_do_cofniecia] = 0;//cofam na nieuzyte
                         }
-                        
                     }
-
-                    while (!pozycje_zmienionych_elementow.empty())//dopoki wektor nie jest pusty popuje z niego zeby byl pusty
-                    {
-                        pozycje_zmienionych_elementow.pop_back();
-                    }
-                  
+                    pozycje_zmienionych_elementow.clear(); //czyszcze wektor zmienionych elementow
                 }
                 else
                 {
                     szukaj_rozwiazania(rozwiazanie, max_ilosc_ciec, czas_start, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty);//pasuje kontynuuje
-                }
-                
-               
+                }   
             }
-            //jesli dotre do tego miejsca to oznacza ze sprawdzilam juz wszystko w obrebie tego wywolania funkcji rekurencyjnie 
-            
+            //jesli dotre do tego miejsca to oznacza ze sprawdzilam juz wszystko w obrebie tego wywolania funkcji rekurencyjnie
+            rozwiazanie.pop_back(); //musze pozbyc sie ostatniego elementu !!!!!!!!!!!!!!!!! TO NIC NIE DA, OPERUJESZ NA KOPII
+            //petla dobiega konca a tym samym konczy sie jedna rekurencja
         }
-        
-        
-
     }
 
 
