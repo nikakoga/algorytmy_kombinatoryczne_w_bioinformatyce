@@ -92,20 +92,52 @@ void wyswietl_mape(std::vector<int>* wskaznik_rozwiazanie)
     }
 }
 
-void szukaj_rozwiazania(std::vector<int>* wskaznik_rozwiazanie, int max_ilosc_ciec, clock_t czas_start)
+bool Czy_dotychczasowe_rozwiazanie_sie_zgadza(int dodawana_dlugosc)
 {
-    if (policz_czas(czas_start) >=3600)
+    //sprawdzasz czy sie sumy zgadzaja
+}
+
+void szukaj_rozwiazania(std::vector<int>* wskaznik_rozwiazanie, int max_ilosc_ciec, clock_t czas_start, std::vector<int>* wskaznik_na_uzyte, std::vector<int>pociete_fragmenty)
+{
+    if (wskaznik_rozwiazanie->size() == max_ilosc_ciec)
     {
         std::cout << "Znaleziono mape: ";
         wyswietl_mape(wskaznik_rozwiazanie);
-        std::cout << "Przekroczono czas dla szukania rozwiaznania\nKoncze program";
-        return;
-    }
-    if (wskaznik_rozwiazanie->size() == max_ilosc_ciec)
-    {
         std::cout << "Czas szukania rozwiazania: " << policz_czas(czas_start) << "\n";
         return;
     }
+    if (policz_czas(czas_start) >=3600)
+    {
+        std::cout << "Przekroczono czas dla szukania rozwiaznania\nKoncze program";
+        return;
+    }
+    else
+    {
+
+        for (int i = 0; i < wskaznik_na_uzyte->size(); i++) //iteruje po tablicy uzyc fragmentow
+        {
+            if (&wskaznik_na_uzyte[i] == 0)//jesli jeszcze nie uzylam tego fragmentu
+            {
+                wskaznik_rozwiazanie->push_back(pociete_fragmenty[i]);//dodaje go na probe do rozwiazania
+                if (Czy_dotychczasowe_rozwiazanie_sie_zgadza(pociete_fragmenty[i]) == true)//sprawdzam czy pasuje
+                {
+                    szukaj_rozwiazania(wskaznik_rozwiazanie, max_ilosc_ciec, czas_start, wskaznik_na_uzyte, pociete_fragmenty);//pasuje kontynuuje
+                }
+                else
+                {
+                    wskaznik_rozwiazanie->pop_back();//nie pasuje, usuwam to co dodalam
+                    //probuje z nastepnym niewykorzystanym w nowym obiegu petli
+                }
+            }
+            
+        }
+        
+        
+
+    }
+
+
+    
    
     
 }
@@ -151,16 +183,22 @@ int main()
     std::vector<int> Rozwiazanie;
     std::vector<int>* wskaznik_na_rozwiazanie = &Rozwiazanie;
     std::vector<int> uzyte = pociete_fragmenty;
+    std::vector<int>* wskaznik_na_uzyte = &uzyte;
     uzyte=zeruj_wektor_uzyc(uzyte);
     
 
     int max = najwiekszy_element(pociete_fragmenty);
+    int pozycja_max = szukaj_elementu(pociete_fragmenty, max);
+    uzyte[pozycja_max] = 1;     //oznaczam max jako uzyty
+    
     int drugi_max = drugi_najwiekszy_element(pociete_fragmenty, max);
+    int pozycja_drugi_max = szukaj_elementu(pociete_fragmenty, drugi_max);
+    uzyte[pozycja_drugi_max] = 1;   //oznaczam drugi max jako uzyty
    
     if (int pozycja_w_wektorze = Znajdz_max_minus_prawie_max_w_wektorze(pociete_fragmenty, max, drugi_max) !=-1) 
     {
         Rozwiazanie.push_back(pociete_fragmenty[pozycja_w_wektorze]); //dodaje ten pierwszy element do rozwiazania
-        uzyte[pozycja_w_wektorze] = 1;
+        uzyte[pozycja_w_wektorze] = 1; //wynik odejmowania max-drugi_max tez jest uzyty
     }
     else
     {
@@ -170,7 +208,7 @@ int main()
 
     auto start = clock();
  
-    szukaj_rozwiazania(wskaznik_na_rozwiazanie,spodziewana_liczb_ciec,start);
+    szukaj_rozwiazania(wskaznik_na_rozwiazanie,spodziewana_liczb_ciec,start,wskaznik_na_uzyte,pociete_fragmenty);
     
 
         
