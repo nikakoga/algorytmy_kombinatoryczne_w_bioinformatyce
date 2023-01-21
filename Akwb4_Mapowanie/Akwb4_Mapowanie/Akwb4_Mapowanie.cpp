@@ -84,8 +84,9 @@ double policz_czas (clock_t start)
 
 }
 
-void wyswietl_mape(std::vector<int> rozwiazanie)
+void wyswietl_mape(std::vector<int>* wskaznik_na_rozwiazanie)
 {
+    std::vector<int> rozwiazanie = *wskaznik_na_rozwiazanie;
     for (auto element : rozwiazanie)
     {
         std::cout << element << " ";
@@ -108,34 +109,22 @@ int szukaj_elementu_jesli_jest_niewykorzystany(int wartosc, std::vector<int>uzyt
     return -1; //zwracam -1 jesli nie ma nieuzytego elementu o takiej wartosci 
 }
 
-bool Czy_dotychczasowe_rozwiazanie_sie_zgadza(std::vector<int> rozwiazanie, std::vector<int>uzyte, std::vector<int>pociete_fragmenty)
+int get_okreslony_element_z_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie,int element)
 {
-    int suma = 0;
-    for (int i = rozwiazanie.size()-1; i > 0; i--)//-1 tam jest ostatni element bo numeruje wektor od 0
-    {
-        suma += rozwiazanie[i];
-        if (i < rozwiazanie.size())// dlatego ze nie sprawdzam czy wlasnie dodany do rozwiazania element jest oznaczony jako uzyty, bo jest na pewno.
-        {
-            int nr_elementu = szukaj_elementu_jesli_jest_niewykorzystany(suma, uzyte, pociete_fragmenty);
-            if (nr_elementu != -1)
-            {
-                uzyte[nr_elementu] = 1;
-            }
-            if (nr_elementu == -1)
-            {
-                return false;
-            }
-        }
-    }
-    return true;
+    std::vector<int> rozwiazanie = *wskaznik_na_rozwiazanie;
+
+    int wartosc = rozwiazanie[element];
+
+    return wartosc;
+
 }
 
-void szukaj_rozwiazania(std::vector<int> rozwiazanie, int max_ilosc_ciec, clock_t czas_start, std::vector<int> uzyte_w_obrebie_tego_wywolania, std::vector<int>pociete_fragmenty)
+void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc_ciec, clock_t czas_start, std::vector<int> uzyte_w_obrebie_tego_wywolania, std::vector<int>pociete_fragmenty)
 {
-    if (rozwiazanie.size() == max_ilosc_ciec)
+    if (wskaznik_na_rozwiazanie->size() == max_ilosc_ciec)
     {
         std::cout << "Znaleziono mape: ";
-        wyswietl_mape(rozwiazanie);
+        wyswietl_mape(wskaznik_na_rozwiazanie);
         std::cout << "Czas szukania rozwiazania: " << policz_czas(czas_start) << "\n";
         return;
     }
@@ -151,15 +140,15 @@ void szukaj_rozwiazania(std::vector<int> rozwiazanie, int max_ilosc_ciec, clock_
         {
             if (uzyte_w_obrebie_tego_wywolania[i] == 0)//jesli jeszcze nie uzylam tego fragmentu
             {
-                rozwiazanie.push_back(pociete_fragmenty[i]);//dodaje go na probe do rozwiazania
+                wskaznik_na_rozwiazanie->push_back(pociete_fragmenty[i]);//dodaje go na probe do rozwiazania
                 int suma = 0;
                 bool czy_wszystko_sie_zgadzalo = true;
                 std::vector<int>pozycje_zmienionych_elementow;
-
-                for (int i = rozwiazanie.size() - 1; i > 0; i--)//-1 tam jest ostatni element bo numeruje wektor od 0
+      
+                for (int i = wskaznik_na_rozwiazanie->size() - 1; i > 0; i--)//-1 tam jest ostatni element bo numeruje wektor od 0
                 {
-                    suma += rozwiazanie[i];
-                    if (i < rozwiazanie.size())// dlatego ze nie sprawdzam czy wlasnie dodany do rozwiazania element jest oznaczony jako uzyty, bo jest na pewno.
+                    suma += get_okreslony_element_z_rozwiazania(wskaznik_na_rozwiazanie,i);
+                    if (i < wskaznik_na_rozwiazanie->size())// dlatego ze nie sprawdzam czy wlasnie dodany do rozwiazania element jest oznaczony jako uzyty, bo jest na pewno.
                     {
                         int nr_elementu = szukaj_elementu_jesli_jest_niewykorzystany(suma, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty);
                         if (nr_elementu != -1) //gdy funkcja nie zwraca -1 to znalazla element o zadanej wartosci ktory jest nieuzyty
@@ -176,7 +165,7 @@ void szukaj_rozwiazania(std::vector<int> rozwiazanie, int max_ilosc_ciec, clock_
                 }
                 if (czy_wszystko_sie_zgadzalo == false)
                 {
-                    rozwiazanie.pop_back();//nie pasuje, usuwam to co dodalam
+                    wskaznik_na_rozwiazanie->pop_back();//nie pasuje, usuwam to co dodalam
                     
                     if (!pozycje_zmienionych_elementow.empty()) //jesli zdazylam cokolwiek zmienic w wektorze uzyc
                     {
@@ -190,19 +179,15 @@ void szukaj_rozwiazania(std::vector<int> rozwiazanie, int max_ilosc_ciec, clock_
                 }
                 else
                 {
-                    szukaj_rozwiazania(rozwiazanie, max_ilosc_ciec, czas_start, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty);//pasuje kontynuuje
+                    szukaj_rozwiazania(wskaznik_na_rozwiazanie, max_ilosc_ciec, czas_start, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty);//pasuje kontynuuje
                 }   
             }
             //jesli dotre do tego miejsca to oznacza ze sprawdzilam juz wszystko w obrebie tego wywolania funkcji rekurencyjnie
-            rozwiazanie.pop_back(); //musze pozbyc sie ostatniego elementu !!!!!!!!!!!!!!!!! TO NIC NIE DA, OPERUJESZ NA KOPII
+            wskaznik_na_rozwiazanie->pop_back(); //musze pozbyc sie ostatniego elementu !!!!!!!!!!!!!!!!! TO NIC NIE DA, OPERUJESZ NA KOPII
             //petla dobiega konca a tym samym konczy sie jedna rekurencja
         }
     }
 
-
-    
-   
-    
 }
 
 int main()
@@ -271,14 +256,7 @@ int main()
 
     auto start = clock();
  
-    szukaj_rozwiazania(Rozwiazanie,spodziewana_liczb_ciec,start,uzyte,pociete_fragmenty);
-    
-
-        
-    
-
-
-
+    szukaj_rozwiazania(wskaznik_na_rozwiazanie,spodziewana_liczb_ciec,start,uzyte,pociete_fragmenty);
 
 }
 
