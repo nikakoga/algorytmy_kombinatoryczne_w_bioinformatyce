@@ -84,25 +84,49 @@ double policz_czas (clock_t start)
 
 }
 
-void wyswietl_mape(std::vector<int>* wskaznik_rozwiazanie)
+void wyswietl_mape(std::vector<int> rozwiazanie)
 {
-    for (auto element : *wskaznik_rozwiazanie)
+    for (auto element : rozwiazanie)
     {
         std::cout << element << " ";
     }
 }
 
-bool Czy_dotychczasowe_rozwiazanie_sie_zgadza(int dodawana_dlugosc)
+int szukaj_elementu_jesli_jest_niewykorzystany(int wartosc, std::vector<int>uzyte, std::vector<int>pociete_fragmenty)
 {
-    //sprawdzasz czy sie sumy zgadzaja
+    for (int i = 0; i < pociete_fragmenty.size(); i++)
+    {
+        if (pociete_fragmenty[i] == wartosc)
+        {
+            if (uzyte[i] == 0)//sprawdzam czy ten element nie jest wykorzystany
+            {
+                return i;
+            }
+        }
+    }
+
+    return -1; //zwracam -1 jesli nie ma nieuzytego elementu o takiej wartosci 
 }
 
-void szukaj_rozwiazania(std::vector<int>* wskaznik_rozwiazanie, int max_ilosc_ciec, clock_t czas_start, std::vector<int>* wskaznik_na_uzyte, std::vector<int>pociete_fragmenty)
+bool Czy_dotychczasowe_rozwiazanie_sie_zgadza(std::vector<int> rozwiazanie, std::vector<int>uzyte, std::vector<int>pociete_fragmenty)
 {
-    if (wskaznik_rozwiazanie->size() == max_ilosc_ciec)
+    int suma = 0;
+    for (int i = rozwiazanie.size()-1; i > 0; i--)//-1 tam jest ostatni element bo numeruje wektor od 0
+    {
+        suma += rozwiazanie[i];
+        if (i < rozwiazanie.size())// dlatego ze nie sprawdzam czy wlasnie dodany do rozwiazania element jest oznaczony jako uzyty, bo jest na pewno.
+        {
+            szukaj_elementu_jesli_jest_niewykorzystany(suma, uzyte, pociete_fragmenty);
+        }
+    }
+}
+
+void szukaj_rozwiazania(std::vector<int> rozwiazanie, int max_ilosc_ciec, clock_t czas_start, std::vector<int> uzyte_w_obrebie_tego_wywolania, std::vector<int>pociete_fragmenty)
+{
+    if (rozwiazanie.size() == max_ilosc_ciec)
     {
         std::cout << "Znaleziono mape: ";
-        wyswietl_mape(wskaznik_rozwiazanie);
+        wyswietl_mape(rozwiazanie);
         std::cout << "Czas szukania rozwiazania: " << policz_czas(czas_start) << "\n";
         return;
     }
@@ -114,18 +138,18 @@ void szukaj_rozwiazania(std::vector<int>* wskaznik_rozwiazanie, int max_ilosc_ci
     else
     {
 
-        for (int i = 0; i < wskaznik_na_uzyte->size(); i++) //iteruje po tablicy uzyc fragmentow
+        for (int i = 0; i < uzyte_w_obrebie_tego_wywolania.size(); i++) //iteruje po tablicy uzyc fragmentow
         {
-            if (&wskaznik_na_uzyte[i] == 0)//jesli jeszcze nie uzylam tego fragmentu
+            if (uzyte_w_obrebie_tego_wywolania[i] == 0)//jesli jeszcze nie uzylam tego fragmentu
             {
-                wskaznik_rozwiazanie->push_back(pociete_fragmenty[i]);//dodaje go na probe do rozwiazania
-                if (Czy_dotychczasowe_rozwiazanie_sie_zgadza(pociete_fragmenty[i]) == true)//sprawdzam czy pasuje
+                rozwiazanie.push_back(pociete_fragmenty[i]);//dodaje go na probe do rozwiazania
+                if (Czy_dotychczasowe_rozwiazanie_sie_zgadza(rozwiazanie, uzyte_w_obrebie_tego_wywolania,pociete_fragmenty) == true)//sprawdzam czy pasuje
                 {
-                    szukaj_rozwiazania(wskaznik_rozwiazanie, max_ilosc_ciec, czas_start, wskaznik_na_uzyte, pociete_fragmenty);//pasuje kontynuuje
+                    szukaj_rozwiazania(rozwiazanie, max_ilosc_ciec, czas_start, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty);//pasuje kontynuuje
                 }
                 else
                 {
-                    wskaznik_rozwiazanie->pop_back();//nie pasuje, usuwam to co dodalam
+                    rozwiazanie.pop_back();//nie pasuje, usuwam to co dodalam
                     //probuje z nastepnym niewykorzystanym w nowym obiegu petli
                 }
             }
@@ -208,7 +232,7 @@ int main()
 
     auto start = clock();
  
-    szukaj_rozwiazania(wskaznik_na_rozwiazanie,spodziewana_liczb_ciec,start,wskaznik_na_uzyte,pociete_fragmenty);
+    szukaj_rozwiazania(Rozwiazanie,spodziewana_liczb_ciec,start,uzyte,pociete_fragmenty);
     
 
         
