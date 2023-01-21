@@ -84,14 +84,26 @@ double policz_czas (clock_t start)
 
 }
 
+void wyswietl_mape(std::vector<int>* wskaznik_rozwiazanie)
+{
+    for (auto element : *wskaznik_rozwiazanie)
+    {
+        std::cout << element << " ";
+    }
+}
+
 void szukaj_rozwiazania(std::vector<int>* wskaznik_rozwiazanie, int max_ilosc_ciec, clock_t czas_start)
 {
-    if (wskaznik_rozwiazanie->size() == max_ilosc_ciec)
-    {
-        return;
-    }
     if (policz_czas(czas_start) >=3600)
     {
+        std::cout << "Znaleziono mape: ";
+        wyswietl_mape(wskaznik_rozwiazanie);
+        std::cout << "Przekroczono czas dla szukania rozwiaznania\nKoncze program";
+        return;
+    }
+    if (wskaznik_rozwiazanie->size() == max_ilosc_ciec)
+    {
+        std::cout << "Czas szukania rozwiazania: " << policz_czas(czas_start) << "\n";
         return;
     }
    
