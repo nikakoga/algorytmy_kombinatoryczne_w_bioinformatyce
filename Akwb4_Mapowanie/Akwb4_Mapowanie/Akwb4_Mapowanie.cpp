@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#include <chrono>
+#include <time.h>
 
 
 bool Czy_mozna_stworzyc_mape(int liczba_elementow, std::map<int,int> mapa)
@@ -75,12 +75,27 @@ std::vector<int> zeruj_wektor_uzyc(std::vector<int>uzyte)
     return uzyte;
 }
 
-void szukaj (std::vector<int>* wskaznik_rozwiazanie, int max_ilosc_ciec)
+double policz_czas (clock_t start)
+{
+    auto stop = clock();
+    double czas_wykonywania_w_sekundach = (double)(stop - start) / (double)CLOCKS_PER_SEC;
+
+    return czas_wykonywania_w_sekundach;
+
+}
+
+void szukaj_rozwiazania(std::vector<int>* wskaznik_rozwiazanie, int max_ilosc_ciec, clock_t czas_start)
 {
     if (wskaznik_rozwiazanie->size() == max_ilosc_ciec)
     {
         return;
     }
+    if (policz_czas(czas_start) >=3600)
+    {
+        return;
+    }
+   
+    
 }
 
 int main()
@@ -121,15 +136,10 @@ int main()
 
     int spodziewana_liczb_ciec = mapa_rozmiarow[pociete_fragmenty.size()];
 
-    auto clock_start = std::chrono::high_resolution_clock::now();
-    auto clock_end = std::chrono::high_resolution_clock::now();
-    auto czas_wykonywania = std::chrono::duration_cast<std::chrono::milliseconds>(clock_end - clock_start); //3 600 000 milisekund to godzina
-
     std::vector<int> Rozwiazanie;
     std::vector<int>* wskaznik_na_rozwiazanie = &Rozwiazanie;
     std::vector<int> uzyte = pociete_fragmenty;
     uzyte=zeruj_wektor_uzyc(uzyte);
-    
     
 
     int max = najwiekszy_element(pociete_fragmenty);
@@ -146,11 +156,12 @@ int main()
         return -1;
     }
 
+    auto start = clock();
+ 
+    szukaj_rozwiazania(wskaznik_na_rozwiazanie,spodziewana_liczb_ciec,start);
     
 
-
-
-
+        
     
 
 
