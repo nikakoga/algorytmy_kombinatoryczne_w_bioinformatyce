@@ -24,7 +24,7 @@ int najwiekszy_element(std::vector<int> fragmenty)
     {
         if (fragmenty[i] > max)
         {
-            fragmenty[i] = max;
+            max = fragmenty[i];
         }
     }
     return max;
@@ -38,19 +38,11 @@ int drugi_najwiekszy_element(std::vector<int> fragmenty, int max)
     {
         if (fragmenty[i] > drugi_max && fragmenty[i]<max)
         {
-            fragmenty[i] = drugi_max;
+            drugi_max = fragmenty[i];
         }
     }
 
     return drugi_max;
-}
-
-int Znajdz_max_minus_prawie_max_w_wektorze(std::vector<int> fragmenty, int max, int prawie_max)//jesli nie ma wyniku roznicy max-prawie max to dane sa zle
-{
-    
-    int roznica_max_prawie_max = max - prawie_max;
-    szukaj_elementu(fragmenty, roznica_max_prawie_max);
-
 }
 
 int szukaj_elementu(std::vector<int> fragmenty, int dlugosc)
@@ -65,35 +57,66 @@ int szukaj_elementu(std::vector<int> fragmenty, int dlugosc)
     return-1;
 }
 
+int Znajdz_max_minus_prawie_max_w_wektorze(std::vector<int> fragmenty, int max, int prawie_max)//jesli nie ma wyniku roznicy max-prawie max to dane sa zle
+{
+    int roznica_max_prawie_max = max - prawie_max;
+   int znalezione= szukaj_elementu(fragmenty, roznica_max_prawie_max);
+   return znalezione;
+
+}
+
+std::vector<int> zeruj_wektor_uzyc(std::vector<int>uzyte)
+{
+
+    for (int i = 0; i < uzyte.size(); i++)
+    {
+        uzyte[i] = 0;
+    }
+    return uzyte;
+}
+
+void szukaj (std::vector<int>* wskaznik_rozwiazanie, int max_ilosc_ciec)
+{
+    if (wskaznik_rozwiazanie->size() == max_ilosc_ciec)
+    {
+        return;
+    }
+}
+
 int main()
 {
     std::fstream plik;
-    std::cout << "Podaj nazwe pliku\n";
-    std::string nazwa_pliku;
-    std::cin >> nazwa_pliku;
-    plik.open(nazwa_pliku, std::ifstream::in);
+   // std::cout << "Podaj nazwe pliku\n";
+    //std::string nazwa_pliku;
+   // std::cin >> nazwa_pliku;
+   // plik.open(nazwa_pliku, std::ifstream::in);
+    plik.open("instancja1.txt", std::ifstream::in);
 
     std::map<int, int>mapa_rozmiarow{ {15,5},{21,6},{28,7},{36,8},{45,9},{55,10},{66,11},{78,12},{91,13},{105,14},{120,15},{136,16} };
     std::vector<int>pociete_fragmenty;
     std::string linia;
     std::string fragment;
     
-    while (!plik.eof())
+    if (plik.is_open())
     {
-        getline(plik, linia);
-        std::stringstream stream_linii(linia);
-        while (!stream_linii.eof())
+        while (!plik.eof())
         {
-            getline(stream_linii, fragment, ' ');
-            int dlugosc_fragmentu = stoi(fragment);
-            pociete_fragmenty.push_back(dlugosc_fragmentu); //w wektorze mam wszystkie fragmenty
+            getline(plik,linia);
+            std::stringstream stream_linii(linia);
+            while (!stream_linii.eof())
+            {
+                getline(stream_linii, fragment, ' ');
+                int dlugosc_fragmentu = stoi(fragment);
+                pociete_fragmenty.push_back(dlugosc_fragmentu); //w wektorze mam wszystkie fragmenty
+            }
         }
     }
+    
     
     if (Czy_mozna_stworzyc_mape(pociete_fragmenty.size(), mapa_rozmiarow) == false) //sprawdzam czy ilosc elementow jest odpowiednia i zwracam komunikat jesli nie. Ilosc elementow obrazuje rozmiar wektora do ktorego wczytywalam elementy po kolei
     {
         std::cout << "Ilosc elementow nie jest odpowiednia aby stworzyc mape z takiego zbioru\n";
-        return;
+        return -1;
     }
 
     int spodziewana_liczb_ciec = mapa_rozmiarow[pociete_fragmenty.size()];
@@ -103,21 +126,24 @@ int main()
     auto czas_wykonywania = std::chrono::duration_cast<std::chrono::milliseconds>(clock_end - clock_start); //3 600 000 milisekund to godzina
 
     std::vector<int> Rozwiazanie;
-    std::vector<int> uzyte;
+    std::vector<int>* wskaznik_na_rozwiazanie = &Rozwiazanie;
+    std::vector<int> uzyte = pociete_fragmenty;
+    uzyte=zeruj_wektor_uzyc(uzyte);
+    
+    
 
     int max = najwiekszy_element(pociete_fragmenty);
     int drugi_max = drugi_najwiekszy_element(pociete_fragmenty, max);
    
-    if (int odpowiedz = Znajdz_max_minus_prawie_max_w_wektorze(pociete_fragmenty, max, drugi_max) !=-1)
+    if (int pozycja_w_wektorze = Znajdz_max_minus_prawie_max_w_wektorze(pociete_fragmenty, max, drugi_max) !=-1) 
     {
-        Rozwiazanie.push_back(odpowiedz); //dodaje ten pierwszy element do rozwiazania
-
-        
+        Rozwiazanie.push_back(pociete_fragmenty[pozycja_w_wektorze]); //dodaje ten pierwszy element do rozwiazania
+        uzyte[pozycja_w_wektorze] = 1;
     }
     else
     {
         std::cout << "Dane niepoprawne, nie ma fragmentu o dlugosci max-drugi_max koncze program\n";
-        return;
+        return -1;
     }
 
     
