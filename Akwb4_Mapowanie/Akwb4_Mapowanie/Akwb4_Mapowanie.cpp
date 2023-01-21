@@ -45,6 +45,26 @@ int drugi_najwiekszy_element(std::vector<int> fragmenty, int max)
     return drugi_max;
 }
 
+int Znajdz_max_minus_prawie_max_w_wektorze(std::vector<int> fragmenty, int max, int prawie_max)//jesli nie ma wyniku roznicy max-prawie max to dane sa zle
+{
+    
+    int roznica_max_prawie_max = max - prawie_max;
+    szukaj_elementu(fragmenty, roznica_max_prawie_max);
+
+}
+
+int szukaj_elementu(std::vector<int> fragmenty, int dlugosc)
+{
+    for (int i = 0; i < fragmenty.size(); i++)
+    {
+        if (fragmenty[i] == dlugosc)
+        {
+            return i;
+        }
+    }
+    return-1;
+}
+
 int main()
 {
     std::fstream plik;
@@ -85,7 +105,22 @@ int main()
     std::vector<int> Rozwiazanie;
     std::vector<int> uzyte;
 
+    int max = najwiekszy_element(pociete_fragmenty);
+    int drugi_max = drugi_najwiekszy_element(pociete_fragmenty, max);
+   
+    if (int odpowiedz = Znajdz_max_minus_prawie_max_w_wektorze(pociete_fragmenty, max, drugi_max) !=-1)
+    {
+        Rozwiazanie.push_back(odpowiedz); //dodaje ten pierwszy element do rozwiazania
 
+        
+    }
+    else
+    {
+        std::cout << "Dane niepoprawne, nie ma fragmentu o dlugosci max-drugi_max koncze program\n";
+        return;
+    }
+
+    
 
 
 
