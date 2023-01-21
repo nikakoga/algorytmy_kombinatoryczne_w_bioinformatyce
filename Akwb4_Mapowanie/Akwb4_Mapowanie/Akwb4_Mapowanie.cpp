@@ -16,6 +16,34 @@ bool Czy_mozna_stworzyc_mape(int liczba_elementow, std::map<int,int> mapa)
     return false;
 }
 
+int najwiekszy_element(std::vector<int> fragmenty)
+{
+    int max = 0;
+
+    for (int i = 0; i < fragmenty.size(); i++)
+    {
+        if (fragmenty[i] > max)
+        {
+            fragmenty[i] = max;
+        }
+    }
+    return max;
+}
+
+int drugi_najwiekszy_element(std::vector<int> fragmenty, int max)
+{
+    int drugi_max = 0;
+
+    for (int i = 0; i < fragmenty.size(); i++)
+    {
+        if (fragmenty[i] > drugi_max && fragmenty[i]<max)
+        {
+            fragmenty[i] = drugi_max;
+        }
+    }
+
+    return drugi_max;
+}
 
 int main()
 {
@@ -49,10 +77,19 @@ int main()
     }
 
     int spodziewana_liczb_ciec = mapa_rozmiarow[pociete_fragmenty.size()];
+
     auto clock_start = std::chrono::high_resolution_clock::now();
     auto clock_end = std::chrono::high_resolution_clock::now();
+    auto czas_wykonywania = std::chrono::duration_cast<std::chrono::milliseconds>(clock_end - clock_start); //3 600 000 milisekund to godzina
 
-    auto elapsed = 
+    std::vector<int> Rozwiazanie;
+    std::vector<int> uzyte;
+
+
+
+
+
+
     
 
 
