@@ -145,10 +145,11 @@ void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc
                 bool czy_wszystko_sie_zgadzalo = true;
                 std::vector<int>pozycje_zmienionych_elementow;
       
-                for (int i = wskaznik_na_rozwiazanie->size() - 1; i > 0; i--)//-1 tam jest ostatni element bo numeruje wektor od 0
+                for (int j = wskaznik_na_rozwiazanie->size() - 1; j >= 0; j--)//iteruje po elementach ktore sa w rozwiazaniu j zaczyna jako ostatni element 
+                    //-1 tam jest ostatni element bo numeruje wektor od 0
                 {
-                    suma += get_okreslony_element_z_rozwiazania(wskaznik_na_rozwiazanie,i);
-                    if (i < wskaznik_na_rozwiazanie->size())// dlatego ze nie sprawdzam czy wlasnie dodany do rozwiazania element jest oznaczony jako uzyty, bo jest na pewno.
+                    suma += get_okreslony_element_z_rozwiazania(wskaznik_na_rozwiazanie,j);
+                    if (j < wskaznik_na_rozwiazanie->size()-1)// dlatego ze nie sprawdzam czy wlasnie dodany do rozwiazania element jest oznaczony jako uzyty, bo dopiero oznacze go na koniec, przed wywolaniem kolejnej rekurencji.
                     {
                         int nr_elementu = szukaj_elementu_jesli_jest_niewykorzystany(suma, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty);
                         if (nr_elementu != -1) //gdy funkcja nie zwraca -1 to znalazla element o zadanej wartosci ktory jest nieuzyty
@@ -169,23 +170,31 @@ void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc
                     
                     if (!pozycje_zmienionych_elementow.empty()) //jesli zdazylam cokolwiek zmienic w wektorze uzyc
                     {
-                        for (int i = 0; i < pozycje_zmienionych_elementow.size(); i++)
+                        for (int k = 0; k < pozycje_zmienionych_elementow.size(); k++)
                         {
-                            int element_do_cofniecia = pozycje_zmienionych_elementow[i];
+                            int element_do_cofniecia = pozycje_zmienionych_elementow[k];
                             uzyte_w_obrebie_tego_wywolania[element_do_cofniecia] = 0;//cofam na nieuzyte
                         }
                     }
                     pozycje_zmienionych_elementow.clear(); //czyszcze wektor zmienionych elementow
                 }
-                else
+                else if (czy_wszystko_sie_zgadzalo == true)
                 {
+                    uzyte_w_obrebie_tego_wywolania[i] = 1;
                     szukaj_rozwiazania(wskaznik_na_rozwiazanie, max_ilosc_ciec, czas_start, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty);//pasuje kontynuuje
                 }   
             }
-            //jesli dotre do tego miejsca to oznacza ze sprawdzilam juz wszystko w obrebie tego wywolania funkcji rekurencyjnie
-            wskaznik_na_rozwiazanie->pop_back(); //musze pozbyc sie ostatniego elementu !!!!!!!!!!!!!!!!! TO NIC NIE DA, OPERUJESZ NA KOPII
-            //petla dobiega konca a tym samym konczy sie jedna rekurencja
+            
         }
+        //jesli dotre do tego miejsca to oznacza ze sprawdzilam juz wszystko w obrebie tego wywolania funkcji rekurencyjnie
+        // jesli sprawdzilam wszystko i skonstruowalam w ten sposob rozwiazanie to super
+        if (wskaznik_na_rozwiazanie->size() != max_ilosc_ciec) //jesli nie to 
+            
+        {
+            wskaznik_na_rozwiazanie->pop_back(); //musze pozbyc sie ostatniego elementu 
+        }
+        
+        //petla dobiega konca a tym samym konczy sie jedna rekurencja
     }
 
 }
