@@ -116,9 +116,18 @@ bool Czy_dotychczasowe_rozwiazanie_sie_zgadza(std::vector<int> rozwiazanie, std:
         suma += rozwiazanie[i];
         if (i < rozwiazanie.size())// dlatego ze nie sprawdzam czy wlasnie dodany do rozwiazania element jest oznaczony jako uzyty, bo jest na pewno.
         {
-            szukaj_elementu_jesli_jest_niewykorzystany(suma, uzyte, pociete_fragmenty);
+            int nr_elementu = szukaj_elementu_jesli_jest_niewykorzystany(suma, uzyte, pociete_fragmenty);
+            if (nr_elementu != -1)
+            {
+                uzyte[nr_elementu] = 1;
+            }
+            if (nr_elementu == -1)
+            {
+                return false;
+            }
         }
     }
+    return true;
 }
 
 void szukaj_rozwiazania(std::vector<int> rozwiazanie, int max_ilosc_ciec, clock_t czas_start, std::vector<int> uzyte_w_obrebie_tego_wywolania, std::vector<int>pociete_fragmenty)
@@ -135,24 +144,64 @@ void szukaj_rozwiazania(std::vector<int> rozwiazanie, int max_ilosc_ciec, clock_
         std::cout << "Przekroczono czas dla szukania rozwiaznania\nKoncze program";
         return;
     }
+
     else
     {
-
         for (int i = 0; i < uzyte_w_obrebie_tego_wywolania.size(); i++) //iteruje po tablicy uzyc fragmentow
         {
             if (uzyte_w_obrebie_tego_wywolania[i] == 0)//jesli jeszcze nie uzylam tego fragmentu
             {
                 rozwiazanie.push_back(pociete_fragmenty[i]);//dodaje go na probe do rozwiazania
-                if (Czy_dotychczasowe_rozwiazanie_sie_zgadza(rozwiazanie, uzyte_w_obrebie_tego_wywolania,pociete_fragmenty) == true)//sprawdzam czy pasuje
+                int suma = 0;
+                bool czy_wszystko_sie_zgadzalo = true;
+                std::vector<int>pozycje_zmienionych_elementow;
+
+                for (int i = rozwiazanie.size() - 1; i > 0; i--)//-1 tam jest ostatni element bo numeruje wektor od 0
                 {
-                    szukaj_rozwiazania(rozwiazanie, max_ilosc_ciec, czas_start, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty);//pasuje kontynuuje
+                    suma += rozwiazanie[i];
+                    if (i < rozwiazanie.size())// dlatego ze nie sprawdzam czy wlasnie dodany do rozwiazania element jest oznaczony jako uzyty, bo jest na pewno.
+                    {
+                        int nr_elementu = szukaj_elementu_jesli_jest_niewykorzystany(suma, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty);
+                        if (nr_elementu != -1)
+                        {
+                            uzyte_w_obrebie_tego_wywolania[nr_elementu] = 1; //jesli nie jest wykorzystany ustawiam ze teraz juz jest
+                            pozycje_zmienionych_elementow.push_back(nr_elementu);
+                        }
+                        if (nr_elementu == -1)//ktorys element jest juz wykorzystany, czyli to nie moze nalezec do rozwiazania
+                        {
+                            czy_wszystko_sie_zgadzalo = false;
+                            break;
+                        }
+                    }
+                }
+                if (czy_wszystko_sie_zgadzalo == false)
+                {
+                    rozwiazanie.pop_back();//nie pasuje, usuwam to co dodalam
+                    
+                    if (!pozycje_zmienionych_elementow.empty()) //jesli zdazylam cokolwiek zmienic w wektorze uzyc
+                    {
+                        for (int i = 0; i < pozycje_zmienionych_elementow.size(); i++)
+                        {
+                            int element_do_cofniecia = pozycje_zmienionych_elementow[i];
+                            uzyte_w_obrebie_tego_wywolania[element_do_cofniecia] = 0;//cofam na nieuzyte
+                        }
+                        
+                    }
+
+                    while (!pozycje_zmienionych_elementow.empty())//dopoki wektor nie jest pusty popuje z niego zeby byl pusty
+                    {
+                        pozycje_zmienionych_elementow.pop_back();
+                    }
+                  
                 }
                 else
                 {
-                    rozwiazanie.pop_back();//nie pasuje, usuwam to co dodalam
-                    //probuje z nastepnym niewykorzystanym w nowym obiegu petli
+                    szukaj_rozwiazania(rozwiazanie, max_ilosc_ciec, czas_start, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty);//pasuje kontynuuje
                 }
+                
+               
             }
+            //jesli dotre do tego miejsca to oznacza ze sprawdzilam juz wszystko w obrebie tego wywolania funkcji rekurencyjnie 
             
         }
         
