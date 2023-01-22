@@ -121,6 +121,7 @@ int get_okreslony_element_z_rozwiazania(std::vector<int>* wskaznik_na_rozwiazani
 
 void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc_ciec, clock_t czas_start, std::vector<int> uzyte_w_obrebie_tego_wywolania, std::vector<int>pociete_fragmenty)
 {
+    std::cout << "Liczba elementow w rozwiazaniu: " << wskaznik_na_rozwiazanie->size() << "\n";
     if (wskaznik_na_rozwiazanie->size() == max_ilosc_ciec)
     {
         std::cout << "Znaleziono mape: ";
@@ -144,21 +145,33 @@ void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc
                 int suma = 0;
                 bool czy_wszystko_sie_zgadzalo = true;
                 std::vector<int>pozycje_zmienionych_elementow;
-      
+
+                std::cout << "SPRAWDZAM DLA dodanego na probe:  " << pociete_fragmenty[i] << "\n"; //!!!!!!!!!!!POTEM USUN
+                //std::cout << "do sprawdzenia sumy uzywam: "; //!!!!!!!!!!!POTEM USUN
                 for (int j = wskaznik_na_rozwiazanie->size() - 1; j >= 0; j--)//iteruje po elementach ktore sa w rozwiazaniu j zaczyna jako ostatni element 
                     //-1 tam jest ostatni element bo numeruje wektor od 0
                 {
                     suma += get_okreslony_element_z_rozwiazania(wskaznik_na_rozwiazanie,j);
+                    
+
+
                     if (j < wskaznik_na_rozwiazanie->size()-1)// dlatego ze nie sprawdzam czy wlasnie dodany do rozwiazania element jest oznaczony jako uzyty, bo dopiero oznacze go na koniec, przed wywolaniem kolejnej rekurencji.
                     {
+                        std::cout << "suma: " << suma << "\n";
                         int nr_elementu = szukaj_elementu_jesli_jest_niewykorzystany(suma, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty);
                         if (nr_elementu != -1) //gdy funkcja nie zwraca -1 to znalazla element o zadanej wartosci ktory jest nieuzyty
                         {
+                            
                             uzyte_w_obrebie_tego_wywolania[nr_elementu] = 1; //jesli nie jest wykorzystany ustawiam ze teraz juz jest
                             pozycje_zmienionych_elementow.push_back(nr_elementu);
+                            std::cout << "obecny, status uzycia " << uzyte_w_obrebie_tego_wywolania[nr_elementu];////!!!!!!!!!!!POTEM USUN
+                            std::cout << "\n";
                         }
                         if (nr_elementu == -1)//znaleziony element jest juz wykorzystany
                         {
+                            std::cout << "nieobecny\n";
+                            
+                            std:: cout<< "PRZERYWAM PETLE SUMOWANIA\n";
                             czy_wszystko_sie_zgadzalo = false;
                             break;
                         }
@@ -170,30 +183,42 @@ void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc
                     
                     if (!pozycje_zmienionych_elementow.empty()) //jesli zdazylam cokolwiek zmienic w wektorze uzyc
                     {
+                        std::cout << "Sa zmienione elementy: ";
                         for (int k = 0; k < pozycje_zmienionych_elementow.size(); k++)
                         {
                             int element_do_cofniecia = pozycje_zmienionych_elementow[k];
                             uzyte_w_obrebie_tego_wywolania[element_do_cofniecia] = 0;//cofam na nieuzyte
+                            std::cout << pociete_fragmenty[element_do_cofniecia] << "status " << uzyte_w_obrebie_tego_wywolania[element_do_cofniecia]<<"\n";
                         }
                     }
                     pozycje_zmienionych_elementow.clear(); //czyszcze wektor zmienionych elementow
+                    if (pozycje_zmienionych_elementow.empty())
+                    {
+                        std::cout << "Wektor uzyc wyczyszczony";
+                        std::cout << "_____________________\n\n";
+                    }
                 }
                 else if (czy_wszystko_sie_zgadzalo == true)
                 {
                     uzyte_w_obrebie_tego_wywolania[i] = 1;
+                    std::cout << "Dodaje do rozwiazania: " << pociete_fragmenty[i] << "\nWchodze w nowa rekurencje\n\n";
                     szukaj_rozwiazania(wskaznik_na_rozwiazanie, max_ilosc_ciec, czas_start, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty);//pasuje kontynuuje
+                    std::cout << "\nOpuscilam rekurencje\n";
                 }   
             }
             
         }
         //jesli dotre do tego miejsca to oznacza ze sprawdzilam juz wszystko w obrebie tego wywolania funkcji rekurencyjnie
         // jesli sprawdzilam wszystko i skonstruowalam w ten sposob rozwiazanie to super
+        std::cout << "Zakonczylam petle przechodzaca przez uzyte elementy\n";
         if (wskaznik_na_rozwiazanie->size() != max_ilosc_ciec) //jesli nie to 
             
         {
+            std::cout << "usuwam z rozwiazania " << wskaznik_na_rozwiazanie->back();
             wskaznik_na_rozwiazanie->pop_back(); //musze pozbyc sie ostatniego elementu 
         }
         
+        std::cout << "Wracam do poprzedniej rekurencji\n\n";
         //petla dobiega konca a tym samym konczy sie jedna rekurencja
     }
 
@@ -245,12 +270,12 @@ int main()
     
 
     int max = najwiekszy_element(pociete_fragmenty);
-    int pozycja_max = szukaj_elementu(pociete_fragmenty, max);
-    uzyte[pozycja_max] = 1;     //oznaczam max jako uzyty
+    //int pozycja_max = szukaj_elementu(pociete_fragmenty, max);
+    //uzyte[pozycja_max] = 1;     //oznaczam max jako uzyty
     
     int drugi_max = drugi_najwiekszy_element(pociete_fragmenty, max);
-    int pozycja_drugi_max = szukaj_elementu(pociete_fragmenty, drugi_max);
-    uzyte[pozycja_drugi_max] = 1;   //oznaczam drugi max jako uzyty
+    //int pozycja_drugi_max = szukaj_elementu(pociete_fragmenty, drugi_max);
+    //uzyte[pozycja_drugi_max] = 1;   //oznaczam drugi max jako uzyty
    
     if (int pozycja_w_wektorze = Znajdz_max_minus_prawie_max_w_wektorze(pociete_fragmenty, max, drugi_max) !=-1) 
     {
