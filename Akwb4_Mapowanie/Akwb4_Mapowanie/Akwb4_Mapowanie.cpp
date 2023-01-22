@@ -122,11 +122,11 @@ void wyswietl_statusy_elementow(std::vector<int>pociete_fragmenty, std::vector<i
 
 void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc_ciec, clock_t czas_start, std::vector<int> uzyte_w_obrebie_tego_wywolania, std::vector<int>pociete_fragmenty, bool* czy_znalzalam)
 {
-	std::cout << "Ilosc elementow w rozwiazaniu: " << wskaznik_na_rozwiazanie->size();
-	std::cout << "\n";
-	std::cout << "Rozwiazanie ";
-	wyswietl_mape(wskaznik_na_rozwiazanie);
-	std::cout << "\n";
+	//std::cout << "Ilosc elementow w rozwiazaniu: " << wskaznik_na_rozwiazanie->size();
+	//std::cout << "\n";
+	//std::cout << "Rozwiazanie ";
+	//wyswietl_mape(wskaznik_na_rozwiazanie);
+	//std::cout << "\n";
 	if (wskaznik_na_rozwiazanie->size() == max_ilosc_ciec)
 	{
 		std::cout << "Znaleziono mape: ";
@@ -189,40 +189,40 @@ void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc
 
 					if (!pozycje_zmienionych_elementow.empty()) //jesli zdazylam cokolwiek zmienic w wektorze uzyc
 					{
-						std::cout << "cofam pozycje zmienione" << '\n';
+						//std::cout << "cofam pozycje zmienione" << '\n';
 						for (int k = 0; k < pozycje_zmienionych_elementow.size(); k++)
 						{
 							int element_do_cofniecia = pozycje_zmienionych_elementow[k];
 							uzyte_w_obrebie_tego_wywolania[element_do_cofniecia] = 0;//cofam na nieuzyte
-							std::cout << pociete_fragmenty[element_do_cofniecia] << "status: " << uzyte_w_obrebie_tego_wywolania[element_do_cofniecia];
+							//std::cout << pociete_fragmenty[element_do_cofniecia] << "status: " << uzyte_w_obrebie_tego_wywolania[element_do_cofniecia];
 
 						}
 					}
 					pozycje_zmienionych_elementow.clear(); //czyszcze wektor zmienionych elementow
-					std::cout << "________________\n";
+					//std::cout << "________________\n";
 				}
 				else if (czy_wszystko_sie_zgadzalo == true)
 				{
 					uzyte_w_obrebie_tego_wywolania[i] = 1;
 					pozycje_zmienionych_elementow.push_back(i);
-					std::cout << "Pasuje wchodze glebiej w rekurencje :)\n\n";
-					std::cout << "Rekurencji przekazuje: \n";
-					wyswietl_statusy_elementow(pociete_fragmenty, uzyte_w_obrebie_tego_wywolania);
-					std::cout << "________________\n";
+					//std::cout << "Pasuje wchodze glebiej w rekurencje :)\n\n";
+					//std::cout << "Rekurencji przekazuje: \n";
+					//wyswietl_statusy_elementow(pociete_fragmenty, uzyte_w_obrebie_tego_wywolania);
+					//std::cout << "________________\n";
 					szukaj_rozwiazania(wskaznik_na_rozwiazanie, max_ilosc_ciec, czas_start, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty, czy_znalzalam);//pasuje kontynuuje
-					std::cout << "Wyszlam z rekurencji. Statusy w tym poziomie: \n";
-					wyswietl_statusy_elementow(pociete_fragmenty, uzyte_w_obrebie_tego_wywolania);
-					std::cout << "\n";
+					//std::cout << "Wyszlam z rekurencji. Statusy w tym poziomie: \n";
+					//wyswietl_statusy_elementow(pociete_fragmenty, uzyte_w_obrebie_tego_wywolania);
+					//std::cout << "\n";
 				}
 			}
 			if (!pozycje_zmienionych_elementow.empty()) //jesli zdazylam cokolwiek zmienic w wektorze uzyc
 			{
-				std::cout << "cofam pozycje zmienione" << '\n';
+				//std::cout << "cofam pozycje zmienione" << '\n';
 				for (int k = 0; k < pozycje_zmienionych_elementow.size(); k++)
 				{
 					int element_do_cofniecia = pozycje_zmienionych_elementow[k];
 					uzyte_w_obrebie_tego_wywolania[element_do_cofniecia] = 0;//cofam na nieuzyte
-					std::cout << pociete_fragmenty[element_do_cofniecia] << "status: " << uzyte_w_obrebie_tego_wywolania[element_do_cofniecia];
+					//std::cout << pociete_fragmenty[element_do_cofniecia] << "status: " << uzyte_w_obrebie_tego_wywolania[element_do_cofniecia];
 
 				}
 			}
@@ -231,7 +231,7 @@ void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc
 		//std::cout << "Tutaj zadna opcja nie pasowala\n";
 		//std::cout << "Statusy tutaj: \n";
 		//wyswietl_statusy_elementow(pociete_fragmenty,uzyte_w_obrebie_tego_wywolania);
-		std::cout << "\ncofam sie do poprzedniego\n";
+		//std::cout << "\ncofam sie do poprzedniego\n";
 		//jesli dotre do tego miejsca to oznacza ze sprawdzilam juz wszystko w obrebie tego wywolania funkcji rekurencyjnie
 		// jesli sprawdzilam wszystko i skonstruowalam w ten sposob rozwiazanie to super
 
@@ -242,9 +242,9 @@ void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc
 		}
 		if (!wskaznik_na_rozwiazanie->empty())
 		{
-			std::cout << "Rozwiazanie: ";
-			wyswietl_mape(wskaznik_na_rozwiazanie);
-			std::cout << "\n";
+			//std::cout << "Rozwiazanie: ";
+			//wyswietl_mape(wskaznik_na_rozwiazanie);
+			//std::cout << "\n";
 		}
 
 		//petla dobiega konca a tym samym konczy sie jedna rekurencja
@@ -258,7 +258,7 @@ int main()
 	 //std::string nazwa_pliku;
 	// std::cin >> nazwa_pliku;
 	// plik.open(nazwa_pliku, std::ifstream::in);
-	plik.open("instancja2.txt", std::ifstream::in);
+	plik.open("1.txt", std::ifstream::in);
 
 	std::map<int, int>mapa_rozmiarow{ {15,5},{21,6},{28,7},{36,8},{45,9},{55,10},{66,11},{78,12},{91,13},{105,14},{120,15},{136,16} };
 	std::vector<int>pociete_fragmenty;
@@ -297,12 +297,12 @@ int main()
 	std::vector<int>* wskaznik_na_uzyte = &uzyte;
 	uzyte = zeruj_wektor_uzyc(uzyte);
 
-	int licznik = 0;
+	/*int licznik = 0;
 	for (auto element : pociete_fragmenty)
 	{
 		std::cout << licznik << " " << element << "\n";
 		licznik++;
-	}
+	}*/
 
 	int max = najwiekszy_element(pociete_fragmenty);
 	std::cout << "max: " << max << "\n";
