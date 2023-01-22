@@ -119,19 +119,20 @@ int get_okreslony_element_z_rozwiazania(std::vector<int>* wskaznik_na_rozwiazani
 
 }
 
-void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc_ciec, clock_t czas_start, std::vector<int> uzyte_w_obrebie_tego_wywolania, std::vector<int>pociete_fragmenty)
+void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc_ciec, clock_t czas_start, std::vector<int> uzyte_w_obrebie_tego_wywolania, std::vector<int>pociete_fragmenty,bool* czy_znalzalam)
 {
-    std::cout << "Liczba elementow w rozwiazaniu: " << wskaznik_na_rozwiazanie->size() << "\n";
     if (wskaznik_na_rozwiazanie->size() == max_ilosc_ciec)
     {
         std::cout << "Znaleziono mape: ";
         wyswietl_mape(wskaznik_na_rozwiazanie);
         std::cout << "Czas szukania rozwiazania: " << policz_czas(czas_start) << "\n";
+        *czy_znalzalam = true;
         return;
     }
     if (policz_czas(czas_start) >=3600)
     {
         std::cout << "Przekroczono czas dla szukania rozwiaznania\nKoncze program";
+        *czy_znalzalam = false;
         return;
     }
 
@@ -146,32 +147,24 @@ void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc
                 bool czy_wszystko_sie_zgadzalo = true;
                 std::vector<int>pozycje_zmienionych_elementow;
 
-                std::cout << "SPRAWDZAM DLA dodanego na probe:  " << pociete_fragmenty[i] << "\n"; //!!!!!!!!!!!POTEM USUN
-                //std::cout << "do sprawdzenia sumy uzywam: "; //!!!!!!!!!!!POTEM USUN
                 for (int j = wskaznik_na_rozwiazanie->size() - 1; j >= 0; j--)//iteruje po elementach ktore sa w rozwiazaniu j zaczyna jako ostatni element 
                     //-1 tam jest ostatni element bo numeruje wektor od 0
                 {
                     suma += get_okreslony_element_z_rozwiazania(wskaznik_na_rozwiazanie,j);
                     
-
-
                     if (j < wskaznik_na_rozwiazanie->size()-1)// dlatego ze nie sprawdzam czy wlasnie dodany do rozwiazania element jest oznaczony jako uzyty, bo dopiero oznacze go na koniec, przed wywolaniem kolejnej rekurencji.
                     {
-                        std::cout << "suma: " << suma << "\n";
+                        
                         int nr_elementu = szukaj_elementu_jesli_jest_niewykorzystany(suma, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty);
                         if (nr_elementu != -1) //gdy funkcja nie zwraca -1 to znalazla element o zadanej wartosci ktory jest nieuzyty
                         {
                             
                             uzyte_w_obrebie_tego_wywolania[nr_elementu] = 1; //jesli nie jest wykorzystany ustawiam ze teraz juz jest
                             pozycje_zmienionych_elementow.push_back(nr_elementu);
-                            std::cout << "obecny, status uzycia " << uzyte_w_obrebie_tego_wywolania[nr_elementu];////!!!!!!!!!!!POTEM USUN
-                            std::cout << "\n";
+                            
                         }
                         if (nr_elementu == -1)//znaleziony element jest juz wykorzystany
                         {
-                            std::cout << "nieobecny\n";
-                            
-                            std:: cout<< "PRZERYWAM PETLE SUMOWANIA\n";
                             czy_wszystko_sie_zgadzalo = false;
                             break;
                         }
@@ -183,42 +176,36 @@ void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc
                     
                     if (!pozycje_zmienionych_elementow.empty()) //jesli zdazylam cokolwiek zmienic w wektorze uzyc
                     {
-                        std::cout << "Sa zmienione elementy: ";
                         for (int k = 0; k < pozycje_zmienionych_elementow.size(); k++)
                         {
                             int element_do_cofniecia = pozycje_zmienionych_elementow[k];
                             uzyte_w_obrebie_tego_wywolania[element_do_cofniecia] = 0;//cofam na nieuzyte
-                            std::cout << pociete_fragmenty[element_do_cofniecia] << "status " << uzyte_w_obrebie_tego_wywolania[element_do_cofniecia]<<"\n";
+                            
                         }
                     }
                     pozycje_zmienionych_elementow.clear(); //czyszcze wektor zmienionych elementow
-                    if (pozycje_zmienionych_elementow.empty())
-                    {
-                        std::cout << "Wektor uzyc wyczyszczony";
-                        std::cout << "_____________________\n\n";
-                    }
+                    
                 }
                 else if (czy_wszystko_sie_zgadzalo == true)
                 {
                     uzyte_w_obrebie_tego_wywolania[i] = 1;
-                    std::cout << "Dodaje do rozwiazania: " << pociete_fragmenty[i] << "\nWchodze w nowa rekurencje\n\n";
-                    szukaj_rozwiazania(wskaznik_na_rozwiazanie, max_ilosc_ciec, czas_start, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty);//pasuje kontynuuje
-                    std::cout << "\nOpuscilam rekurencje\n";
+                    szukaj_rozwiazania(wskaznik_na_rozwiazanie, max_ilosc_ciec, czas_start, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty,czy_znalzalam);//pasuje kontynuuje
+                    
                 }   
             }
             
         }
         //jesli dotre do tego miejsca to oznacza ze sprawdzilam juz wszystko w obrebie tego wywolania funkcji rekurencyjnie
         // jesli sprawdzilam wszystko i skonstruowalam w ten sposob rozwiazanie to super
-        std::cout << "Zakonczylam petle przechodzaca przez uzyte elementy\n";
+       
         if (wskaznik_na_rozwiazanie->size() != max_ilosc_ciec) //jesli nie to 
             
         {
-            std::cout << "usuwam z rozwiazania " << wskaznik_na_rozwiazanie->back();
+       
             wskaznik_na_rozwiazanie->pop_back(); //musze pozbyc sie ostatniego elementu 
         }
         
-        std::cout << "Wracam do poprzedniej rekurencji\n\n";
+        
         //petla dobiega konca a tym samym konczy sie jedna rekurencja
     }
 
@@ -290,7 +277,14 @@ int main()
 
     auto start = clock();
  
-    szukaj_rozwiazania(wskaznik_na_rozwiazanie,spodziewana_liczb_ciec,start,uzyte,pociete_fragmenty);
+    bool rozwiazanie = false;
+    bool* czy_znalazlam = &rozwiazanie;
+    szukaj_rozwiazania(wskaznik_na_rozwiazanie,spodziewana_liczb_ciec,start,uzyte,pociete_fragmenty,czy_znalazlam);
+
+    if (rozwiazanie == false)
+    {
+        std::cout << "Brak rozwiazania dla takich danych\n";
+    }
 
 }
 
