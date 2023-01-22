@@ -44,13 +44,19 @@ def heuristic_xd(vertices: dict):
         elif smallest_degree_verticle != -1:
             del vertices[smallest_degree_verticle]
             for neighbour in smallest_degree_neighbours:
-                vertices[neighbour].remove(smallest_degree_verticle)
+                if neighbour in vertices.keys() and smallest_degree_verticle in vertices[neighbour]:
+                    vertices[neighbour].remove(smallest_degree_verticle)
     print(vertices)
+    res = set(vertices.keys())
+    for x in vertices.values():
+        for y in x:
+            res.add(y)
+    print(res)
 
 
 def get_vertices() -> dict:
     res = {}
-    with open("input.txt", "r") as f:
+    with open("input2.txt", "r") as f:
         for l in f.readlines():
             tmp = l.split('->')
             neighbours = list(

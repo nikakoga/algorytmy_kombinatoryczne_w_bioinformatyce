@@ -114,7 +114,7 @@ int get_okreslony_element_z_rozwiazania(std::vector<int>* wskaznik_na_rozwiazani
 
 void wyswietl_statusy_elementow(std::vector<int>pociete_fragmenty, std::vector<int>uzyte_w_tym_wywolaniu)
 {
-	for (int i=0; i<pociete_fragmenty.size();i++)
+	for (int i = 0; i < pociete_fragmenty.size(); i++)
 	{
 		std::cout << pociete_fragmenty[i] << " status: " << uzyte_w_tym_wywolaniu[i] << "\n";
 	}
@@ -147,39 +147,36 @@ void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc
 		//std::cout << "Zaczynam sprawdzanie opcji\n";
 		for (int i = 0; i < uzyte_w_obrebie_tego_wywolania.size(); i++) //iteruje po tablicy uzyc fragmentow
 		{
+			std::vector<int>pozycje_zmienionych_elementow;
 			//std::cout << pociete_fragmenty[i] << "status: " << uzyte_w_obrebie_tego_wywolania[i] << "\n";
 			if (uzyte_w_obrebie_tego_wywolania[i] == 0)//jesli jeszcze nie uzylam tego fragmentu
 			{
 				wskaznik_na_rozwiazanie->push_back(pociete_fragmenty[i]);//dodaje go na probe do rozwiazania
 				//std::cout << "dodaje na probe " << pociete_fragmenty[i] << "\n";
-				int suma = 0;
+				int suma = pociete_fragmenty[i];
 				bool czy_wszystko_sie_zgadzalo = true;
-				std::vector<int>pozycje_zmienionych_elementow;
 
-				for (int j = wskaznik_na_rozwiazanie->size() - 1; j >= 0; j--)//iteruje po elementach ktore sa w rozwiazaniu j zaczyna jako ostatni element 
+				for (int j = wskaznik_na_rozwiazanie->size() - 2; j >= 0; j--)//iteruje po elementach ktore sa w rozwiazaniu j zaczyna jako ostatni element 
 					//-1 tam jest ostatni element bo numeruje wektor od 0
 				{
 					suma += get_okreslony_element_z_rozwiazania(wskaznik_na_rozwiazanie, j);
 
-					if (j < wskaznik_na_rozwiazanie->size() - 1)// dlatego ze nie sprawdzam czy wlasnie dodany do rozwiazania element jest oznaczony jako uzyty, bo dopiero oznacze go na koniec, przed wywolaniem kolejnej rekurencji.
+					//std::cout << "suma do sprawdzenia: "<<suma<<"\n";
+					int nr_elementu = szukaj_elementu_jesli_jest_niewykorzystany(suma, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty);
+					if (nr_elementu != -1) //gdy funkcja nie zwraca -1 to znalazla element o zadanej wartosci ktory jest nieuzyty
 					{
-						//std::cout << "suma do sprawdzenia: "<<suma<<"\n";
-						int nr_elementu = szukaj_elementu_jesli_jest_niewykorzystany(suma, uzyte_w_obrebie_tego_wywolania, pociete_fragmenty);
-						if (nr_elementu != -1) //gdy funkcja nie zwraca -1 to znalazla element o zadanej wartosci ktory jest nieuzyty
-						{
-							//std::cout << "obecny\n";
-							uzyte_w_obrebie_tego_wywolania[nr_elementu] = 1; //jesli nie jest wykorzystany ustawiam ze teraz juz jest
-							//std::cout << "status: " << uzyte_w_obrebie_tego_wywolania[nr_elementu];
-							//std::cout<< "\n";
-							pozycje_zmienionych_elementow.push_back(nr_elementu);
+						//std::cout << "obecny\n";
+						uzyte_w_obrebie_tego_wywolania[nr_elementu] = 1; //jesli nie jest wykorzystany ustawiam ze teraz juz jest
+						//std::cout << "status: " << uzyte_w_obrebie_tego_wywolania[nr_elementu];
+						//std::cout<< "\n";
+						pozycje_zmienionych_elementow.push_back(nr_elementu);
 
-						}
-						if (nr_elementu == -1)//znaleziony element jest juz wykorzystany
-						{
-							//std::cout << "nieobecny lub juz uzyty\n";
-							czy_wszystko_sie_zgadzalo = false;
-							break;
-						}
+					}
+					else if (nr_elementu == -1)//znaleziony element jest juz wykorzystany
+					{
+						//std::cout << "nieobecny lub juz uzyty\n";
+						czy_wszystko_sie_zgadzalo = false;
+						break;
 					}
 				}
 				if (czy_wszystko_sie_zgadzalo == false)
@@ -202,11 +199,12 @@ void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc
 						}
 					}
 					pozycje_zmienionych_elementow.clear(); //czyszcze wektor zmienionych elementow
-					std::cout<<"________________\n";
+					std::cout << "________________\n";
 				}
 				else if (czy_wszystko_sie_zgadzalo == true)
 				{
 					uzyte_w_obrebie_tego_wywolania[i] = 1;
+					pozycje_zmienionych_elementow.push_back(i);
 					std::cout << "Pasuje wchodze glebiej w rekurencje :)\n\n";
 					std::cout << "Rekurencji przekazuje: \n";
 					wyswietl_statusy_elementow(pociete_fragmenty, uzyte_w_obrebie_tego_wywolania);
@@ -217,12 +215,23 @@ void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc
 					std::cout << "\n";
 				}
 			}
+			if (!pozycje_zmienionych_elementow.empty()) //jesli zdazylam cokolwiek zmienic w wektorze uzyc
+			{
+				std::cout << "cofam pozycje zmienione" << '\n';
+				for (int k = 0; k < pozycje_zmienionych_elementow.size(); k++)
+				{
+					int element_do_cofniecia = pozycje_zmienionych_elementow[k];
+					uzyte_w_obrebie_tego_wywolania[element_do_cofniecia] = 0;//cofam na nieuzyte
+					std::cout << pociete_fragmenty[element_do_cofniecia] << "status: " << uzyte_w_obrebie_tego_wywolania[element_do_cofniecia];
 
+				}
+			}
+			pozycje_zmienionych_elementow.clear(); //czyszcze wektor zmienionych elementow
 		}
 		//std::cout << "Tutaj zadna opcja nie pasowala\n";
 		//std::cout << "Statusy tutaj: \n";
 		//wyswietl_statusy_elementow(pociete_fragmenty,uzyte_w_obrebie_tego_wywolania);
-		std::cout<<"\ncofam sie do poprzedniego\n";
+		std::cout << "\ncofam sie do poprzedniego\n";
 		//jesli dotre do tego miejsca to oznacza ze sprawdzilam juz wszystko w obrebie tego wywolania funkcji rekurencyjnie
 		// jesli sprawdzilam wszystko i skonstruowalam w ten sposob rozwiazanie to super
 
@@ -237,10 +246,9 @@ void szukaj_rozwiazania(std::vector<int>* wskaznik_na_rozwiazanie, int max_ilosc
 			wyswietl_mape(wskaznik_na_rozwiazanie);
 			std::cout << "\n";
 		}
-		
+
 		//petla dobiega konca a tym samym konczy sie jedna rekurencja
 	}
-
 }
 
 int main()
@@ -250,7 +258,7 @@ int main()
 	 //std::string nazwa_pliku;
 	// std::cin >> nazwa_pliku;
 	// plik.open(nazwa_pliku, std::ifstream::in);
-	plik.open("instancja1.txt", std::ifstream::in);
+	plik.open("instancja2.txt", std::ifstream::in);
 
 	std::map<int, int>mapa_rozmiarow{ {15,5},{21,6},{28,7},{36,8},{45,9},{55,10},{66,11},{78,12},{91,13},{105,14},{120,15},{136,16} };
 	std::vector<int>pociete_fragmenty;
@@ -292,7 +300,7 @@ int main()
 	int licznik = 0;
 	for (auto element : pociete_fragmenty)
 	{
-		std::cout <<licznik<< " "<<element<<"\n";
+		std::cout << licznik << " " << element << "\n";
 		licznik++;
 	}
 
