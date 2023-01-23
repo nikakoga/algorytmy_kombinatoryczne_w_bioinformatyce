@@ -358,6 +358,11 @@ int main()
 		if (rozwiazanie == false)
 		{
 			std::cout << "Brak rozwiazania dla takich danych\n";
+			replace(nazwa_pliku, ".txt", "_wynik.txt");
+			replace(nazwa_pliku, "Mapowanie_instancje", "Mapowanie_wyniki");
+			std::ofstream out(nazwa_pliku);
+			out << "Przekroczono czas szukania rozwiązania." << std::endl;
+			out.close();
 		}
 		if (rozwiazanie == true)
 		{
