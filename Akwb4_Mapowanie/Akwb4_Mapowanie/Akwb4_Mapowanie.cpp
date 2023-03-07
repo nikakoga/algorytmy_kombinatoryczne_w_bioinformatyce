@@ -258,7 +258,7 @@ int main()
 	 //std::string nazwa_pliku;
 	// std::cin >> nazwa_pliku;
 	// plik.open(nazwa_pliku, std::ifstream::in);
-	plik.open("1.txt", std::ifstream::in);
+	plik.open("6moje.txt", std::ifstream::in);
 
 	std::map<int, int>mapa_rozmiarow{ {15,5},{21,6},{28,7},{36,8},{45,9},{55,10},{66,11},{78,12},{91,13},{105,14},{120,15},{136,16} };
 	std::vector<int>pociete_fragmenty;
@@ -287,8 +287,8 @@ int main()
 		return -1;
 	}
 
-	int spodziewana_liczb_ciec = mapa_rozmiarow[pociete_fragmenty.size()];
-	std::cout << "Spodziewana liczba ciec: " << spodziewana_liczb_ciec << "\n";
+	int spodziewane_rozwiazanie = mapa_rozmiarow[pociete_fragmenty.size()];
+	//std::cout << "Spodziewana liczba ciec: " << spodziewane_rozwiazanie << "\n";
 	//std::sort(pociete_fragmenty.begin(), pociete_fragmenty.end());
 
 	std::vector<int> Rozwiazanie;
@@ -305,23 +305,23 @@ int main()
 	}*/
 
 	int max = najwiekszy_element(pociete_fragmenty);
-	std::cout << "max: " << max << "\n";
+	//std::cout << "max: " << max << "\n";
 	//int pozycja_max = szukaj_elementu(pociete_fragmenty, max);
 	//uzyte[pozycja_max] = 1;     //oznaczam max jako uzyty
 
 	int drugi_max = drugi_najwiekszy_element(pociete_fragmenty, max);
-	std::cout << "drugi max: " << drugi_max << "\n";
+	//std::cout << "drugi max: " << drugi_max << "\n";
 	//int pozycja_drugi_max = szukaj_elementu(pociete_fragmenty, drugi_max);
 	//uzyte[pozycja_drugi_max] = 1;   //oznaczam drugi max jako uzyty
 
 	int roznica = max - drugi_max;
-	std::cout << "roznica: " << roznica << "\n";
+	//std::cout << "roznica: " << roznica << "\n";
 	int pozycja_roznicy = szukaj_elementu(pociete_fragmenty, roznica);
-	std::cout << "pozycja roznicy: " << pozycja_roznicy << "\n";
+	//std::cout << "pozycja roznicy: " << pozycja_roznicy << "\n";
 
 	if (pozycja_roznicy != -1)
 	{
-		std::cout << "Dodaje do rozwiazania: " << pociete_fragmenty[pozycja_roznicy] << "\n";
+		//std::cout << "Dodaje do rozwiazania: " << pociete_fragmenty[pozycja_roznicy] << "\n";
 		Rozwiazanie.push_back(pociete_fragmenty[pozycja_roznicy]); //dodaje ten pierwszy element do rozwiazania
 		uzyte[pozycja_roznicy] = 1; //wynik odejmowania max-drugi_max tez jest uzyty
 	}
@@ -335,7 +335,7 @@ int main()
 
 	bool rozwiazanie = false;
 	bool* czy_znalazlam = &rozwiazanie;
-	szukaj_rozwiazania(wskaznik_na_rozwiazanie, spodziewana_liczb_ciec, start, uzyte, pociete_fragmenty, czy_znalazlam);
+	szukaj_rozwiazania(wskaznik_na_rozwiazanie, spodziewane_rozwiazanie, start, uzyte, pociete_fragmenty, czy_znalazlam);
 	std::cout << "\n\n\n";
 
 
